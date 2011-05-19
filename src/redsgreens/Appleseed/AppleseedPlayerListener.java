@@ -38,7 +38,7 @@ public class AppleseedPlayerListener extends PlayerListener {
 		ItemStack iStack = player.getItemInHand();
 		if(iStack == null)
 			return;
-		else if(!Appleseed.treeTypes.contains(iStack.getType()))
+		else if(!Appleseed.Config.AllowedTreeMaterials.contains(iStack.getType()))
 			return;
 		
 		// return if the block above is not air

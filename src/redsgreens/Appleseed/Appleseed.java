@@ -1,6 +1,5 @@
 package redsgreens.Appleseed;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Random;
@@ -31,25 +30,18 @@ public class Appleseed extends JavaPlugin {
     
     private static Random rand = new Random();
     
-    // list of allowed tree types
-    public static ArrayList<Material> treeTypes = new ArrayList<Material>();
+    public static AppleseedConfig Config;
     
     // hashmap of tree locations and types
     public static HashMap<Location, Material> treeLocations = new HashMap<Location, Material>();
-    
-    
     
     public void onEnable() {
 
     	Plugin = this;
     	
-    	// add some types to the allowed list
-    	treeTypes.add(Material.APPLE);
-    	treeTypes.add(Material.GOLDEN_APPLE);
-    	treeTypes.add(Material.COOKIE);
-    	treeTypes.add(Material.SLIME_BALL);
-    	treeTypes.add(Material.SULPHUR);
-    	treeTypes.add(Material.CAKE);
+    	// initialize the config object and load the config 
+    	Config = new AppleseedConfig(Plugin);
+    	Config.LoadConfig();
     	
         // register our event
         PluginManager pm = getServer().getPluginManager();
@@ -78,8 +70,6 @@ public class Appleseed extends JavaPlugin {
     // loop through the list of trees and drop items around them, then schedule the next run
     private static void processTrees(){
 
-    	int worldPercent = 33;
-    	
     	if(treeLocations.size() != 0){
         	Set<Location> locations = treeLocations.keySet();
         	Iterator<Location> itr = locations.iterator();
@@ -88,7 +78,7 @@ public class Appleseed extends JavaPlugin {
         		World world = loc.getWorld();
         		if(world.isChunkLoaded(world.getChunkAt(world.getBlockAt(loc)))){
             		if(isTree(loc)){
-            			if(rand.nextInt((Integer)(100 / worldPercent)) == 0){
+            			if(rand.nextInt((Integer)(100 / Config.SpawnLikelihood)) == 0){
                 			ItemStack is = new ItemStack(treeLocations.get(loc), 1);
                 			loc.getWorld().dropItemNaturally(loc, is);
             			}

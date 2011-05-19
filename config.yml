@@ -1,0 +1,30 @@
+#
+# 
+# ShowErrorsInClient: toggle that determines if permissions or other error messages
+#                     are displayed client-side
+#
+# Allowed values are: Yes (shows errors to players)
+#                     No (errors only show up in server console)
+# 
+ShowErrorsInClient: Yes
+
+#
+# 
+# SpawnLikelihood: percentage chance an item will spawn under a tree
+#
+# Allowed values: numbers 1 through 100
+#                  100 means items will spawn every interval
+#                  1 means items will spawn once out of every hundred intervals
+# 
+SpawnLikelihood: 33
+
+#
+#
+# AllowedTreeTypes: list of items that can be planted in soil(aka farmland)
+#
+# Examples: "apple", "golden_apple", "cookie", "pork"
+#
+AllowedTreeTypes:
+    - "apple"
+    - "cookie"
+   
