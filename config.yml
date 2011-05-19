@@ -10,13 +10,21 @@ ShowErrorsInClient: Yes
 
 #
 # 
-# SpawnLikelihood: percentage chance an item will spawn under a tree
+# DropLikelihood: percentage chance an item will drop under a tree
 #
-# Allowed values: numbers 1 through 100
+# Allowed values: numbers 1 through 100 (no decimals)
 #                  100 means items will spawn every interval
 #                  1 means items will spawn once out of every hundred intervals
 # 
-SpawnLikelihood: 33
+DropLikelihood: 33
+
+#
+# 
+# DropInterval: length of time, in seconds, between drops
+#
+# Allowed values: numbers bigger than 1 (no decimals)
+# 
+DropInterval: 60
 
 #
 #

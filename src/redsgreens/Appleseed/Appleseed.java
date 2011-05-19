@@ -23,7 +23,6 @@ import org.bukkit.plugin.PluginManager;
  */
 public class Appleseed extends JavaPlugin {
     private final AppleseedPlayerListener playerListener = new AppleseedPlayerListener(this);
-//    private final AppleseedBlockListener blockListener = new AppleseedBlockListener(this);
     private final HashMap<Player, Boolean> debugees = new HashMap<Player, Boolean>();
     
     private static Appleseed Plugin;
@@ -78,7 +77,7 @@ public class Appleseed extends JavaPlugin {
         		World world = loc.getWorld();
         		if(world.isChunkLoaded(world.getChunkAt(world.getBlockAt(loc)))){
             		if(isTree(loc)){
-            			if(rand.nextInt((Integer)(100 / Config.SpawnLikelihood)) == 0){
+            			if(rand.nextInt((Integer)(100 / Config.DropLikelihood)) == 0){
                 			ItemStack is = new ItemStack(treeLocations.get(loc), 1);
                 			loc.getWorld().dropItemNaturally(loc, is);
             			}
@@ -94,8 +93,9 @@ public class Appleseed extends JavaPlugin {
 		    public void run() {
 		    	processTrees();
 		    }
-		}, 60*20);
+		}, Config.DropInterval*20);
     }
+
     // see if the given location is the root of a tree
     public static final boolean isTree(Location rootBlock)
     {

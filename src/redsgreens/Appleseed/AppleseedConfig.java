@@ -17,7 +17,8 @@ public class AppleseedConfig {
 	private Appleseed Plugin;
 
 	public Boolean ShowErrorsInClient = true;
-	public Integer SpawnLikelihood = 33;	
+	public Integer DropLikelihood = 33;
+	public Integer DropInterval = 60;
 	public ArrayList<Material> AllowedTreeMaterials = new ArrayList<Material>();
 
 	public AppleseedConfig(Appleseed plugin)
@@ -65,8 +66,11 @@ public class AppleseedConfig {
 			if(configMap.containsKey("ShowErrorsInClient"))
 				ShowErrorsInClient = (Boolean)configMap.get("ShowErrorsInClient");
 
-			if(configMap.containsKey("SpawnLikelihood"))
-				SpawnLikelihood = (Integer)configMap.get("SpawnLikelihood");
+			if(configMap.containsKey("DropLikelihood"))
+				DropLikelihood = (Integer)configMap.get("DropLikelihood");
+
+			if(configMap.containsKey("DropInterval"))
+				DropInterval = (Integer)configMap.get("DropInterval");
 
 			List<String> AllowedTreeTypes = Arrays.asList("apple", "cookie");
 			if(configMap.containsKey("AllowedTreeTypes"))
@@ -83,7 +87,8 @@ public class AppleseedConfig {
 			
 			// print config status
 			System.out.println("Appleseed: ShowErrorsInClient=" + ShowErrorsInClient.toString());
-			System.out.println("Appleseed: SpawnLikelihood=" + SpawnLikelihood.toString() + "%");
+			System.out.println("Appleseed: DropLikelihood=" + DropLikelihood.toString() + "%");
+			System.out.println("Appleseed: DropInterval=" + DropInterval.toString() + " seconds");
 			System.out.println("Appleseed: AllowedTreeTypes=" + AllowedTreeMaterials.toString());
 		}
 		catch (Exception ex){
