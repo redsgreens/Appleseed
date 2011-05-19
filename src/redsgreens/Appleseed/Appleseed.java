@@ -86,7 +86,7 @@ public class Appleseed extends JavaPlugin {
                 			loc.getWorld().dropItemNaturally(loc, treeLocations.get(loc));
             		}
             		else if(world.getBlockAt(loc).getType() != Material.SAPLING)
-            			treeLocations.remove(loc);
+            			itr.remove();
         		}
         	}
         }
