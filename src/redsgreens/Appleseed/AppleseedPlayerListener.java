@@ -14,10 +14,12 @@ import org.bukkit.inventory.ItemStack;
  * @author redsgreens
  */
 public class AppleseedPlayerListener extends PlayerListener {
-//    private final Appleseed plugin;
 
-    public AppleseedPlayerListener(Appleseed instance) {
-//        plugin = instance;
+	Appleseed Plugin;
+	
+    public AppleseedPlayerListener(Appleseed plugin) 
+    {
+    	Plugin = plugin;
     }
 
     @Override
@@ -64,7 +66,7 @@ public class AppleseedPlayerListener extends PlayerListener {
 		event.setCancelled(true);
 		
 		// add the root location and type to the list of trees
-		Appleseed.treeLocations.put(blockRoot.getLocation(), new ItemStack(iStack.getType(), 1, iStack.getDurability()));
+		Appleseed.TreeManager.AddTree(blockRoot.getLocation(), new ItemStack(iStack.getType(), 1, iStack.getDurability()));
 		
 		// set the clicked block to dirt
 		block.setType(Material.DIRT);
@@ -80,7 +82,6 @@ public class AppleseedPlayerListener extends PlayerListener {
 			iStack.setAmount(iStack.getAmount() - 1);
 			player.setItemInHand(iStack);			
 		}
-		
     }
 }
 

@@ -8,7 +8,6 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
@@ -20,20 +19,20 @@ public class AppleseedConfig {
 	public Boolean ShowErrorsInClient = true;
 	public Integer DropLikelihood = 33;
 	public Integer DropInterval = 60;
-	public List<String> AllowedTreeTypes = Arrays.asList("apple", "cookie");
-	public ArrayList<ItemStack> AllowedTreeItems = new ArrayList<ItemStack>();
+	public ArrayList<String> AllowedTreeTypes;
+	public ArrayList<ItemStack> AllowedTreeItems;
 
 	public AppleseedConfig(Appleseed plugin)
 	{
 		Plugin = plugin;
-		
+		AllowedTreeTypes = new ArrayList<String>();
+		AllowedTreeItems = new ArrayList<ItemStack>();
 	}
 	@SuppressWarnings("unchecked")
 	public void LoadConfig()
 	{
 		try
 		{
-		
 			// create the data folder if it doesn't exist
 			File folder = Plugin.getDataFolder();
 	    	if(!folder.exists())
@@ -60,6 +59,9 @@ public class AppleseedConfig {
 			try{
 				configMap = (HashMap<String,Object>)yaml.load(rx);
 			}
+			catch (Exception ex){
+				System.out.println(ex.getMessage());
+			}
 			finally
 			{
 				rx.close();
@@ -67,35 +69,39 @@ public class AppleseedConfig {
 
 			if(configMap.containsKey("ShowErrorsInClient"))
 				ShowErrorsInClient = (Boolean)configMap.get("ShowErrorsInClient");
+			System.out.println("Appleseed: ShowErrorsInClient=" + ShowErrorsInClient.toString());
 
 			if(configMap.containsKey("DropLikelihood"))
 				DropLikelihood = (Integer)configMap.get("DropLikelihood");
+			System.out.println("Appleseed: DropLikelihood=" + DropLikelihood.toString() + "%");
 
 			if(configMap.containsKey("DropInterval"))
 				DropInterval = (Integer)configMap.get("DropInterval");
-
-			if(configMap.containsKey("AllowedTreeTypes"))
-				AllowedTreeTypes = (List<String>)configMap.get("AllowedTreeTypes");
-			
-			// process list of tree types and generate materials list
-			AllowedTreeItems.clear();
-			for(int i=0; i<AllowedTreeTypes.size(); i++)
-			{
-				Material m = Material.matchMaterial(AllowedTreeTypes.get(i));
-				if(m != null)
-					AllowedTreeItems.add(new ItemStack(m));
-				else if(AllowedTreeTypes.get(i).equalsIgnoreCase("cocoa_beans"))
-					AllowedTreeItems.add(new ItemStack(Material.INK_SACK, 1, (short)3));
-			}
-			
-			// print config status
-			System.out.println("Appleseed: ShowErrorsInClient=" + ShowErrorsInClient.toString());
-			System.out.println("Appleseed: DropLikelihood=" + DropLikelihood.toString() + "%");
 			System.out.println("Appleseed: DropInterval=" + DropInterval.toString() + " seconds");
+
+			ArrayList<String> tempAllowedTreeTypes = new ArrayList<String>(Arrays.asList("apple", "cookie"));
+			if(configMap.containsKey("AllowedTreeTypes"))
+				tempAllowedTreeTypes = (ArrayList<String>)configMap.get("AllowedTreeTypes");
+
+			// process list of tree types and generate materials list
+			for(int i=0; i<tempAllowedTreeTypes.size(); i++)
+			{
+				Material m = Material.matchMaterial(tempAllowedTreeTypes.get(i));
+				if(m != null)
+				{
+					AllowedTreeItems.add(new ItemStack(m));
+					AllowedTreeTypes.add(tempAllowedTreeTypes.get(i).toLowerCase());
+				}
+				else if(tempAllowedTreeTypes.get(i).equalsIgnoreCase("cocoa_beans"))
+				{
+					AllowedTreeItems.add(new ItemStack(Material.INK_SACK, 1, (short)3));
+					AllowedTreeTypes.add(tempAllowedTreeTypes.get(i).toLowerCase());
+				}
+			}
 			System.out.println("Appleseed: AllowedTreeTypes=" + AllowedTreeTypes.toString());
 		}
 		catch (Exception ex){
-			System.out.println(ex.getMessage());
+			System.out.println(ex.getStackTrace());
 		}
 	}
 }

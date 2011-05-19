@@ -29,7 +29,6 @@ public class AppleseedPermissionsManager {
 	}
 	
 	public Boolean hasPermission(Player player, String permission){
-
 		// use op status if no permissions plugin is installed
 		if(Permissions == null)
 			return player.isOp();

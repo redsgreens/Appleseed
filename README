@@ -1,0 +1,19 @@
+Appleseed - Plant trees that drop apples on the ground (or other items!):
+Version: v0.1
+
+There are other plugins out there that make trees drop apples/items when you break the leaves, but this plugin doesn't do that. With Appleseed, all existing trees are left as-is. To get an apple tree, you must use a hoe to create soil, then right click the soil with an apple in hand. Done correctly(and if you have permission), a sapling will appear in the soil. When the sapling grows(use bonemeal to speed this up), the tree will drop apples on the ground. 
+
+Features:
+- Plant items in soil(aka farmland) and grow a tree that drops that item on the ground
+- Config file that controls allowed types of trees, item drop interval and likelihood
+- Permissions to control who can plant trees(and what type)
+
+Config File:
+- DropInterval: This determines how often items might drop. The default is 60 seconds; any lower value lower than this might cause lag.
+- DropLikelihood: This is the percentage chance an item will drop under a tree. The default value is "33", which is a 1/3 chance that an item will drop every interval.
+- AllowedTreeTypes: Types of trees that can be planted on the server. Permission is still required to plant a tree. Defaults to "apple" and "cookie". Other items you might add are "cocoa_beans", "pork", or "golden_apple".
+
+Permissions: If you don't have a permissions plugin, then only Ops will be able to plant trees.
+- appleseed.plant.*: This will allow the planting of any item in the AllowedTreeTypes list.
+- appleseed.plant.apple: This only allows the planting of an "apple".
+
