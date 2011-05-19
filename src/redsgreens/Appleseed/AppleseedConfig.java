@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.bukkit.Material;
+import org.bukkit.inventory.ItemStack;
 import org.yaml.snakeyaml.Yaml;
 
 public class AppleseedConfig {
@@ -19,7 +20,8 @@ public class AppleseedConfig {
 	public Boolean ShowErrorsInClient = true;
 	public Integer DropLikelihood = 33;
 	public Integer DropInterval = 60;
-	public ArrayList<Material> AllowedTreeMaterials = new ArrayList<Material>();
+	public List<String> AllowedTreeTypes = Arrays.asList("apple", "cookie");
+	public ArrayList<ItemStack> AllowedTreeItems = new ArrayList<ItemStack>();
 
 	public AppleseedConfig(Appleseed plugin)
 	{
@@ -72,24 +74,25 @@ public class AppleseedConfig {
 			if(configMap.containsKey("DropInterval"))
 				DropInterval = (Integer)configMap.get("DropInterval");
 
-			List<String> AllowedTreeTypes = Arrays.asList("apple", "cookie");
 			if(configMap.containsKey("AllowedTreeTypes"))
 				AllowedTreeTypes = (List<String>)configMap.get("AllowedTreeTypes");
 			
 			// process list of tree types and generate materials list
-			AllowedTreeMaterials.clear();
+			AllowedTreeItems.clear();
 			for(int i=0; i<AllowedTreeTypes.size(); i++)
 			{
 				Material m = Material.matchMaterial(AllowedTreeTypes.get(i));
 				if(m != null)
-					AllowedTreeMaterials.add(m);
+					AllowedTreeItems.add(new ItemStack(m));
+				else if(AllowedTreeTypes.get(i).equalsIgnoreCase("cocoa_beans"))
+					AllowedTreeItems.add(new ItemStack(Material.INK_SACK, 1, (short)3));
 			}
 			
 			// print config status
 			System.out.println("Appleseed: ShowErrorsInClient=" + ShowErrorsInClient.toString());
 			System.out.println("Appleseed: DropLikelihood=" + DropLikelihood.toString() + "%");
 			System.out.println("Appleseed: DropInterval=" + DropInterval.toString() + " seconds");
-			System.out.println("Appleseed: AllowedTreeTypes=" + AllowedTreeMaterials.toString());
+			System.out.println("Appleseed: AllowedTreeTypes=" + AllowedTreeTypes.toString());
 		}
 		catch (Exception ex){
 			System.out.println(ex.getMessage());

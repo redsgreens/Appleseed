@@ -31,8 +31,10 @@ public class Appleseed extends JavaPlugin {
     
     public static AppleseedConfig Config;
     
+    public static AppleseedPermissionsManager Permissions;
+    
     // hashmap of tree locations and types
-    public static HashMap<Location, Material> treeLocations = new HashMap<Location, Material>();
+    public static HashMap<Location, ItemStack> treeLocations = new HashMap<Location, ItemStack>();
     
     public void onEnable() {
 
@@ -41,6 +43,9 @@ public class Appleseed extends JavaPlugin {
     	// initialize the config object and load the config 
     	Config = new AppleseedConfig(Plugin);
     	Config.LoadConfig();
+    	
+    	// initialize the permissions handler
+    	Permissions = new AppleseedPermissionsManager(Plugin);
     	
         // register our event
         PluginManager pm = getServer().getPluginManager();
@@ -77,12 +82,10 @@ public class Appleseed extends JavaPlugin {
         		World world = loc.getWorld();
         		if(world.isChunkLoaded(world.getChunkAt(world.getBlockAt(loc)))){
             		if(isTree(loc)){
-            			if(rand.nextInt((Integer)(100 / Config.DropLikelihood)) == 0){
-                			ItemStack is = new ItemStack(treeLocations.get(loc), 1);
-                			loc.getWorld().dropItemNaturally(loc, is);
-            			}
+            			if(rand.nextInt((Integer)(100 / Config.DropLikelihood)) == 0)
+                			loc.getWorld().dropItemNaturally(loc, treeLocations.get(loc));
             		}
-            		else
+            		else if(world.getBlockAt(loc).getType() != Material.SAPLING)
             			treeLocations.remove(loc);
         		}
         	}
@@ -113,22 +116,24 @@ public class Appleseed extends JavaPlugin {
         int treeCount = 0;
         int leafCount = 0;
 
-        for (int y = rootY; y <= rootY+maxY; y++) {
-            for (int x = rootX-radius; x <= rootX+radius; x++) {
-                for (int z = rootZ-radius; z <= rootZ+radius; z++) {
-                    final int blockId = world.getBlockTypeIdAt(x, y, z);
-                    if(blockId == treeId) 
-                    	treeCount++;
-                    else if(blockId == leafId) 
-                    	leafCount++;
+        if(world.getBlockTypeIdAt(rootBlock) == treeId)
+        {
+            for (int y = rootY; y <= rootY+maxY; y++) {
+                for (int x = rootX-radius; x <= rootX+radius; x++) {
+                    for (int z = rootZ-radius; z <= rootZ+radius; z++) {
+                        final int blockId = world.getBlockTypeIdAt(x, y, z);
+                        if(blockId == treeId) 
+                        	treeCount++;
+                        else if(blockId == leafId) 
+                        	leafCount++;
 
-                    if(treeCount >= 3 && leafCount >= 8)
-                    	return true;
-                    
+                        if(treeCount >= 3 && leafCount >= 8)
+                        	return true;
+                        
+                    }
                 }
             }
         }
-
         return false;
     }
 

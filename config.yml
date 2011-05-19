@@ -30,7 +30,7 @@ DropInterval: 60
 #
 # AllowedTreeTypes: list of items that can be planted in soil(aka farmland)
 #
-# Examples: "apple", "golden_apple", "cookie", "pork"
+# Examples: "apple", "golden_apple", "cookie", "pork", "cocoa_beans"
 #
 AllowedTreeTypes:
     - "apple"
