@@ -17,7 +17,7 @@ public class Appleseed extends JavaPlugin {
     private final AppleseedPlayerListener playerListener = new AppleseedPlayerListener(this);
     private final HashMap<Player, Boolean> debugees = new HashMap<Player, Boolean>();
     
-    private static Appleseed Plugin;
+    public static Appleseed Plugin;
     public static AppleseedConfig Config;
     public static AppleseedPermissionsManager Permissions;
     public static AppleseedTreeManager TreeManager;
@@ -27,14 +27,14 @@ public class Appleseed extends JavaPlugin {
     	Plugin = this;
     	
     	// initialize the config object and load the config 
-    	Config = new AppleseedConfig(Plugin);
+    	Config = new AppleseedConfig();
     	Config.LoadConfig();
     	
     	// initialize the permissions handler
-    	Permissions = new AppleseedPermissionsManager(Plugin);
+    	Permissions = new AppleseedPermissionsManager();
     	
     	// initialize the tree manager
-    	TreeManager = new AppleseedTreeManager(Plugin);
+    	TreeManager = new AppleseedTreeManager();
     	
         // register our event
         PluginManager pm = getServer().getPluginManager();

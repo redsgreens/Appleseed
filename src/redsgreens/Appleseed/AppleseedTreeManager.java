@@ -18,17 +18,13 @@ import org.yaml.snakeyaml.Yaml;
 
 public class AppleseedTreeManager {
 
-	private Appleseed Plugin;
-	
     // hashmap of tree locations and types
     private static HashMap<Location, AppleseedTreeData> Trees = new HashMap<Location, AppleseedTreeData>();
 	
     private static Random rand = new Random();
 
-	public AppleseedTreeManager(Appleseed plugin)
+	public AppleseedTreeManager()
 	{
-		Plugin = plugin;
-
 		loadTrees();
 	}
 	
@@ -59,7 +55,7 @@ public class AppleseedTreeManager {
         }
 
     	// reprocess the list every minute
-		Plugin.getServer().getScheduler().scheduleSyncDelayedTask(Plugin, new Runnable() {
+		Appleseed.Plugin.getServer().getScheduler().scheduleSyncDelayedTask(Appleseed.Plugin, new Runnable() {
 		    public void run() {
 		    	ProcessTrees();
 		    }
@@ -81,36 +77,19 @@ public class AppleseedTreeManager {
     	try
     	{
             Yaml yaml = new Yaml();
-            File inFile = new File(Plugin.getDataFolder(), "trees.yml");
+            File inFile = new File(Appleseed.Plugin.getDataFolder(), "trees.yml");
             if (inFile.exists()){
                 FileInputStream fis = new FileInputStream(inFile);
                 ArrayList<HashMap<String, Object>> loadData = (ArrayList<HashMap<String, Object>>)yaml.load(fis);
                 
                 for(int i=0; i<loadData.size(); i++)
                 {
-                	HashMap<String, Object> tree = loadData.get(i);
+                	HashMap<String, Object> treeHash = loadData.get(i);
 
-                	Location loc = new Location(Plugin.getServer().getWorld((String)tree.get("world")), (Double)tree.get("x"), (Double)tree.get("y"), (Double)tree.get("z"));
-
-                	String player;
-            		if(tree.containsKey("player"))
-            			player = (String)tree.get("player");
-            		else
-            			player = "unknown";
-
-            		Integer dc;
-            		if(tree.containsKey("dropcount"))
-            			dc = (Integer)tree.get("dropcount");
-            		else
-            			dc = -1;
-
-            		ItemStack iStack;
-            		if(tree.containsKey("durability"))
-                		iStack = new ItemStack(Material.getMaterial((Integer)tree.get("itemid")), 1, ((Integer)tree.get("durability")).shortValue()); 
-                	else
-                		iStack = new ItemStack(Material.getMaterial((Integer)tree.get("itemid")), 1);
-
-            		Trees.put(loc, new AppleseedTreeData(loc, iStack, dc, player));
+                	AppleseedTreeData tree = AppleseedTreeData.LoadFromHash(treeHash);
+                	
+                	if(tree != null)
+                		Trees.put(tree.getLocation(), tree);
                 }
             }
     	}
@@ -131,13 +110,13 @@ public class AppleseedTreeManager {
         	Iterator<Location> itr = locations.iterator();
         	while(itr.hasNext()){
         		Location loc = itr.next();
-        		saveData.add(makeHashFromTree(Trees.get(loc)));
+        		saveData.add(Trees.get(loc).MakeHashFromTree());
         	}
         	
         	try
         	{
                 Yaml yaml = new Yaml();
-                File outFile = new File(Plugin.getDataFolder(), "trees.yml");
+                File outFile = new File(Appleseed.Plugin.getDataFolder(), "trees.yml");
                 FileOutputStream fos = new FileOutputStream(outFile);
                 OutputStreamWriter out = new OutputStreamWriter(fos);
                 out.write(yaml.dump(saveData));
@@ -151,30 +130,7 @@ public class AppleseedTreeManager {
         	}
     	}
     }
-    
-    // take a tree location and item and return a hash for saving to disk
-    private HashMap<String, Object> makeHashFromTree(AppleseedTreeData tree)
-    {
-    	HashMap<String, Object> treeHash = new HashMap<String, Object>();
-    	
-    	Location loc = tree.getLocation();
-    	ItemStack iStack = tree.getItemStack();
-    	
-    	treeHash.put("world", loc.getWorld().getName());
-    	treeHash.put("x", loc.getX());
-    	treeHash.put("y", loc.getY());
-    	treeHash.put("z", loc.getZ());
-    	
-    	treeHash.put("itemid", iStack.getTypeId());
-    	if(iStack.getType() == Material.INK_SACK && iStack.getDurability() == 3)
-    		treeHash.put("durability", iStack.getDurability());
-    	
-    	treeHash.put("player", tree.getPlayer());
-    	treeHash.put("dropcount", tree.getDropCount());
-    	
-    	return treeHash;
-    }
-    
+
     // see if the given location is the root of a tree
     public static final boolean isTree(Location rootBlock)
     {

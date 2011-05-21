@@ -8,14 +8,11 @@ import com.nijikokun.bukkit.Permissions.Permissions;
 
 public class AppleseedPermissionsManager {
 
-	private static Appleseed Plugin;
 	private static PermissionHandler Permissions = null;
 	
-	public AppleseedPermissionsManager(Appleseed plugin){
-		Plugin = plugin;
-		
+	public AppleseedPermissionsManager(){
     	try{
-            Plugin test = Plugin.getServer().getPluginManager().getPlugin("Permissions");
+            Plugin test = Appleseed.Plugin.getServer().getPluginManager().getPlugin("Permissions");
 
             if (Permissions == null) {
                 if (test != null) {

@@ -14,8 +14,6 @@ import org.bukkit.inventory.ItemStack;
 import org.yaml.snakeyaml.Yaml;
 
 public class AppleseedConfig {
-	private Appleseed Plugin;
-
 	public Boolean ShowErrorsInClient = true;
 	public Boolean DropsContinuous = true;
 	public Integer DropLikelihood = 33;
@@ -24,19 +22,19 @@ public class AppleseedConfig {
 	public ArrayList<String> AllowedTreeTypes;
 	public ArrayList<ItemStack> AllowedTreeItems;
 
-	public AppleseedConfig(Appleseed plugin)
+	public AppleseedConfig()
 	{
-		Plugin = plugin;
 		AllowedTreeTypes = new ArrayList<String>();
 		AllowedTreeItems = new ArrayList<ItemStack>();
 	}
+	
 	@SuppressWarnings("unchecked")
 	public void LoadConfig()
 	{
 		try
 		{
 			// create the data folder if it doesn't exist
-			File folder = Plugin.getDataFolder();
+			File folder = Appleseed.Plugin.getDataFolder();
 	    	if(!folder.exists())
 	    		folder.mkdirs();
     	
