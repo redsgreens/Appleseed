@@ -34,5 +34,5 @@ DropInterval: 60
 #
 AllowedTreeTypes:
     - "apple"
-    - "cookie"
+    - "cocoa_beans"
    

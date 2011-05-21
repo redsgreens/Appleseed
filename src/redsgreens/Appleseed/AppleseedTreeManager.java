@@ -92,7 +92,7 @@ public class AppleseedTreeManager {
                 	if(tree.containsKey("durability"))
                 		treeLocations.put(new Location(Plugin.getServer().getWorld((String)tree.get("world")), (Double)tree.get("x"), (Double)tree.get("y"), (Double)tree.get("z")), new ItemStack(Material.getMaterial((Integer)tree.get("itemid")), 1, ((Integer)tree.get("durability")).shortValue()));
                 	else
-                		treeLocations.put(new Location(Plugin.getServer().getWorld((String)tree.get("world")), (Double)tree.get("x"), (Double)tree.get("y"), (Double)tree.get("z")), new ItemStack(Material.getMaterial((Integer)tree.get("itemid"))));
+                		treeLocations.put(new Location(Plugin.getServer().getWorld((String)tree.get("world")), (Double)tree.get("x"), (Double)tree.get("y"), (Double)tree.get("z")), new ItemStack(Material.getMaterial((Integer)tree.get("itemid")), 1));
                 }
             }
     	}

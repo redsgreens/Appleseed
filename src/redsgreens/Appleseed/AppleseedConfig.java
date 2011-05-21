@@ -89,7 +89,7 @@ public class AppleseedConfig {
 				Material m = Material.matchMaterial(tempAllowedTreeTypes.get(i));
 				if(m != null)
 				{
-					AllowedTreeItems.add(new ItemStack(m));
+					AllowedTreeItems.add(new ItemStack(m, 1));
 					AllowedTreeTypes.add(tempAllowedTreeTypes.get(i).toLowerCase());
 				}
 				else if(tempAllowedTreeTypes.get(i).equalsIgnoreCase("cocoa_beans"))
