@@ -3,10 +3,30 @@
 # ShowErrorsInClient: toggle that determines if permissions or other error messages
 #                     are displayed client-side
 #
-# Allowed values are: Yes (shows errors to players)
-#                     No (errors only show up in server console)
+# Allowed values : Yes (shows errors to players)
+#                  No  (errors only show up in server console)
 # 
 ShowErrorsInClient: Yes
+
+#
+#
+# AllowedTreeTypes: list of items that can be planted in soil(aka farmland)
+#
+# Examples: "apple", "golden_apple", "cookie", "pork", "cocoa_beans"
+#
+AllowedTreeTypes:
+    - "apple"
+    - "cocoa_beans"
+
+#
+#
+# DropsContinuous: determines if drops should happen forever, or until a tree gets "tired"
+#                  and requires bonemeal fertilizer.  
+#
+# Allowed values : Yes (drops happen at inteverals forever)
+#                  No  (trees get tired and require bonemeal to fertilize them)
+#
+DropsContinuous: Yes
 
 #
 # 
@@ -27,12 +47,9 @@ DropLikelihood: 33
 DropInterval: 60
 
 #
+# 
+# DropsBeforeTired: approximate number of drops before a tree gets tired
 #
-# AllowedTreeTypes: list of items that can be planted in soil(aka farmland)
-#
-# Examples: "apple", "golden_apple", "cookie", "pork", "cocoa_beans"
-#
-AllowedTreeTypes:
-    - "apple"
-    - "cocoa_beans"
-   
+# Allowed values: numbers bigger than 1 (no decimals)
+# 
+DropsBeforeTired: 100

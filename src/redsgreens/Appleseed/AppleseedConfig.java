@@ -17,8 +17,10 @@ public class AppleseedConfig {
 	private Appleseed Plugin;
 
 	public Boolean ShowErrorsInClient = true;
+	public Boolean DropsContinuous = true;
 	public Integer DropLikelihood = 33;
 	public Integer DropInterval = 60;
+	public Integer DropsBeforeTired = 100;
 	public ArrayList<String> AllowedTreeTypes;
 	public ArrayList<ItemStack> AllowedTreeItems;
 
@@ -71,6 +73,10 @@ public class AppleseedConfig {
 				ShowErrorsInClient = (Boolean)configMap.get("ShowErrorsInClient");
 			System.out.println("Appleseed: ShowErrorsInClient=" + ShowErrorsInClient.toString());
 
+			if(configMap.containsKey("DropsContinuous"))
+				DropsContinuous = (Boolean)configMap.get("DropsContinuous");
+			System.out.println("Appleseed: DropsContinuous=" + DropsContinuous.toString());
+
 			if(configMap.containsKey("DropLikelihood"))
 				DropLikelihood = (Integer)configMap.get("DropLikelihood");
 			System.out.println("Appleseed: DropLikelihood=" + DropLikelihood.toString() + "%");
@@ -78,6 +84,10 @@ public class AppleseedConfig {
 			if(configMap.containsKey("DropInterval"))
 				DropInterval = (Integer)configMap.get("DropInterval");
 			System.out.println("Appleseed: DropInterval=" + DropInterval.toString() + " seconds");
+
+			if(configMap.containsKey("DropsBeforeTired"))
+				DropsBeforeTired = (Integer)configMap.get("DropsBeforeTired");
+			System.out.println("Appleseed: DropsBeforeTired=" + DropsBeforeTired.toString());
 
 			ArrayList<String> tempAllowedTreeTypes = new ArrayList<String>(Arrays.asList("apple", "cookie"));
 			if(configMap.containsKey("AllowedTreeTypes"))

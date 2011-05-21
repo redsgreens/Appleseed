@@ -66,7 +66,7 @@ public class AppleseedPlayerListener extends PlayerListener {
 		event.setCancelled(true);
 		
 		// add the root location and type to the list of trees
-		Appleseed.TreeManager.AddTree(blockRoot.getLocation(), new ItemStack(iStack.getType(), 1, iStack.getDurability()));
+		Appleseed.TreeManager.AddTree(blockRoot.getLocation(), new ItemStack(iStack.getType(), 1, iStack.getDurability()), player.getName());
 		
 		// set the clicked block to dirt
 		block.setType(Material.DIRT);

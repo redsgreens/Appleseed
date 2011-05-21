@@ -21,7 +21,7 @@ public class AppleseedTreeManager {
 	private Appleseed Plugin;
 	
     // hashmap of tree locations and types
-    private static HashMap<Location, ItemStack> treeLocations = new HashMap<Location, ItemStack>();
+    private static HashMap<Location, AppleseedTreeData> Trees = new HashMap<Location, AppleseedTreeData>();
 	
     private static Random rand = new Random();
 
@@ -36,8 +36,8 @@ public class AppleseedTreeManager {
     public void ProcessTrees(){
     	Boolean treesRemoved = false;
     	
-    	if(treeLocations.size() != 0){
-        	Set<Location> locations = treeLocations.keySet();
+    	if(Trees.size() != 0){
+        	Set<Location> locations = Trees.keySet();
         	Iterator<Location> itr = locations.iterator();
         	while(itr.hasNext()){
         		Location loc = itr.next();
@@ -45,7 +45,7 @@ public class AppleseedTreeManager {
         		if(world.isChunkLoaded(world.getChunkAt(world.getBlockAt(loc)))){
             		if(isTree(loc)){
             			if(rand.nextInt((Integer)(100 / Appleseed.Config.DropLikelihood)) == 0)
-                			loc.getWorld().dropItemNaturally(loc, treeLocations.get(loc));
+                			loc.getWorld().dropItemNaturally(loc, Trees.get(loc).getItemStack());
             		}
             		else if(world.getBlockAt(loc).getType() != Material.SAPLING)
             		{
@@ -67,9 +67,9 @@ public class AppleseedTreeManager {
     }
 
     // add a tree to the hashmap and save to disk
-    public void AddTree(Location loc, ItemStack iStack)
+    public void AddTree(Location loc, ItemStack iStack, String player)
     {
-    	treeLocations.put(loc, iStack);
+    	Trees.put(loc, new AppleseedTreeData(loc, iStack, player));
     	
     	saveTrees();
     }
@@ -89,10 +89,28 @@ public class AppleseedTreeManager {
                 for(int i=0; i<loadData.size(); i++)
                 {
                 	HashMap<String, Object> tree = loadData.get(i);
-                	if(tree.containsKey("durability"))
-                		treeLocations.put(new Location(Plugin.getServer().getWorld((String)tree.get("world")), (Double)tree.get("x"), (Double)tree.get("y"), (Double)tree.get("z")), new ItemStack(Material.getMaterial((Integer)tree.get("itemid")), 1, ((Integer)tree.get("durability")).shortValue()));
+
+                	Location loc = new Location(Plugin.getServer().getWorld((String)tree.get("world")), (Double)tree.get("x"), (Double)tree.get("y"), (Double)tree.get("z"));
+
+                	String player;
+            		if(tree.containsKey("player"))
+            			player = (String)tree.get("player");
+            		else
+            			player = "unknown";
+
+            		Integer dc;
+            		if(tree.containsKey("dropcount"))
+            			dc = (Integer)tree.get("dropcount");
+            		else
+            			dc = -1;
+
+            		ItemStack iStack;
+            		if(tree.containsKey("durability"))
+                		iStack = new ItemStack(Material.getMaterial((Integer)tree.get("itemid")), 1, ((Integer)tree.get("durability")).shortValue()); 
                 	else
-                		treeLocations.put(new Location(Plugin.getServer().getWorld((String)tree.get("world")), (Double)tree.get("x"), (Double)tree.get("y"), (Double)tree.get("z")), new ItemStack(Material.getMaterial((Integer)tree.get("itemid")), 1));
+                		iStack = new ItemStack(Material.getMaterial((Integer)tree.get("itemid")), 1);
+
+            		Trees.put(loc, new AppleseedTreeData(loc, iStack, dc, player));
                 }
             }
     	}
@@ -100,7 +118,7 @@ public class AppleseedTreeManager {
     	{
             ex.printStackTrace();
     	}
-    	System.out.println("Appleseed: " + ((Integer)treeLocations.size()).toString() + " trees loaded.");
+    	System.out.println("Appleseed: " + ((Integer)Trees.size()).toString() + " trees loaded.");
     }
     
     // save trees to disk
@@ -108,12 +126,12 @@ public class AppleseedTreeManager {
     {
     	ArrayList<HashMap<String, Object>> saveData = new ArrayList<HashMap<String, Object>>();
     	
-    	if(treeLocations.size() != 0){
-        	Set<Location> locations = treeLocations.keySet();
+    	if(Trees.size() != 0){
+        	Set<Location> locations = Trees.keySet();
         	Iterator<Location> itr = locations.iterator();
         	while(itr.hasNext()){
         		Location loc = itr.next();
-        		saveData.add(makeHashFromTree(loc, treeLocations.get(loc)));
+        		saveData.add(makeHashFromTree(Trees.get(loc)));
         	}
         	
         	try
@@ -135,17 +153,24 @@ public class AppleseedTreeManager {
     }
     
     // take a tree location and item and return a hash for saving to disk
-    private HashMap<String, Object> makeHashFromTree(Location loc, ItemStack iStack)
+    private HashMap<String, Object> makeHashFromTree(AppleseedTreeData tree)
     {
     	HashMap<String, Object> treeHash = new HashMap<String, Object>();
+    	
+    	Location loc = tree.getLocation();
+    	ItemStack iStack = tree.getItemStack();
     	
     	treeHash.put("world", loc.getWorld().getName());
     	treeHash.put("x", loc.getX());
     	treeHash.put("y", loc.getY());
     	treeHash.put("z", loc.getZ());
+    	
     	treeHash.put("itemid", iStack.getTypeId());
     	if(iStack.getType() == Material.INK_SACK && iStack.getDurability() == 3)
     		treeHash.put("durability", iStack.getDurability());
+    	
+    	treeHash.put("player", tree.getPlayer());
+    	treeHash.put("dropcount", tree.getDropCount());
     	
     	return treeHash;
     }
