@@ -30,58 +30,72 @@ public class AppleseedPlayerListener extends PlayerListener {
 		if(event.isCancelled() || event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
 
 		Block block = event.getClickedBlock();
+		Material blockType = block.getType();
 		
-		// return if the player didn't right click on farmland
-		if(block.getType() != Material.SOIL)
+		// return if the player didn't right click on farmland or tree
+		if(blockType != Material.SOIL && blockType != Material.LOG)
 			return;
 
-		// return if they don't have an allowed item in hand
 		Player player = event.getPlayer();
 		ItemStack iStack = player.getItemInHand();
-		if(iStack == null)
-			return;
-		else if(!Appleseed.Config.TreeTypes.containsKey(new ItemStack(iStack.getType(), 1, iStack.getDurability())) && !Appleseed.Config.TreeTypes.containsKey(new ItemStack(iStack.getType(), 1)))
-			return;
-		
-		// return if the block above is not air
-		Block blockRoot = block.getRelative(BlockFace.UP);
-		if(blockRoot.getType() != Material.AIR)
-			return;
-		
-		// return if they don't have permission
-		if(iStack.getType() == Material.INK_SACK && iStack.getDurability() == 3 && !Appleseed.Permissions.hasPermission(player, "plant.cocoa_beans"))
+
+		if(blockType == Material.SOIL)
 		{
-			event.getPlayer().sendMessage("§cErr: You don't have permission to plant this tree.");
-			return;
+			// they might have planted something, do some more checks
+			
+			// return if they don't have an allowed item in hand
+			if(iStack == null)
+				return;
+			else if(!Appleseed.Config.TreeTypes.containsKey(new ItemStack(iStack.getType(), 1, iStack.getDurability())) && !Appleseed.Config.TreeTypes.containsKey(new ItemStack(iStack.getType(), 1)))
+				return;
+			
+			// return if the block above is not air
+			Block blockRoot = block.getRelative(BlockFace.UP);
+			if(blockRoot.getType() != Material.AIR)
+				return;
+			
+			// return if they don't have permission
+			if(iStack.getType() == Material.INK_SACK && iStack.getDurability() == 3 && !Appleseed.Permissions.hasPermission(player, "plant.cocoa_beans"))
+			{
+				event.getPlayer().sendMessage("§cErr: You don't have permission to plant this tree.");
+				return;
+			}
+			if(!Appleseed.Permissions.hasPermission(player, "plant." + iStack.getType().name().toLowerCase()))
+			{
+				event.getPlayer().sendMessage("§cErr: You don't have permission to plant this tree.");
+				return;
+			}
+			
+			// all tests satisfied, proceed
+			
+			// cancel the event so we're the only one processing it
+			event.setCancelled(true);
+			
+			// add the root location and type to the list of trees
+			Appleseed.TreeManager.AddTree(blockRoot.getLocation(), new ItemStack(iStack.getType(), 1, iStack.getDurability()), player.getName());
+			
+			// set the clicked block to dirt
+			block.setType(Material.DIRT);
+			
+			// plant a sapling
+			blockRoot.setType(Material.SAPLING);
+			
+			// take the item from the player
+			if(iStack.getAmount() == 1)
+				player.setItemInHand(null);
+			else
+			{
+				iStack.setAmount(iStack.getAmount() - 1);
+				player.setItemInHand(iStack);			
+			}
 		}
-		if(!Appleseed.Permissions.hasPermission(player, "plant." + iStack.getType().name().toLowerCase()))
+		else if(blockType == Material.LOG)
 		{
-			event.getPlayer().sendMessage("§cErr: You don't have permission to plant this tree.");
-			return;
+			// they might be fertilizing a tree, check more conditions
+			
 		}
+
 		
-		// all tests satisfied, proceed
-		
-		// cancel the event so we're the only one processing it
-		event.setCancelled(true);
-		
-		// add the root location and type to the list of trees
-		Appleseed.TreeManager.AddTree(blockRoot.getLocation(), new ItemStack(iStack.getType(), 1, iStack.getDurability()), player.getName());
-		
-		// set the clicked block to dirt
-		block.setType(Material.DIRT);
-		
-		// plant a sapling
-		blockRoot.setType(Material.SAPLING);
-		
-		// take the item from the player
-		if(iStack.getAmount() == 1)
-			player.setItemInHand(null);
-		else
-		{
-			iStack.setAmount(iStack.getAmount() - 1);
-			player.setItemInHand(iStack);			
-		}
     }
 }
 

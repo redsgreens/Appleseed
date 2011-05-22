@@ -8,15 +8,13 @@ import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Iterator;
 
+import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.yaml.snakeyaml.Yaml;
 
 public class AppleseedConfig {
 	public Boolean ShowErrorsInClient = true;
-	public Boolean DropsContinuous = true;
-	public Integer DropLikelihood = 33;
 	public Integer DropInterval = 60;
-	public Integer DropsBeforeTired = 100;
 
 	public HashMap<ItemStack, AppleseedTreeType> TreeTypes;
 
@@ -93,7 +91,22 @@ public class AppleseedConfig {
 						TreeTypes.put(treeType.getItemStack(), treeType);
 					
 				}
-				System.out.println("Appleseed: Loaded " + ((Integer)TreeTypes.size()).toString() + " TreeTypes");
+				
+				String strTreeTypes = "";
+				Iterator<ItemStack> itr2 = TreeTypes.keySet().iterator();
+				while(itr2.hasNext())
+				{
+					ItemStack is = itr2.next();
+					if(strTreeTypes.length() != 0)
+						strTreeTypes = strTreeTypes + ",";
+					
+					if(is.getType() == Material.INK_SACK && is.getDurability() == (short)3)
+						strTreeTypes = strTreeTypes + "cocoa_beans";
+					else
+						strTreeTypes = strTreeTypes + is.getType().name().toLowerCase();
+				}
+				
+				System.out.println("Appleseed: TreeTypes=(" + strTreeTypes +")");
 			}
 		}
 		catch (Exception ex){

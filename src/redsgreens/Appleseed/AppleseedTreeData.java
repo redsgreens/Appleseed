@@ -23,8 +23,8 @@ public class AppleseedTreeData {
 		itemStack = is;
 		player = p;
 		
-		Integer dcMin = (int) (Appleseed.Config.DropsBeforeTired - (0.3 * Appleseed.Config.DropsBeforeTired));
-		Integer dcMax = (int) (Appleseed.Config.DropsBeforeTired + (0.3 * Appleseed.Config.DropsBeforeTired));
+		Integer dcMin = (int) (Appleseed.Config.TreeTypes.get(is.getType().name()).getDropsBeforeFertilzer() - (0.3 * Appleseed.Config.TreeTypes.get(is.getType().name()).getDropsBeforeFertilzer()));
+		Integer dcMax = (int) (Appleseed.Config.TreeTypes.get(is.getType().name()).getDropsBeforeFertilzer() + (0.3 * Appleseed.Config.TreeTypes.get(is.getType().name()).getDropsBeforeFertilzer()));
 		dropCount = rand.nextInt(dcMax - dcMin + 1) + dcMin;
 	}
 

@@ -31,17 +31,49 @@ public class AppleseedTreeManager {
     // loop through the list of trees and drop items around them, then schedule the next run
     public void ProcessTrees(){
     	Boolean treesRemoved = false;
+    	Boolean treesUpdated = false;
     	
     	if(Trees.size() != 0){
         	Set<Location> locations = Trees.keySet();
         	Iterator<Location> itr = locations.iterator();
         	while(itr.hasNext()){
         		Location loc = itr.next();
+        		if(loc == null)
+        			continue;
+        		
         		World world = loc.getWorld();
+        		if(world == null)
+        			continue;
+        		
         		if(world.isChunkLoaded(world.getChunkAt(world.getBlockAt(loc)))){
             		if(isTree(loc)){
-            			if(rand.nextInt((Integer)(100 / Appleseed.Config.DropLikelihood)) == 0)
-                			loc.getWorld().dropItemNaturally(loc, Trees.get(loc).getItemStack());
+            			ItemStack iStack = Trees.get(loc).getItemStack();
+            			if(iStack != null)
+            			{
+            				AppleseedTreeType treeType = Appleseed.Config.TreeTypes.get(iStack);
+
+            				if(treeType != null)
+            				{
+                    			if(rand.nextInt((Integer)(100 / treeType.getDropLikelihood())) == 0)
+                    			{
+                    				AppleseedTreeData tree = Trees.get(loc);
+                        			Integer dropCount = tree.getDropCount(); 
+
+                        			if(dropCount > 0 || dropCount == -1)
+                        			{
+                        				loc.getWorld().dropItemNaturally(loc, tree.getItemStack());
+
+                        				if(dropCount != -1)
+                        				{
+                        					tree.setDropCount(dropCount - 1);
+                        					treesUpdated = true;
+                        				}
+                        			}
+                    			}
+            				}
+            				else
+            					System.out.println("Appleseed: No TreeType in config.yml for \"" + iStack.getType().name().toLowerCase() + "\"");
+            			}
             		}
             		else if(world.getBlockAt(loc).getType() != Material.SAPLING)
             		{
@@ -50,7 +82,7 @@ public class AppleseedTreeManager {
             		}
         		}
         	}
-        	if(treesRemoved == true)
+        	if(treesRemoved || treesUpdated)
         		saveTrees();
         }
 
