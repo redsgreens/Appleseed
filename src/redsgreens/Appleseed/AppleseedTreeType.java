@@ -11,7 +11,7 @@ public class AppleseedTreeType {
 	private Integer dropLikelihood;
 	private Boolean requireFertilzer;
 	private Integer dropsBeforeFertilzer;
-	private String treeType;
+	private Byte saplingData;
 
 	public AppleseedTreeType(ItemStack is, Integer likelihood, Boolean reqFertilizer, Integer dropsFertilizer, String type)
 	{
@@ -19,7 +19,12 @@ public class AppleseedTreeType {
 		dropLikelihood = likelihood;
 		requireFertilzer = reqFertilizer;
 		dropsBeforeFertilzer = dropsFertilizer;
-		treeType = type;
+		
+		if(type.equalsIgnoreCase("Spruce"))
+			saplingData = 1;
+		else if(type.equalsIgnoreCase("Birch"))
+			saplingData = 2;
+		else saplingData = 0;
 	}
 	
 	public static AppleseedTreeType LoadFromHash(String itemName, HashMap<String, Object> loadData)
@@ -50,23 +55,6 @@ public class AppleseedTreeType {
 		return tree;
 	}
 	
-/*
-	for(int i=0; i<tempAllowedTreeTypes.size(); i++)
-	{
-		Material m = Material.matchMaterial(tempAllowedTreeTypes.get(i));
-		if(m != null)
-		{
-			AllowedTreeItems.add(new ItemStack(m, 1));
-			AllowedTreeTypes.add(tempAllowedTreeTypes.get(i).toLowerCase());
-		}
-		else if(tempAllowedTreeTypes.get(i).equalsIgnoreCase("cocoa_beans"))
-		{
-			AllowedTreeItems.add(new ItemStack(Material.INK_SACK, 1, (short)3));
-			AllowedTreeTypes.add(tempAllowedTreeTypes.get(i).toLowerCase());
-		}
-	}
-*/
-
 	public ItemStack getItemStack()
 	{
 		return itemStack;
@@ -87,8 +75,8 @@ public class AppleseedTreeType {
 		return dropsBeforeFertilzer;
 	}
 	
-	public String getTreeType()
+	public Byte getSaplingData()
 	{
-		return treeType;
+		return saplingData;
 	}
 }

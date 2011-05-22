@@ -46,9 +46,21 @@ public class AppleseedPlayerListener extends PlayerListener {
 		if(blockType == Material.SOIL)
 		{
 			// they might have planted something, do some more checks
+
+			// try to get the type of the tree they are planting
+			AppleseedTreeType treeType = null;
+			ItemStack tmpIS = new ItemStack(iStack.getType(), 1, iStack.getDurability());
+			if(Appleseed.Config.TreeTypes.containsKey(tmpIS))
+				treeType = Appleseed.Config.TreeTypes.get(tmpIS);
+			else
+			{
+				ItemStack tmpIS2 = new ItemStack(iStack.getType(), 1);
+				if(Appleseed.Config.TreeTypes.containsKey(tmpIS2))
+					treeType = Appleseed.Config.TreeTypes.get(tmpIS2);
+			}
 			
 			// return if they don't have an allowed item in hand
-			if(!Appleseed.Config.TreeTypes.containsKey(new ItemStack(iStack.getType(), 1, iStack.getDurability())) && !Appleseed.Config.TreeTypes.containsKey(new ItemStack(iStack.getType(), 1)))
+			if(treeType == null)
 				return;
 			
 			// return if the block above is not air
@@ -81,6 +93,7 @@ public class AppleseedPlayerListener extends PlayerListener {
 			
 			// plant a sapling
 			blockRoot.setType(Material.SAPLING);
+			blockRoot.setData(treeType.getSaplingData());
 			
 			// take the item from the player
 			if(iStack.getAmount() == 1)
