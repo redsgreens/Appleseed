@@ -111,17 +111,39 @@ public class AppleseedTreeManager {
     {
     	Trees.put(loc, new AppleseedTreeData(loc, iStack, player));
     	
-    	saveTrees();
+    	asyncSaveTrees();
     }
-    
+
+    // add a tree to the hashmap and save to disk
+    public synchronized void AddTree(Location loc, ItemStack iStack, Integer dropcount, String player)
+    {
+    	Trees.put(loc, new AppleseedTreeData(loc, iStack, dropcount, player));
+    	
+    	asyncSaveTrees();
+    }
+
     public synchronized void ResetTreeDropCount(Location loc)
     {
     	AppleseedTreeData tree = Trees.get(loc);
     	
     	if(tree != null)
+    	{
     		tree.ResetDropCount();
+    		asyncSaveTrees();
+    	}
     }
-    
+
+    public synchronized void ResetTreeDropCount(Location loc, Integer dropcount)
+    {
+    	AppleseedTreeData tree = Trees.get(loc);
+    	
+    	if(tree != null)
+    	{
+    		tree.ResetDropCount(dropcount);
+    		asyncSaveTrees();
+    	}
+    }
+
     // load trees from disk
     @SuppressWarnings("unchecked")
 	private synchronized void loadTrees()
@@ -154,7 +176,7 @@ public class AppleseedTreeManager {
     
     // save trees to disk
 
-    private synchronized void saveTrees()
+    public synchronized void saveTrees()
     {
     	ArrayList<HashMap<String, Object>> saveData = new ArrayList<HashMap<String, Object>>();
     	

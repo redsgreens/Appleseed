@@ -43,3 +43,9 @@ TreeTypes:
         RequireFertilzer: Yes
         DropsBeforeFertilzer: 10
         TreeType: Birch
+
+    cookie:
+        DropLikelihood: 33
+        RequireFertilzer: Yes
+        DropsBeforeFertilzer: 50
+        TreeType: Standard

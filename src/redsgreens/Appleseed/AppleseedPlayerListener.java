@@ -86,7 +86,10 @@ public class AppleseedPlayerListener extends PlayerListener {
 			event.setCancelled(true);
 			
 			// add the root location and type to the list of trees
-			Appleseed.TreeManager.AddTree(blockRoot.getLocation(), new ItemStack(iStack.getType(), 1, iStack.getDurability()), player.getName());
+			if(Appleseed.Permissions.hasPermission(player, "infinite.plant"))
+				Appleseed.TreeManager.AddTree(blockRoot.getLocation(), new ItemStack(iStack.getType(), 1, iStack.getDurability()), -1, player.getName());
+			else
+				Appleseed.TreeManager.AddTree(blockRoot.getLocation(), new ItemStack(iStack.getType(), 1, iStack.getDurability()), player.getName());
 			
 			// set the clicked block to dirt
 			block.setType(Material.DIRT);
@@ -112,7 +115,10 @@ public class AppleseedPlayerListener extends PlayerListener {
 			if(!Appleseed.TreeManager.isTree(loc))
 				return;
 
-			Appleseed.TreeManager.ResetTreeDropCount(loc);
+			if(Appleseed.Permissions.hasPermission(player, "infinite.fertilizer"))
+				Appleseed.TreeManager.ResetTreeDropCount(loc, -1);
+			else
+				Appleseed.TreeManager.ResetTreeDropCount(loc);
 			
 			// take the item from the player
 			if(iStack.getAmount() == 1)

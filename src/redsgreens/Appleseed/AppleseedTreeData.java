@@ -93,7 +93,12 @@ public class AppleseedTreeData {
 		Integer dcMax = (int) (Appleseed.Config.TreeTypes.get(itemStack).getDropsBeforeFertilzer() + (0.3 * Appleseed.Config.TreeTypes.get(itemStack).getDropsBeforeFertilzer()));
 		dropCount = rand.nextInt(dcMax - dcMin + 1) + dcMin;
     }
-    
+
+    public void ResetDropCount(Integer dc)
+    {
+    	dropCount = dc;
+    }
+
 	public Location getLocation()
 	{
 		return location;
