@@ -23,9 +23,7 @@ public class AppleseedTreeData {
 		itemStack = is;
 		player = p;
 		
-		Integer dcMin = (int) (Appleseed.Config.TreeTypes.get(is.getType().name()).getDropsBeforeFertilzer() - (0.3 * Appleseed.Config.TreeTypes.get(is.getType().name()).getDropsBeforeFertilzer()));
-		Integer dcMax = (int) (Appleseed.Config.TreeTypes.get(is.getType().name()).getDropsBeforeFertilzer() + (0.3 * Appleseed.Config.TreeTypes.get(is.getType().name()).getDropsBeforeFertilzer()));
-		dropCount = rand.nextInt(dcMax - dcMin + 1) + dcMin;
+		ResetDropCount();		
 	}
 
 	public AppleseedTreeData(Location loc, ItemStack is, Integer dc, String p)
@@ -89,6 +87,13 @@ public class AppleseedTreeData {
     	return treeHash;
     }
 	
+    public void ResetDropCount()
+    {
+		Integer dcMin = (int) (Appleseed.Config.TreeTypes.get(itemStack).getDropsBeforeFertilzer() - (0.3 * Appleseed.Config.TreeTypes.get(itemStack).getDropsBeforeFertilzer()));
+		Integer dcMax = (int) (Appleseed.Config.TreeTypes.get(itemStack).getDropsBeforeFertilzer() + (0.3 * Appleseed.Config.TreeTypes.get(itemStack).getDropsBeforeFertilzer()));
+		dropCount = rand.nextInt(dcMax - dcMin + 1) + dcMin;
+    }
+    
 	public Location getLocation()
 	{
 		return location;

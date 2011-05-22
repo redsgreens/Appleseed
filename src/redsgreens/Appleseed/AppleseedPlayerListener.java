@@ -1,5 +1,6 @@
 package redsgreens.Appleseed;
 
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -39,14 +40,15 @@ public class AppleseedPlayerListener extends PlayerListener {
 		Player player = event.getPlayer();
 		ItemStack iStack = player.getItemInHand();
 
+		if(iStack == null)
+			return;
+
 		if(blockType == Material.SOIL)
 		{
 			// they might have planted something, do some more checks
 			
 			// return if they don't have an allowed item in hand
-			if(iStack == null)
-				return;
-			else if(!Appleseed.Config.TreeTypes.containsKey(new ItemStack(iStack.getType(), 1, iStack.getDurability())) && !Appleseed.Config.TreeTypes.containsKey(new ItemStack(iStack.getType(), 1)))
+			if(!Appleseed.Config.TreeTypes.containsKey(new ItemStack(iStack.getType(), 1, iStack.getDurability())) && !Appleseed.Config.TreeTypes.containsKey(new ItemStack(iStack.getType(), 1)))
 				return;
 			
 			// return if the block above is not air
@@ -89,10 +91,25 @@ public class AppleseedPlayerListener extends PlayerListener {
 				player.setItemInHand(iStack);			
 			}
 		}
-		else if(blockType == Material.LOG)
+		else if(blockType == Material.LOG && iStack.getType() == Material.INK_SACK && iStack.getDurability() == (short)15)
 		{
-			// they might be fertilizing a tree, check more conditions
+			// they might be fertilizing a tree
 			
+			Location loc = block.getLocation();
+			if(!Appleseed.TreeManager.isTree(loc))
+				return;
+
+			Appleseed.TreeManager.ResetTreeDropCount(loc);
+			
+			// take the item from the player
+			if(iStack.getAmount() == 1)
+				player.setItemInHand(null);
+			else
+			{
+				iStack.setAmount(iStack.getAmount() - 1);
+				player.setItemInHand(iStack);			
+			}
+
 		}
 
 		

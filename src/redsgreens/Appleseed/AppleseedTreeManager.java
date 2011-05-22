@@ -102,6 +102,14 @@ public class AppleseedTreeManager {
     	saveTrees();
     }
     
+    public void ResetTreeDropCount(Location loc)
+    {
+    	AppleseedTreeData tree = Trees.get(loc);
+    	
+    	if(tree != null)
+    		tree.ResetDropCount();
+    }
+    
     // load trees from disk
     @SuppressWarnings("unchecked")
 	private void loadTrees()
@@ -164,7 +172,7 @@ public class AppleseedTreeManager {
     }
 
     // see if the given location is the root of a tree
-    public static final boolean isTree(Location rootBlock)
+    public final boolean isTree(Location rootBlock)
     {
         final World world = rootBlock.getWorld();
         final int rootX = rootBlock.getBlockX();
