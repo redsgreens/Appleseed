@@ -5,11 +5,9 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Iterator;
 
-import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.yaml.snakeyaml.Yaml;
 
@@ -19,13 +17,12 @@ public class AppleseedConfig {
 	public Integer DropLikelihood = 33;
 	public Integer DropInterval = 60;
 	public Integer DropsBeforeTired = 100;
-	public ArrayList<String> AllowedTreeTypes;
-	public ArrayList<ItemStack> AllowedTreeItems;
+
+	public HashMap<ItemStack, AppleseedTreeType> TreeTypes;
 
 	public AppleseedConfig()
 	{
-		AllowedTreeTypes = new ArrayList<String>();
-		AllowedTreeItems = new ArrayList<ItemStack>();
+		TreeTypes = new HashMap<ItemStack, AppleseedTreeType>();
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -71,42 +68,33 @@ public class AppleseedConfig {
 				ShowErrorsInClient = (Boolean)configMap.get("ShowErrorsInClient");
 			System.out.println("Appleseed: ShowErrorsInClient=" + ShowErrorsInClient.toString());
 
-			if(configMap.containsKey("DropsContinuous"))
-				DropsContinuous = (Boolean)configMap.get("DropsContinuous");
-			System.out.println("Appleseed: DropsContinuous=" + DropsContinuous.toString());
-
-			if(configMap.containsKey("DropLikelihood"))
-				DropLikelihood = (Integer)configMap.get("DropLikelihood");
-			System.out.println("Appleseed: DropLikelihood=" + DropLikelihood.toString() + "%");
-
 			if(configMap.containsKey("DropInterval"))
 				DropInterval = (Integer)configMap.get("DropInterval");
 			System.out.println("Appleseed: DropInterval=" + DropInterval.toString() + " seconds");
 
-			if(configMap.containsKey("DropsBeforeTired"))
-				DropsBeforeTired = (Integer)configMap.get("DropsBeforeTired");
-			System.out.println("Appleseed: DropsBeforeTired=" + DropsBeforeTired.toString());
-
-			ArrayList<String> tempAllowedTreeTypes = new ArrayList<String>(Arrays.asList("apple", "cookie"));
-			if(configMap.containsKey("AllowedTreeTypes"))
-				tempAllowedTreeTypes = (ArrayList<String>)configMap.get("AllowedTreeTypes");
-
-			// process list of tree types and generate materials list
-			for(int i=0; i<tempAllowedTreeTypes.size(); i++)
+			if(!configMap.containsKey("TreeTypes"))
+				System.out.println("Appleseed: TreeTypes=");
+			else
 			{
-				Material m = Material.matchMaterial(tempAllowedTreeTypes.get(i));
-				if(m != null)
+				HashMap<String, HashMap<String, Object>> treeTypes = (HashMap<String, HashMap<String, Object>>)configMap.get("TreeTypes");
+
+				// process list of tree types
+				Iterator<String> itr = treeTypes.keySet().iterator();
+				while(itr.hasNext())
 				{
-					AllowedTreeItems.add(new ItemStack(m, 1));
-					AllowedTreeTypes.add(tempAllowedTreeTypes.get(i).toLowerCase());
+					String itemName = itr.next();
+					HashMap<String, Object> treeConf = treeTypes.get(itemName);
+					
+					AppleseedTreeType treeType = AppleseedTreeType.LoadFromHash(itemName, treeConf);
+					
+					if(treeType == null)
+						itr.remove();
+					else
+						TreeTypes.put(treeType.getItemStack(), treeType);
+					
 				}
-				else if(tempAllowedTreeTypes.get(i).equalsIgnoreCase("cocoa_beans"))
-				{
-					AllowedTreeItems.add(new ItemStack(Material.INK_SACK, 1, (short)3));
-					AllowedTreeTypes.add(tempAllowedTreeTypes.get(i).toLowerCase());
-				}
+				System.out.println("Appleseed: Loaded " + ((Integer)TreeTypes.size()).toString() + " TreeTypes");
 			}
-			System.out.println("Appleseed: AllowedTreeTypes=" + AllowedTreeTypes.toString());
 		}
 		catch (Exception ex){
 			System.out.println(ex.getStackTrace());

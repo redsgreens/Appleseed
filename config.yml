@@ -1,5 +1,4 @@
 #
-# 
 # ShowErrorsInClient: toggle that determines if permissions or other error messages
 #                     are displayed client-side
 #
@@ -9,37 +8,6 @@
 ShowErrorsInClient: Yes
 
 #
-#
-# AllowedTreeTypes: list of items that can be planted in soil(aka farmland)
-#
-# Examples: "apple", "golden_apple", "cookie", "pork", "cocoa_beans"
-#
-AllowedTreeTypes:
-    - "apple"
-    - "cocoa_beans"
-
-#
-#
-# DropsContinuous: determines if drops should happen forever, or until a tree gets "tired"
-#                  and requires bonemeal fertilizer.  
-#
-# Allowed values : Yes (drops happen at inteverals forever)
-#                  No  (trees get tired and require bonemeal to fertilize them)
-#
-DropsContinuous: Yes
-
-#
-# 
-# DropLikelihood: percentage chance an item will drop under a tree
-#
-# Allowed values: numbers 1 through 100 (no decimals)
-#                  100 means items will spawn every interval
-#                  1 means items will spawn once out of every hundred intervals
-# 
-DropLikelihood: 33
-
-#
-# 
 # DropInterval: length of time, in seconds, between drops
 #
 # Allowed values: numbers bigger than 1 (no decimals)
@@ -47,9 +15,31 @@ DropLikelihood: 33
 DropInterval: 60
 
 #
-# 
-# DropsBeforeTired: approximate number of drops before a tree gets tired
 #
-# Allowed values: numbers bigger than 1 (no decimals)
-# 
-DropsBeforeTired: 100
+# TreeTypes: list of items that can be planted in soil(aka farmland)
+#
+# Example: 
+#    - "apple"                      # Name of the item that must be planted and will be dropped
+#        DropLikelihood: 33         # Chance an item will drop under a tree (numbers 1-100)
+#        RequireFertilzer: Yes      # Yes if the tree should require occasional fertilizer
+#        DropsBeforeFertilzer: 50   # Approximate number of drops before fertilzer is required
+#        TreeType: Standard         # Type of tree that should grow from the sapling (Standard/Spruce/Birch)
+#
+TreeTypes:
+    apple:
+        DropLikelihood: 33
+        RequireFertilzer: Yes
+        DropsBeforeFertilzer: 50
+        TreeType: Standard
+        
+    cocoa_beans:
+        DropLikelihood: 33
+        RequireFertilzer: Yes
+        DropsBeforeFertilzer: 50
+        TreeType: Spruce
+
+    golden_apple:
+        DropLikelihood: 5
+        RequireFertilzer: Yes
+        DropsBeforeFertilzer: 10
+        TreeType: Birch
