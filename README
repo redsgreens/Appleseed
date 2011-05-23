@@ -8,8 +8,14 @@ you have permission), a sapling will appear in the soil. When the sapling grows(
 this up), the tree will drop apples on the ground. 
 
 Features:
-- Plant items in soil(aka farmland) and grow a tree that drops that item on the ground
-- Config file that controls allowed types of trees, item drop interval and likelihood
-- Permissions to control who can plant trees(and what type)
+ - Plant items in soil(aka farmland) and grow a tree that drops that item on the ground
+ - Config file that controls allowed types of trees, item drop interval and likelihood
+ - Permissions to control who can plant trees(and what type)
 
 For more info, go here: http://forums.bukkit.org/threads/17961/
+
+TODO:
+ - Bonus items with very low likelihood
+ - Optional tree death after some number of fertilizer cycles
+ - Configurable "seed" item
+  
