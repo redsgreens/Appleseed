@@ -15,6 +15,7 @@ import org.yaml.snakeyaml.Yaml;
 public class AppleseedConfig {
 	public Boolean ShowErrorsInClient = true;
 	public Integer DropInterval = 60;
+	public Material WandItem = Material.WOOD_HOE;
 
 	public HashMap<ItemStack, AppleseedTreeType> TreeTypes;
 
@@ -70,6 +71,10 @@ public class AppleseedConfig {
 				DropInterval = (Integer)configMap.get("DropInterval");
 			System.out.println("Appleseed: DropInterval=" + DropInterval.toString() + " seconds");
 
+			if(configMap.containsKey("WandItem"))
+				WandItem = Material.getMaterial((Integer)configMap.get("WandItem"));
+			System.out.println("Appleseed: WandItem=" + WandItem.name().toLowerCase());
+			
 			if(!configMap.containsKey("TreeTypes"))
 				System.out.println("Appleseed: TreeTypes=");
 			else

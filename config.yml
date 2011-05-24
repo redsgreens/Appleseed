@@ -15,6 +15,13 @@ ShowErrorsInClient: Yes
 DropInterval: 60
 
 #
+# WandItem: item used in game to see what type a tree is and if it needs fertilizer 
+#
+# Allowed values: any decimal item id (default is 290 for wooden hoe)
+# 
+WandItem: 290
+
+#
 #
 # TreeTypes: list of items that can be planted in soil(aka farmland)
 #

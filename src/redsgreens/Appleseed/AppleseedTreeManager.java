@@ -122,28 +122,14 @@ public class AppleseedTreeManager {
     	asyncSaveTrees();
     }
 
-    public synchronized void ResetTreeDropCount(Location loc)
+    public synchronized AppleseedTreeData GetTree(Location loc)
     {
-    	AppleseedTreeData tree = Trees.get(loc);
-    	
-    	if(tree != null)
-    	{
-    		tree.ResetDropCount();
-    		asyncSaveTrees();
-    	}
+    	if(isTree(loc))
+    		return Trees.get(loc);
+    	else 
+    		return null;
     }
-
-    public synchronized void ResetTreeDropCount(Location loc, Integer dropcount)
-    {
-    	AppleseedTreeData tree = Trees.get(loc);
-    	
-    	if(tree != null)
-    	{
-    		tree.ResetDropCount(dropcount);
-    		asyncSaveTrees();
-    	}
-    }
-
+    
     // load trees from disk
     @SuppressWarnings("unchecked")
 	private synchronized void loadTrees()

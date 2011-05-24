@@ -69,7 +69,7 @@ public class AppleseedPlayerListener extends PlayerListener {
 				return;
 			
 			// return if they don't have permission
-			if(iStack.getType() == Material.INK_SACK && iStack.getDurability() == 3)
+			if(iStack.getType() == Material.INK_SACK && iStack.getDurability() == (short)3)
 			{
 				if(!Appleseed.Permissions.hasPermission(player, "plant.cocoa_beans") || !Appleseed.CanBuild.canBuild(player, blockRoot))
 				{
@@ -118,10 +118,19 @@ public class AppleseedPlayerListener extends PlayerListener {
 			if(!Appleseed.TreeManager.isTree(loc))
 				return;
 
+			// cancel the event so we're the only one processing it
+			event.setCancelled(true);
+
 			if(Appleseed.Permissions.hasPermission(player, "infinite.fertilizer"))
-				Appleseed.TreeManager.ResetTreeDropCount(loc, -1);
+			{
+				AppleseedTreeData tree = Appleseed.TreeManager.GetTree(loc);
+				tree.ResetDropCount(-1);
+			}
 			else
-				Appleseed.TreeManager.ResetTreeDropCount(loc);
+			{
+				AppleseedTreeData tree = Appleseed.TreeManager.GetTree(loc);
+				tree.ResetDropCount();
+			}
 			
 			// take the item from the player
 			if(iStack.getAmount() == 1)
@@ -130,6 +139,44 @@ public class AppleseedPlayerListener extends PlayerListener {
 			{
 				iStack.setAmount(iStack.getAmount() - 1);
 				player.setItemInHand(iStack);			
+			}
+		}
+		else if(blockType == Material.LOG && iStack.getType() == Appleseed.Config.WandItem)
+		{
+			// they clicked with the wand
+
+			if(Appleseed.Permissions.hasPermission(player, "wand"))
+			{
+				// cancel the event so we're the only one processing it
+				event.setCancelled(true);
+
+				Location loc = block.getLocation();
+				if(!Appleseed.TreeManager.isTree(loc))
+				{
+					player.sendMessage("§cErr: This is not an Appleseed tree.");
+					return;
+				}
+				else
+				{
+					AppleseedTreeData tree = Appleseed.TreeManager.GetTree(loc);
+					String msg = "§cAppleseed: Type=";
+					ItemStack treeIS = tree.getItemStack();
+					Integer treeDC = tree.getDropCount();
+					
+					if(treeIS.getType() == Material.INK_SACK && treeIS.getDurability() == (short)3)
+						msg = msg + "cocoa_beans";
+					else
+						msg = msg + treeIS.getType().name().toLowerCase();
+
+					msg = msg + ", NeedsFertilizer=";
+					
+					if(treeDC == 0)
+						msg = msg + "yes";
+					else 
+						msg = msg + "no";
+
+					player.sendMessage(msg);				
+				}
 			}
 
 		}
