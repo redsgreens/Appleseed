@@ -21,6 +21,7 @@ public class Appleseed extends JavaPlugin {
     public static AppleseedConfig Config;
     public static AppleseedPermissionsManager Permissions;
     public static AppleseedTreeManager TreeManager;
+    public static AppleseedCanBuild CanBuild;
     
     public void onEnable() {
 
@@ -32,6 +33,9 @@ public class Appleseed extends JavaPlugin {
     	
     	// initialize the permissions handler
     	Permissions = new AppleseedPermissionsManager();
+    	
+    	// load the worldguard handler
+    	CanBuild = new AppleseedCanBuild();
     	
     	// initialize the tree manager
     	TreeManager = new AppleseedTreeManager();

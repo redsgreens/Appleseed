@@ -8,7 +8,7 @@ import com.nijikokun.bukkit.Permissions.Permissions;
 
 public class AppleseedPermissionsManager {
 
-	private static PermissionHandler Permissions = null;
+	private PermissionHandler Permissions = null;
 	
 	public AppleseedPermissionsManager(){
     	try{
@@ -17,6 +17,7 @@ public class AppleseedPermissionsManager {
             if (Permissions == null) {
                 if (test != null) {
                     Permissions = ((Permissions)test).getHandler();
+                	System.out.println("Appleseed: " + test.getDescription().getName() + " " + test.getDescription().getVersion() + " found");
                 }
             }
     	}

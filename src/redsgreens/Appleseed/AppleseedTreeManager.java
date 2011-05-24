@@ -216,6 +216,9 @@ public class AppleseedTreeManager {
     // see if the given location is the root of a tree
     public final boolean isTree(Location rootBlock)
     {
+    	if(!Trees.containsKey(rootBlock))
+    		return false;
+    	
         final World world = rootBlock.getWorld();
         final int rootX = rootBlock.getBlockX();
         final int rootY = rootBlock.getBlockY();

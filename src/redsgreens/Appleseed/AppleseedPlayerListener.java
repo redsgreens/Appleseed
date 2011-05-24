@@ -71,13 +71,13 @@ public class AppleseedPlayerListener extends PlayerListener {
 			// return if they don't have permission
 			if(iStack.getType() == Material.INK_SACK && iStack.getDurability() == 3)
 			{
-				if(!Appleseed.Permissions.hasPermission(player, "plant.cocoa_beans"))
+				if(!Appleseed.Permissions.hasPermission(player, "plant.cocoa_beans") || !Appleseed.CanBuild.canBuild(player, blockRoot))
 				{
 					event.getPlayer().sendMessage("§cErr: You don't have permission to plant this tree.");
 					return;
 				}
 			}
-			else if(!Appleseed.Permissions.hasPermission(player, "plant." + iStack.getType().name().toLowerCase()))
+			else if(!Appleseed.Permissions.hasPermission(player, "plant." + iStack.getType().name().toLowerCase()) || !Appleseed.CanBuild.canBuild(player, blockRoot))
 			{
 				event.getPlayer().sendMessage("§cErr: You don't have permission to plant this tree.");
 				return;
