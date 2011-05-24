@@ -73,14 +73,27 @@ public class AppleseedPlayerListener extends PlayerListener {
 			{
 				if(!Appleseed.Permissions.hasPermission(player, "plant.cocoa_beans") || !Appleseed.CanBuild.canBuild(player, blockRoot))
 				{
-					event.getPlayer().sendMessage("§cErr: You don't have permission to plant this tree.");
+					if(Appleseed.Config.ShowErrorsInClient)
+						event.getPlayer().sendMessage("§cErr: You don't have permission to plant this tree.");
 					return;
 				}
 			}
 			else if(!Appleseed.Permissions.hasPermission(player, "plant." + iStack.getType().name().toLowerCase()) || !Appleseed.CanBuild.canBuild(player, blockRoot))
 			{
-				event.getPlayer().sendMessage("§cErr: You don't have permission to plant this tree.");
+				if(Appleseed.Config.ShowErrorsInClient)
+					event.getPlayer().sendMessage("§cErr: You don't have permission to plant this tree.");
 				return;
+			}
+			
+			if(Appleseed.Config.MinimumTreeDistance != -1)
+			{
+				// MinimumTreeDistance is set, make sure this tree won't be too close to another
+				if(Appleseed.TreeManager.IsNewTreeTooClose(blockRoot.getLocation()))
+				{
+					if(Appleseed.Config.ShowErrorsInClient)
+						event.getPlayer().sendMessage("§cErr: Too close to another tree.");
+					return;
+				}
 			}
 			
 			// all tests satisfied, proceed

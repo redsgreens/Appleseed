@@ -129,6 +129,18 @@ public class AppleseedTreeManager {
     	else 
     		return null;
     }
+
+    public synchronized Boolean IsNewTreeTooClose(Location loc)
+    {
+    	Set<Location> locations = Trees.keySet();
+    	Iterator<Location> itr = locations.iterator();
+    	
+    	while(itr.hasNext())
+    		if(calcDistanceSquared(itr.next(), loc) < (Appleseed.Config.MinimumTreeDistance * Appleseed.Config.MinimumTreeDistance))
+    			return true;
+    	
+    	return false;
+    }
     
     // load trees from disk
     @SuppressWarnings("unchecked")
@@ -239,4 +251,22 @@ public class AppleseedTreeManager {
         }
         return false;
     }
+
+    private double calcDistanceSquared(Location loc1, Location loc2)
+    {
+    	if(loc1.getWorld() != loc2.getWorld())
+        	return Double.MAX_VALUE;
+    	
+    	double dX = loc1.getX() - loc2.getX();
+    	double dY = loc1.getY() - loc2.getY();
+    	double dZ = loc1.getZ() - loc2.getZ();
+
+    	Double retval = (dX*dX) + (dY*dY) + (dZ*dZ);
+    	
+    	if(retval.isInfinite() || retval.isNaN())
+    		return Double.MAX_VALUE;
+    	else
+    		return retval;
+    }
+
 }

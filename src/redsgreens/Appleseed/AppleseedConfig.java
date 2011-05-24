@@ -16,6 +16,7 @@ public class AppleseedConfig {
 	public Boolean ShowErrorsInClient = true;
 	public Integer DropInterval = 60;
 	public Material WandItem = Material.WOOD_HOE;
+	public Integer MinimumTreeDistance = -1;
 
 	public HashMap<ItemStack, AppleseedTreeType> TreeTypes;
 
@@ -74,7 +75,14 @@ public class AppleseedConfig {
 			if(configMap.containsKey("WandItem"))
 				WandItem = Material.getMaterial((Integer)configMap.get("WandItem"));
 			System.out.println("Appleseed: WandItem=" + WandItem.name().toLowerCase());
-			
+
+			if(configMap.containsKey("MinimumTreeDistance"))
+				MinimumTreeDistance = (Integer)configMap.get("MinimumTreeDistance");
+			if(MinimumTreeDistance == -1)
+				System.out.println("Appleseed: MinimumTreeDistance=disabled");
+			else
+				System.out.println("Appleseed: MinimumTreeDistance=" + MinimumTreeDistance.toString());
+
 			if(!configMap.containsKey("TreeTypes"))
 				System.out.println("Appleseed: TreeTypes=");
 			else

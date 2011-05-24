@@ -22,6 +22,13 @@ DropInterval: 60
 WandItem: 290
 
 #
+# MinimumTreeDistance: optional paramter specifies minimum block distance between planted trees 
+#
+# Allowed values: any decimal number bigger than 1 (set to -1 to disable, or comment out the parameter)
+# 
+#MinimumTreeDistance: 8
+
+#
 #
 # TreeTypes: list of items that can be planted in soil(aka farmland)
 #
