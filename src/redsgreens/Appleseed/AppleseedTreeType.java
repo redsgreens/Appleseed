@@ -44,8 +44,8 @@ public class AppleseedTreeType {
 			return null;
 
 		Integer mf;
-		if(loadData.containsKey("maxfertilizer"))
-			mf = (Integer)loadData.get("maxfertilizer");
+		if(loadData.containsKey("MaxFertilizer"))
+			mf = (Integer)loadData.get("MaxFertilizer");
 		else
 			mf = -1;
 		

@@ -72,19 +72,15 @@ public class AppleseedTreeManager {
                     			Integer dropCount = tree.getDropCount(); 
                     			Integer fertilizerCount = tree.getFertilizerCount();
 
-                    			if(rand.nextInt((Integer)(100 / treeType.getDropLikelihood())) == 0)
+                    			if(rand.nextInt((Integer)(100 / treeType.getDropLikelihood())) == 0 && (dropCount > 0 || dropCount == -1))
                     			{
+                    				loc.getWorld().dropItemNaturally(loc, tree.getItemStack());
 
-                        			if(dropCount > 0 || dropCount == -1)
-                        			{
-                        				loc.getWorld().dropItemNaturally(loc, tree.getItemStack());
-
-                        				if(dropCount != -1)
-                        				{
-                        					tree.setDropCount(dropCount - 1);
-                        					treesUpdated = true;
-                        				}
-                        			}
+                    				if(dropCount != -1)
+                    				{
+                    					tree.setDropCount(dropCount - 1);
+                    					treesUpdated = true;
+                    				}
                     			}
                     			else if(dropCount == 0 && fertilizerCount == 0)
                     			{
@@ -93,7 +89,7 @@ public class AppleseedTreeManager {
                     			}
             				}
             				else
-            					System.out.println("Appleseed: No TreeType in config.yml for \"" + iStack.getType().name().toLowerCase() + "\"");
+            					System.out.println("Appleseed: No TreeTypes in config.yml for \"" + iStack.getType().name().toLowerCase() + "\"");
             			}
             		}
             		else if(world.getBlockAt(loc).getType() != Material.SAPLING)
@@ -176,7 +172,55 @@ public class AppleseedTreeManager {
     
     public synchronized void KillTree(Location loc)
     {
-    	// TODO: kill the tree
+    	if(!Trees.containsKey(loc))
+    		return;
+    	
+    	World world = loc.getWorld();
+    	Block block = world.getBlockAt(loc);
+    	
+    	if(block.getType() != Material.LOG)
+    		return;
+    	
+    	int i = 0;
+    	while(block.getType() == Material.LOG && i < 16)
+    	{
+    		block.setType(Material.AIR);
+    		
+    		Block neighbor = block.getFace(BlockFace.EAST);
+    		if(neighbor.getType() == Material.LOG)
+    			neighbor.setType(Material.AIR);
+
+    		neighbor = block.getFace(BlockFace.NORTH);
+    		if(neighbor.getType() == Material.LOG)
+    			neighbor.setType(Material.AIR);
+
+    		neighbor = block.getFace(BlockFace.NORTH_EAST);
+    		if(neighbor.getType() == Material.LOG)
+    			neighbor.setType(Material.AIR);
+
+    		neighbor = block.getFace(BlockFace.NORTH_WEST);
+    		if(neighbor.getType() == Material.LOG)
+    			neighbor.setType(Material.AIR);
+
+    		neighbor = block.getFace(BlockFace.SOUTH);
+    		if(neighbor.getType() == Material.LOG)
+    			neighbor.setType(Material.AIR);
+
+    		neighbor = block.getFace(BlockFace.SOUTH_EAST);
+    		if(neighbor.getType() == Material.LOG)
+    			neighbor.setType(Material.AIR);
+
+    		neighbor = block.getFace(BlockFace.SOUTH_WEST);
+    		if(neighbor.getType() == Material.LOG)
+    			neighbor.setType(Material.AIR);
+
+    		neighbor = block.getFace(BlockFace.WEST);
+    		if(neighbor.getType() == Material.LOG)
+    			neighbor.setType(Material.AIR);
+
+    		block = block.getFace(BlockFace.UP);
+    		i++;
+    	}
     }
     
     // load trees from disk

@@ -22,7 +22,7 @@ DropInterval: 60
 WandItem: 290
 
 #
-# MinimumTreeDistance: optional paramter specifies minimum block distance between planted trees 
+# MinimumTreeDistance: optional parameter specifies minimum block distance between planted trees 
 #
 # Allowed values: any decimal number bigger than 1 (set to -1 to disable, or comment out the parameter)
 # 
@@ -37,7 +37,7 @@ WandItem: 290
 #        DropLikelihood: 33         # Chance an item will drop under a tree (numbers 1-100)
 #        RequireFertilzer: Yes      # Yes if the tree should require occasional fertilizer
 #        DropsBeforeFertilzer: 50   # Approximate number of drops before fertilzer is required
-#        MaxFertilzer: 5            # Approximate number of times a tree can be fertilized (optional, or set to -1 to disable)
+#        MaxFertilizer: 5            # Approximate number of times a tree can be fertilized (optional, or set to -1 to disable)
 #        TreeType: Standard         # Type of tree that should grow from the sapling (Standard/Spruce/Birch)
 #
 TreeTypes:
@@ -45,26 +45,26 @@ TreeTypes:
         DropLikelihood: 33
         RequireFertilzer: Yes
         DropsBeforeFertilzer: 50
- #       MaxFertilzer: 10
+#        MaxFertilizer: 10
         TreeType: Standard
         
     cocoa_beans:
         DropLikelihood: 33
         RequireFertilzer: Yes
         DropsBeforeFertilzer: 50
-#        MaxFertilzer: 5
+#        MaxFertilizer: 10
         TreeType: Spruce
 
     golden_apple:
         DropLikelihood: 5
         RequireFertilzer: Yes
         DropsBeforeFertilzer: 10
-        MaxFertilzer: 5
+        MaxFertilizer: 5
         TreeType: Birch
 
     cookie:
         DropLikelihood: 33
         RequireFertilzer: Yes
         DropsBeforeFertilzer: 50
-#        MaxFertilzer: 5
+#        MaxFertilizer: 5
         TreeType: Standard

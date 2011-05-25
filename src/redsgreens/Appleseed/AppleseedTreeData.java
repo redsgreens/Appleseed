@@ -97,9 +97,9 @@ public class AppleseedTreeData {
     	treeHash.put("z", location.getZ());
     	
     	treeHash.put("itemid", itemStack.getTypeId());
-    	if(itemStack.getType() == Material.INK_SACK && itemStack.getDurability() == 3)
+    	if(itemStack.getDurability() != 0)
     		treeHash.put("durability", itemStack.getDurability());
-    	
+
     	treeHash.put("player", player);
     	treeHash.put("dropcount", dropCount);
     	treeHash.put("fertilizercount", fertilizerCount);
