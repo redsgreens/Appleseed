@@ -115,9 +115,9 @@ public class AppleseedTreeManager {
     }
 
     // add a tree to the hashmap and save to disk
-    public synchronized void AddTree(Location loc, ItemStack iStack, Integer dropcount, String player)
+    public synchronized void AddTree(Location loc, ItemStack iStack, Integer dropcount, Integer fertilizercount,  String player)
     {
-    	Trees.put(loc, new AppleseedTreeData(loc, iStack, dropcount, player));
+    	Trees.put(loc, new AppleseedTreeData(loc, iStack, dropcount, fertilizercount, player));
     	
     	asyncSaveTrees();
     }
@@ -140,6 +140,11 @@ public class AppleseedTreeManager {
     			return true;
     	
     	return false;
+    }
+    
+    public synchronized void KillTree(Location loc)
+    {
+    	// TODO: kill the tree
     }
     
     // load trees from disk

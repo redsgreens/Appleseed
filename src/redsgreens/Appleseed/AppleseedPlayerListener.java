@@ -103,7 +103,7 @@ public class AppleseedPlayerListener extends PlayerListener {
 			
 			// add the root location and type to the list of trees
 			if(Appleseed.Permissions.hasPermission(player, "infinite.plant"))
-				Appleseed.TreeManager.AddTree(blockRoot.getLocation(), new ItemStack(iStack.getType(), 1, iStack.getDurability()), -1, player.getName());
+				Appleseed.TreeManager.AddTree(blockRoot.getLocation(), new ItemStack(iStack.getType(), 1, iStack.getDurability()), -1, -1, player.getName());
 			else
 				Appleseed.TreeManager.AddTree(blockRoot.getLocation(), new ItemStack(iStack.getType(), 1, iStack.getDurability()), player.getName());
 			
@@ -137,12 +137,26 @@ public class AppleseedPlayerListener extends PlayerListener {
 			if(Appleseed.Permissions.hasPermission(player, "infinite.fertilizer"))
 			{
 				AppleseedTreeData tree = Appleseed.TreeManager.GetTree(loc);
-				tree.ResetDropCount(-1);
+				tree.setDropCount(-1);
+				tree.setFertilizerCount(-1);
 			}
 			else
 			{
 				AppleseedTreeData tree = Appleseed.TreeManager.GetTree(loc);
-				tree.ResetDropCount();
+				Integer fertilizer = tree.getFertilizerCount();
+				if(fertilizer == -1)
+					tree.ResetDropCount();
+				else if(fertilizer > 0)
+				{
+					tree.setFertilizerCount(fertilizer - 1);
+					tree.ResetDropCount();
+				}
+				else
+				{
+					if(Appleseed.Config.ShowErrorsInClient)
+						event.getPlayer().sendMessage("§cErr: This tree cannot be fertilized.");
+					return;
+				}
 			}
 			
 			// take the item from the player

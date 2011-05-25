@@ -11,14 +11,16 @@ public class AppleseedTreeType {
 	private Integer dropLikelihood;
 	private Boolean requireFertilzer;
 	private Integer dropsBeforeFertilzer;
+	private Integer maxFertilizer;
 	private Byte saplingData;
 
-	public AppleseedTreeType(ItemStack is, Integer likelihood, Boolean reqFertilizer, Integer dropsFertilizer, String type)
+	public AppleseedTreeType(ItemStack is, Integer likelihood, Boolean reqFertilizer, Integer dropsFertilizer, Integer mxFertilizer, String type)
 	{
 		itemStack = is;
 		dropLikelihood = likelihood;
 		requireFertilzer = reqFertilizer;
 		dropsBeforeFertilzer = dropsFertilizer;
+		maxFertilizer = mxFertilizer;
 		
 		if(type.equalsIgnoreCase("Spruce"))
 			saplingData = 1;
@@ -41,10 +43,16 @@ public class AppleseedTreeType {
 		else
 			return null;
 
+		Integer mf;
+		if(loadData.containsKey("maxfertilizer"))
+			mf = (Integer)loadData.get("maxfertilizer");
+		else
+			mf = -1;
+		
 		AppleseedTreeType tree;
 		try
 		{
-			tree = new AppleseedTreeType(iStack, (Integer)loadData.get("DropLikelihood"), (Boolean)loadData.get("RequireFertilzer"), (Integer)loadData.get("DropsBeforeFertilzer"), (String)loadData.get("TreeType"));
+			tree = new AppleseedTreeType(iStack, (Integer)loadData.get("DropLikelihood"), (Boolean)loadData.get("RequireFertilzer"), (Integer)loadData.get("DropsBeforeFertilzer"), mf, (String)loadData.get("TreeType"));
 		}
 		catch (Exception ex)
 		{
@@ -73,6 +81,11 @@ public class AppleseedTreeType {
 	public Integer getDropsBeforeFertilzer()
 	{
 		return dropsBeforeFertilzer;
+	}
+	
+	public Integer getMaxFertilizer()
+	{
+		return maxFertilizer;
 	}
 	
 	public Byte getSaplingData()

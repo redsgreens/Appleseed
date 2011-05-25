@@ -14,6 +14,7 @@ public class AppleseedTreeData {
 	private ItemStack itemStack;
 	private String player;
 	private Integer dropCount;
+	private Integer fertilizerCount;
 
 	private static Random rand = new Random();
 
@@ -22,16 +23,28 @@ public class AppleseedTreeData {
 		location = loc;
 		itemStack = is;
 		player = p;
-		
+
+    	AppleseedTreeType treeType = Appleseed.Config.TreeTypes.get(is);
+    	Integer fertilizer = treeType.getMaxFertilizer();
+    	if(fertilizer == -1)
+    		fertilizerCount = -1;
+    	else
+    	{
+    		Integer fcMin = (int) (fertilizer - (0.3 * fertilizer));
+    		Integer fcMax = (int) (fertilizer + (0.3 * fertilizer));
+    		fertilizerCount = rand.nextInt(fcMax - fcMin + 1) + fcMin;
+    	}
+    	
 		ResetDropCount();		
 	}
 
-	public AppleseedTreeData(Location loc, ItemStack is, Integer dc, String p)
+	public AppleseedTreeData(Location loc, ItemStack is, Integer dc, Integer fc, String p)
 	{
 		location = loc;
 		itemStack = is;
 		player = p;
 		dropCount = dc;
+		fertilizerCount = fc;
 	}
 
 	// take a hashmap and make a tree from it
@@ -58,13 +71,19 @@ public class AppleseedTreeData {
 		else
 			dc = -1;
 
+		Integer fc;
+		if(loadData.containsKey("fertilizercount"))
+			fc = (Integer)loadData.get("fertilizercount");
+		else
+			fc = -1;
+
 		ItemStack iStack;
 		if(loadData.containsKey("durability"))
     		iStack = new ItemStack(Material.getMaterial((Integer)loadData.get("itemid")), 1, ((Integer)loadData.get("durability")).shortValue()); 
     	else
     		iStack = new ItemStack(Material.getMaterial((Integer)loadData.get("itemid")), 1);
 
-		return new AppleseedTreeData(loc, iStack, dc, player);
+		return new AppleseedTreeData(loc, iStack, dc, fc, player);
 	}
 	
     // take a tree location and item and return a hash for saving to disk
@@ -83,20 +102,23 @@ public class AppleseedTreeData {
     	
     	treeHash.put("player", player);
     	treeHash.put("dropcount", dropCount);
+    	treeHash.put("fertilizercount", fertilizerCount);
     	
     	return treeHash;
     }
 	
     public void ResetDropCount()
     {
-		Integer dcMin = (int) (Appleseed.Config.TreeTypes.get(itemStack).getDropsBeforeFertilzer() - (0.3 * Appleseed.Config.TreeTypes.get(itemStack).getDropsBeforeFertilzer()));
-		Integer dcMax = (int) (Appleseed.Config.TreeTypes.get(itemStack).getDropsBeforeFertilzer() + (0.3 * Appleseed.Config.TreeTypes.get(itemStack).getDropsBeforeFertilzer()));
-		dropCount = rand.nextInt(dcMax - dcMin + 1) + dcMin;
-    }
-
-    public void ResetDropCount(Integer dc)
-    {
-    	dropCount = dc;
+    	AppleseedTreeType treeType = Appleseed.Config.TreeTypes.get(itemStack);
+    	Integer drops = treeType.getDropsBeforeFertilzer();
+    	if(drops == -1)
+    		dropCount = -1;
+    	else
+    	{
+    		Integer dcMin = (int) (drops - (0.3 * drops));
+    		Integer dcMax = (int) (drops + (0.3 * drops));
+    		dropCount = rand.nextInt(dcMax - dcMin + 1) + dcMin;
+    	}
     }
 
 	public Location getLocation()
@@ -122,5 +144,15 @@ public class AppleseedTreeData {
 	public void setDropCount(Integer dc)
 	{
 		dropCount = dc;
+	}
+	
+	public Integer getFertilizerCount()
+	{
+		return fertilizerCount;
+	}
+	
+	public void setFertilizerCount(Integer fc)
+	{
+		fertilizerCount = fc;
 	}
 }
