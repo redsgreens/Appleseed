@@ -15,6 +15,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.inventory.ItemStack;
 import org.yaml.snakeyaml.Yaml;
 
@@ -24,6 +25,9 @@ public class AppleseedTreeManager {
     private static HashMap<Location, AppleseedTreeData> Trees = new HashMap<Location, AppleseedTreeData>();
     
     private Random rand = new Random();
+
+    final int treeId = Material.LOG.getId();
+    final int leafId = Material.LEAVES.getId();
 
 	public AppleseedTreeManager()
 	{
@@ -131,10 +135,31 @@ public class AppleseedTreeManager {
 
     public synchronized AppleseedTreeData GetTree(Location loc)
     {
-    	if(isTree(loc))
+    	if(Trees.containsKey(loc))
     		return Trees.get(loc);
     	else 
-    		return null;
+    	{
+
+    		World world = loc.getWorld();    		
+        	Block block = world.getBlockAt(loc);
+        	int treeCount = 0;
+        	while(treeCount < 15 && block.getTypeId() == treeId && !Trees.containsKey(block.getLocation()))
+        	{
+        		Block blockDown = block.getFace(BlockFace.DOWN);
+        		if(blockDown.getTypeId() == treeId)
+        			block = blockDown;
+        		else
+        			break;
+        		
+        		treeCount++;
+        	}
+
+        	Location retval = block.getLocation();
+        	if(!Trees.containsKey(retval))
+        		return null;
+        	else
+        		return Trees.get(retval);
+    	}
     }
 
     public synchronized Boolean IsNewTreeTooClose(Location loc)
@@ -224,26 +249,32 @@ public class AppleseedTreeManager {
     }
     
     // see if the given location is the root of a tree
-    public final boolean isTree(Location rootBlock)
+    public final boolean isTree(Location loc)
     {
-    	if(!Trees.containsKey(rootBlock))
-    		return false;
+    	Location rootLoc;
+    	if(Trees.containsKey(loc))
+    		rootLoc = loc;
+    	else
+    	{
+    		AppleseedTreeData tree = GetTree(loc);
+    		if(tree == null)
+    			return false;
+    		else rootLoc = tree.getLocation();   			
+    	}
     	
-        final World world = rootBlock.getWorld();
-        final int rootX = rootBlock.getBlockX();
-        final int rootY = rootBlock.getBlockY();
-        final int rootZ = rootBlock.getBlockZ();
-        
-        final int treeId = Material.LOG.getId();
-        final int leafId = Material.LEAVES.getId();
-        
+        final World world = rootLoc.getWorld();
+
+        int treeCount = 0;        	
+        final int rootX = rootLoc.getBlockX();
+        final int rootY = rootLoc.getBlockY();
+        final int rootZ = rootLoc.getBlockZ();
+       
         final int maxY = 7;
         final int radius = 3;
         
-        int treeCount = 0;
         int leafCount = 0;
 
-        if(world.getBlockTypeIdAt(rootBlock) == treeId)
+        if(world.getBlockTypeIdAt(rootLoc) == treeId)
         {
             for (int y = rootY; y <= rootY+maxY; y++) {
                 for (int x = rootX-radius; x <= rootX+radius; x++) {

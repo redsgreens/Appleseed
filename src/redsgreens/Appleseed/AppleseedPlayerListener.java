@@ -171,39 +171,42 @@ public class AppleseedPlayerListener extends PlayerListener {
 		else if(blockType == Material.LOG && iStack.getType() == Appleseed.Config.WandItem)
 		{
 			// they clicked with the wand
-
-			if(Appleseed.Permissions.hasPermission(player, "wand"))
+			if(!Appleseed.Permissions.hasPermission(player, "wand"))
 			{
-				// cancel the event so we're the only one processing it
-				event.setCancelled(true);
+				if(Appleseed.Config.ShowErrorsInClient)
+					event.getPlayer().sendMessage("§cErr: You don't have permission to do this.");
+				return;
+			}
 
-				Location loc = block.getLocation();
-				if(!Appleseed.TreeManager.isTree(loc))
-				{
-					player.sendMessage("§cErr: This is not an Appleseed tree.");
-					return;
-				}
+			// cancel the event so we're the only one processing it
+			event.setCancelled(true);
+
+			Location loc = block.getLocation();
+			if(!Appleseed.TreeManager.isTree(loc))
+			{
+				player.sendMessage("§cErr: This is not an Appleseed tree.");
+				return;
+			}
+			else
+			{
+				AppleseedTreeData tree = Appleseed.TreeManager.GetTree(loc);
+				String msg = "§cAppleseed: Type=";
+				ItemStack treeIS = tree.getItemStack();
+				Integer treeDC = tree.getDropCount();
+				
+				if(treeIS.getType() == Material.INK_SACK && treeIS.getDurability() == (short)3)
+					msg = msg + "cocoa_beans";
 				else
-				{
-					AppleseedTreeData tree = Appleseed.TreeManager.GetTree(loc);
-					String msg = "§cAppleseed: Type=";
-					ItemStack treeIS = tree.getItemStack();
-					Integer treeDC = tree.getDropCount();
-					
-					if(treeIS.getType() == Material.INK_SACK && treeIS.getDurability() == (short)3)
-						msg = msg + "cocoa_beans";
-					else
-						msg = msg + treeIS.getType().name().toLowerCase();
+					msg = msg + treeIS.getType().name().toLowerCase();
 
-					msg = msg + ", NeedsFertilizer=";
-					
-					if(treeDC == 0)
-						msg = msg + "yes";
-					else 
-						msg = msg + "no";
+				msg = msg + ", NeedsFertilizer=";
+				
+				if(treeDC == 0)
+					msg = msg + "yes";
+				else 
+					msg = msg + "no";
 
-					player.sendMessage(msg);				
-				}
+				player.sendMessage(msg);				
 			}
 
 		}
