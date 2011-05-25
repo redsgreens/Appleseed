@@ -64,10 +64,12 @@ public class AppleseedTreeManager {
 
             				if(treeType != null)
             				{
-            					if(rand.nextInt((Integer)(100 / treeType.getDropLikelihood())) == 0)
+                				AppleseedTreeData tree = Trees.get(loc);
+                    			Integer dropCount = tree.getDropCount(); 
+                    			Integer fertilizerCount = tree.getFertilizerCount();
+
+                    			if(rand.nextInt((Integer)(100 / treeType.getDropLikelihood())) == 0)
                     			{
-                    				AppleseedTreeData tree = Trees.get(loc);
-                        			Integer dropCount = tree.getDropCount(); 
 
                         			if(dropCount > 0 || dropCount == -1)
                         			{
@@ -79,6 +81,11 @@ public class AppleseedTreeManager {
                         					treesUpdated = true;
                         				}
                         			}
+                    			}
+                    			else if(dropCount == 0 && fertilizerCount == 0)
+                    			{
+                    				KillTree(loc);
+                    				treesUpdated = true;
                     			}
             				}
             				else
