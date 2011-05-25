@@ -1,5 +1,5 @@
 Version 0.4.0 (unreleased)
-    * Allow configurable minimum distance between trees
+    * Added config option to enforce minimum distance between trees
     * Added config option to kill trees after some number of fertilizer cycles
     * Allow clicking with wand or fertilizer anywhere on tree trunk
     * Added wand item support to show tree type and fertilizer status
