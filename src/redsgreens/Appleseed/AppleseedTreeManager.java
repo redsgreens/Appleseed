@@ -283,13 +283,13 @@ public class AppleseedTreeManager {
     	}
     }
 
-    private synchronized void asyncSaveTrees()
+    public synchronized void asyncSaveTrees()
     {
 		Appleseed.Plugin.getServer().getScheduler().scheduleAsyncDelayedTask(Appleseed.Plugin, new Runnable() {
 		    public void run() {
 		    	saveTrees();
 		    }
-		}, 0);
+		}, 10);
     }
     
     // see if the given location is the root of a tree

@@ -134,22 +134,28 @@ public class AppleseedPlayerListener extends PlayerListener {
 			// cancel the event so we're the only one processing it
 			event.setCancelled(true);
 
+			Boolean treesUpdated = false;
 			if(Appleseed.Permissions.hasPermission(player, "infinite.fertilizer"))
 			{
 				AppleseedTreeData tree = Appleseed.TreeManager.GetTree(loc);
 				tree.setDropCount(-1);
 				tree.setFertilizerCount(-1);
+				treesUpdated = true;
 			}
 			else
 			{
 				AppleseedTreeData tree = Appleseed.TreeManager.GetTree(loc);
 				Integer fertilizer = tree.getFertilizerCount();
 				if(fertilizer == -1)
+				{
 					tree.ResetDropCount();
+					treesUpdated = true;
+				}
 				else if(fertilizer > 0)
 				{
 					tree.setFertilizerCount(fertilizer - 1);
 					tree.ResetDropCount();
+					treesUpdated = true;
 				}
 				else
 				{
@@ -158,7 +164,10 @@ public class AppleseedPlayerListener extends PlayerListener {
 					return;
 				}
 			}
-			
+
+			if(treesUpdated == true)
+				Appleseed.TreeManager.asyncSaveTrees();
+
 			// take the item from the player
 			if(iStack.getAmount() == 1)
 				player.setItemInHand(null);
