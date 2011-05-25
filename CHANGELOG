@@ -1,0 +1,26 @@
+Version 0.4.0 (unreleased)
+    * Allow configurable minimum distance between trees
+    * Added config option to kill trees after some number of fertilizer cycles (in progress)
+    * allow clicking with wand or fertilizer anywhere on tree trunk (todo)
+    * Added wand item support to show tree type and fertilizer status
+    * Fixed bug with ShowErrorsInClient config flag 
+    * 
+    
+Version 0.3.2 (05/24/2011)
+    * Added detection of WorldGuard regions when trees are planted
+
+Version 0.3.1 (05/23/2011)
+    * Fixed bug with permission node "appleseed.plant.cocoa_beans"
+
+Version 0.3 (05/22/2011)
+    * Restructured config file to allow per tree type drop rates and sapling types
+    * Trees occasionally stop dropping items and require fertilizer to keep going
+    * Added two permission nodes for admins to plant trees that don't require fertilizer, and allow admins to use fertilizer to cause an existing tree to no longer require fertilizer
+    * Saving the trees.yml file now runs in a separate thread to improve performance when a large number of trees exist
+    * Fixed bug where last tree is not removed from trees.yml (reported by GipsyKing)
+
+Version 0.2 (05/19/2011)
+    * Fixed potential bug that caused some drops to have infinite quantity (reported by walruscode)
+
+Version 0.1 (05/19/2011)
+    * Initial release
