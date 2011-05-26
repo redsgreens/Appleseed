@@ -16,14 +16,7 @@ import org.bukkit.inventory.ItemStack;
  */
 public class AppleseedPlayerListener extends PlayerListener {
 
-	Appleseed Plugin;
-	
-    public AppleseedPlayerListener(Appleseed plugin) 
-    {
-    	Plugin = plugin;
-    }
-
-    @Override
+	@Override
     public void onPlayerInteract(PlayerInteractEvent event)
     // catch player right-click events
     {
@@ -103,9 +96,9 @@ public class AppleseedPlayerListener extends PlayerListener {
 			
 			// add the root location and type to the list of trees
 			if(Appleseed.Permissions.hasPermission(player, "infinite.plant"))
-				Appleseed.TreeManager.AddTree(blockRoot.getLocation(), new ItemStack(iStack.getType(), 1, iStack.getDurability()), -1, -1, player.getName());
+				Appleseed.TreeManager.AddTree(new AppleseedLocation(blockRoot.getLocation()), new ItemStack(iStack.getType(), 1, iStack.getDurability()), -1, -1, player.getName());
 			else
-				Appleseed.TreeManager.AddTree(blockRoot.getLocation(), new ItemStack(iStack.getType(), 1, iStack.getDurability()), player.getName());
+				Appleseed.TreeManager.AddTree(new AppleseedLocation(blockRoot.getLocation()), new ItemStack(iStack.getType(), 1, iStack.getDurability()), player.getName());
 			
 			// set the clicked block to dirt
 			block.setType(Material.DIRT);
@@ -137,14 +130,14 @@ public class AppleseedPlayerListener extends PlayerListener {
 			Boolean treesUpdated = false;
 			if(Appleseed.Permissions.hasPermission(player, "infinite.fertilizer"))
 			{
-				AppleseedTreeData tree = Appleseed.TreeManager.GetTree(loc);
+				AppleseedTreeData tree = Appleseed.TreeManager.GetTree(new AppleseedLocation(loc));
 				tree.setDropCount(-1);
 				tree.setFertilizerCount(-1);
 				treesUpdated = true;
 			}
 			else
 			{
-				AppleseedTreeData tree = Appleseed.TreeManager.GetTree(loc);
+				AppleseedTreeData tree = Appleseed.TreeManager.GetTree(new AppleseedLocation(loc));
 				Integer fertilizer = tree.getFertilizerCount();
 				if(fertilizer == -1)
 				{
@@ -198,7 +191,7 @@ public class AppleseedPlayerListener extends PlayerListener {
 			}
 			else
 			{
-				AppleseedTreeData tree = Appleseed.TreeManager.GetTree(loc);
+				AppleseedTreeData tree = Appleseed.TreeManager.GetTree(new AppleseedLocation(loc));
 				String msg = "§cAppleseed: Type=";
 				ItemStack treeIS = tree.getItemStack();
 				Integer treeDC = tree.getDropCount();

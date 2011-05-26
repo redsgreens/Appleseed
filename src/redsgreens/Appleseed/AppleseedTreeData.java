@@ -10,11 +10,7 @@ import org.bukkit.inventory.ItemStack;
 
 public class AppleseedTreeData {
 
-//	private Location location;
-	private Double X;
-	private Double Y;
-	private Double Z;
-	private String worldName;
+	private AppleseedLocation location;
 	private ItemStack itemStack;
 	private String player;
 	private Integer dropCount;
@@ -22,12 +18,9 @@ public class AppleseedTreeData {
 
 	private static Random rand = new Random();
 
-	public AppleseedTreeData(Location loc, ItemStack is, String p)
+	public AppleseedTreeData(AppleseedLocation loc, ItemStack is, String p)
 	{
-		X = loc.getX();
-		Y = loc.getY();
-		Z = loc.getZ();
-		worldName = loc.getWorld().getName();
+		location = new AppleseedLocation(loc.getWorldName(), loc.getX(), loc.getY(), loc.getZ());
 		itemStack = is;
 		player = p;
 
@@ -45,12 +38,18 @@ public class AppleseedTreeData {
 		ResetDropCount();		
 	}
 
-	public AppleseedTreeData(Location loc, ItemStack is, Integer dc, Integer fc, String p)
+	public AppleseedTreeData(AppleseedLocation loc, ItemStack is, Integer dc, Integer fc, String p)
 	{
-		X = loc.getX();
-		Y = loc.getY();
-		Z = loc.getZ();
-		worldName = loc.getWorld().getName();
+		location = new AppleseedLocation(loc.getWorldName(), loc.getX(), loc.getY(), loc.getZ());
+		itemStack = is;
+		player = p;
+		dropCount = dc;
+		fertilizerCount = fc;
+	}
+
+	public AppleseedTreeData(String world, Double x, Double y, Double z, ItemStack is, Integer dc, Integer fc, String p)
+	{
+		location = new AppleseedLocation(world, x, y, z);
 		itemStack = is;
 		player = p;
 		dropCount = dc;
@@ -67,8 +66,6 @@ public class AppleseedTreeData {
 		if(world == null)
 			return null;
 		
-//    	Location loc = new Location(world, (Double)loadData.get("x"), (Double)loadData.get("y"), (Double)loadData.get("z"));
-
     	String player;
 		if(loadData.containsKey("player"))
 			player = (String)loadData.get("player");
@@ -93,7 +90,7 @@ public class AppleseedTreeData {
     	else
     		iStack = new ItemStack(Material.getMaterial((Integer)loadData.get("itemid")), 1);
 
-		return new AppleseedTreeData(world, (Double)loadData.get("x"), (Double)loadData.get("y"), (Double)loadData.get("z"), iStack, dc, fc, player);
+		return new AppleseedTreeData(world.getName(), (Double)loadData.get("x"), (Double)loadData.get("y"), (Double)loadData.get("z"), iStack, dc, fc, player);
 	}
 	
     // take a tree location and item and return a hash for saving to disk
@@ -101,7 +98,7 @@ public class AppleseedTreeData {
     {
     	HashMap<String, Object> treeHash = new HashMap<String, Object>();
     	
-    	treeHash.put("world", location.getWorld().getName());
+    	treeHash.put("world", location.getWorldName());
     	treeHash.put("x", location.getX());
     	treeHash.put("y", location.getY());
     	treeHash.put("z", location.getZ());
@@ -113,7 +110,7 @@ public class AppleseedTreeData {
     	treeHash.put("player", player);
     	treeHash.put("dropcount", dropCount);
     	treeHash.put("fertilizercount", fertilizerCount);
-    	
+
     	return treeHash;
     }
 	
@@ -131,11 +128,21 @@ public class AppleseedTreeData {
     	}
     }
 
-	public Location getLocation()
+    public String getWorld()
+    {
+    	return location.getWorldName();
+    }
+    
+	public AppleseedLocation getLocation()
 	{
 		return location;
 	}
-	
+
+	public Location getBukkitLocation()
+	{
+		return location.getLocation();
+	}
+
 	public ItemStack getItemStack()
 	{
 		return itemStack;
