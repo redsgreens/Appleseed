@@ -7,6 +7,7 @@ import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
@@ -21,8 +22,8 @@ import org.yaml.snakeyaml.Yaml;
 
 public class AppleseedTreeManager {
 
-    // hashmap of tree locations and types
-    private static HashMap<Location, AppleseedTreeData> Trees = new HashMap<Location, AppleseedTreeData>();
+    // hashmap of tree worlds, locations and data
+    private static HashMap<String, HashMap<Location, AppleseedTreeData>> WorldTrees = new HashMap<String, HashMap<Location, AppleseedTreeData>>();
     
     private Random rand = new Random();
 
@@ -38,73 +39,92 @@ public class AppleseedTreeManager {
     public synchronized void ProcessTrees(){
     	Boolean treesRemoved = false;
     	Boolean treesUpdated = false;
+
+		List<World> worlds = Appleseed.Plugin.getServer().getWorlds();
+		Iterator<World> worldItr = worlds.iterator();
+		
+		while(worldItr.hasNext())
+		{
+			World world = worldItr.next();
+			String worldName = world.getName();
+			HashMap<Location, AppleseedTreeData> trees = WorldTrees.get(worldName);
+
+	    	if(trees.size() != 0){
+	        	Set<Location> locations = trees.keySet();
+	        	Iterator<Location> itr = locations.iterator();
+	        	while(itr.hasNext()){
+	        		Location loc = itr.next();
+
+	        		try {
+						if(loc == null)
+						{
+							itr.remove();
+							treesRemoved = true;
+							continue;
+						}
+	    		
+						Chunk chunk = world.getChunkAt(((Double)loc.getX()).intValue(), ((Double)loc.getZ()).intValue());
+						if(chunk == null)
+							continue;
+						else if(world.isChunkLoaded(chunk)){
+							Block block = world.getBlockAt(loc);
+							if(block == null)
+								continue;
+
+							if(isTree(loc)){
+								ItemStack iStack = trees.get(loc).getItemStack();
+								if(iStack != null)
+								{
+									AppleseedTreeType treeType = Appleseed.Config.TreeTypes.get(iStack);
+
+									if(treeType != null)
+									{
+										AppleseedTreeData tree = trees.get(loc);
+						    			Integer dropCount = tree.getDropCount(); 
+						    			Integer fertilizerCount = tree.getFertilizerCount();
+
+						    			if(rand.nextInt((Integer)(100 / treeType.getDropLikelihood())) == 0 && (dropCount > 0 || dropCount == -1))
+						    			{
+						    				loc.getWorld().dropItemNaturally(loc, tree.getItemStack());
+
+						    				if(dropCount != -1)
+						    				{
+						    					tree.setDropCount(dropCount - 1);
+						    					treesUpdated = true;
+						    				}
+						    			}
+						    			else if(dropCount == 0 && fertilizerCount == 0)
+						    			{
+						    				KillTree(loc);
+						    				treesUpdated = true;
+						    			}
+									}
+									else
+										System.out.println("Appleseed: No TreeType in config.yml for \"" + iStack.getType().name().toLowerCase() + "\"");
+								}
+							}
+							else if(world.getBlockAt(loc).getType() != Material.SAPLING)
+							{
+								itr.remove();
+								treesRemoved = true;
+							}
+						}
+					} catch (Exception e) {
+						System.out.println("Appleseed: Removed tree at " + loc.toString() + ". (Exception: " + e.getMessage() + ")");
+						itr.remove();
+						treesRemoved = true;
+					}
+	        	}
+	        	if(treesRemoved || treesUpdated)
+	        	{
+	        		asyncSaveTrees();
+	        	}
+	        }
+
     	
-    	if(Trees.size() != 0){
-        	Set<Location> locations = Trees.keySet();
-        	Iterator<Location> itr = locations.iterator();
-        	while(itr.hasNext()){
-        		Location loc = itr.next();
-        		if(loc == null)
-        			continue;
-       		
-        		World world = loc.getWorld();
-        		if(world == null)
-        			continue;
-        		
-        		Block block = world.getBlockAt(loc);
-        		if(block == null)
-        			continue;
-        		
-        		Chunk chunk = world.getChunkAt(block);
-        		if(chunk == null)
-        			continue;
-        		
-        		if(world.isChunkLoaded(chunk)){
-            		if(isTree(loc)){
-            			ItemStack iStack = Trees.get(loc).getItemStack();
-            			if(iStack != null)
-            			{
-            				AppleseedTreeType treeType = Appleseed.Config.TreeTypes.get(iStack);
-
-            				if(treeType != null)
-            				{
-                				AppleseedTreeData tree = Trees.get(loc);
-                    			Integer dropCount = tree.getDropCount(); 
-                    			Integer fertilizerCount = tree.getFertilizerCount();
-
-                    			if(rand.nextInt((Integer)(100 / treeType.getDropLikelihood())) == 0 && (dropCount > 0 || dropCount == -1))
-                    			{
-                    				loc.getWorld().dropItemNaturally(loc, tree.getItemStack());
-
-                    				if(dropCount != -1)
-                    				{
-                    					tree.setDropCount(dropCount - 1);
-                    					treesUpdated = true;
-                    				}
-                    			}
-                    			else if(dropCount == 0 && fertilizerCount == 0)
-                    			{
-                    				KillTree(loc);
-                    				treesUpdated = true;
-                    			}
-            				}
-            				else
-            					System.out.println("Appleseed: No TreeTypes in config.yml for \"" + iStack.getType().name().toLowerCase() + "\"");
-            			}
-            		}
-            		else if(world.getBlockAt(loc).getType() != Material.SAPLING)
-            		{
-            			itr.remove();
-            			treesRemoved = true;
-            		}
-        		}
-        	}
-        	if(treesRemoved || treesUpdated)
-        	{
-        		asyncSaveTrees();
-        	}
-        }
-
+    	
+		}
+    	
     	// reprocess the list every interval
 		Appleseed.Plugin.getServer().getScheduler().scheduleSyncDelayedTask(Appleseed.Plugin, new Runnable() {
 		    public void run() {
@@ -116,7 +136,7 @@ public class AppleseedTreeManager {
     // add a tree to the hashmap and save to disk
     public synchronized void AddTree(Location loc, ItemStack iStack, String player)
     {
-    	Trees.put(loc, new AppleseedTreeData(loc, iStack, player));
+    	WorldTrees.get(loc.getWorld().getName()).put(loc, new AppleseedTreeData(loc, iStack, player));
     	
     	asyncSaveTrees();
     }
@@ -124,22 +144,27 @@ public class AppleseedTreeManager {
     // add a tree to the hashmap and save to disk
     public synchronized void AddTree(Location loc, ItemStack iStack, Integer dropcount, Integer fertilizercount,  String player)
     {
-    	Trees.put(loc, new AppleseedTreeData(loc, iStack, dropcount, fertilizercount, player));
+    	WorldTrees.get(loc.getWorld().getName()).put(loc, new AppleseedTreeData(loc, iStack, dropcount, fertilizercount, player));
     	
     	asyncSaveTrees();
     }
 
     public synchronized AppleseedTreeData GetTree(Location loc)
     {
-    	if(Trees.containsKey(loc))
-    		return Trees.get(loc);
+    	HashMap<Location, AppleseedTreeData> trees = WorldTrees.get(loc.getWorld().getName());
+    	
+    	if(trees.containsKey(loc))
+    		return trees.get(loc);
     	else 
     	{
 
-    		World world = loc.getWorld();    		
+    		World world = loc.getWorld();
+    		if(world == null)
+    			return null;
+    		
         	Block block = world.getBlockAt(loc);
         	int treeCount = 0;
-        	while(treeCount < 15 && block.getTypeId() == treeId && !Trees.containsKey(block.getLocation()))
+        	while(treeCount < 15 && block.getTypeId() == treeId && !trees.containsKey(block.getLocation()))
         	{
         		Block blockDown = block.getFace(BlockFace.DOWN);
         		if(blockDown.getTypeId() == treeId)
@@ -151,16 +176,17 @@ public class AppleseedTreeManager {
         	}
 
         	Location retval = block.getLocation();
-        	if(!Trees.containsKey(retval))
+        	if(!trees.containsKey(retval))
         		return null;
         	else
-        		return Trees.get(retval);
+        		return trees.get(retval);
     	}
     }
 
     public synchronized Boolean IsNewTreeTooClose(Location loc)
     {
-    	Set<Location> locations = Trees.keySet();
+    	HashMap<Location, AppleseedTreeData> trees = WorldTrees.get(loc.getWorld().getName());
+    	Set<Location> locations = trees.keySet();
     	Iterator<Location> itr = locations.iterator();
     	
     	while(itr.hasNext())
@@ -172,7 +198,7 @@ public class AppleseedTreeManager {
     
     public synchronized void KillTree(Location loc)
     {
-    	if(!Trees.containsKey(loc))
+    	if(!WorldTrees.get(loc.getWorld().getName()).containsKey(loc))
     		return;
     	
     	World world = loc.getWorld();
@@ -227,8 +253,47 @@ public class AppleseedTreeManager {
     @SuppressWarnings("unchecked")
 	private synchronized void loadTrees()
     {
+    	Integer loadedTrees = 0;
+    	
     	try
     	{
+    		List<World> worlds = Appleseed.Plugin.getServer().getWorlds();
+    		Iterator<World> worldItr = worlds.iterator();
+    		
+    		while(worldItr.hasNext())
+    		{
+    			World world = worldItr.next();
+    			String worldName = world.getName();
+    			HashMap<Location, AppleseedTreeData> trees;
+    			
+    			if(WorldTrees.containsKey(worldName))
+    				trees = WorldTrees.get(worldName);
+    			else
+    			{
+    				trees = new HashMap<Location, AppleseedTreeData>();
+    				WorldTrees.put(worldName, trees);
+    			}
+    			
+                Yaml yaml = new Yaml();
+                File inFile = new File(Appleseed.Plugin.getDataFolder(), worldName + ".yml");
+                if (inFile.exists()){
+                    FileInputStream fis = new FileInputStream(inFile);
+                    ArrayList<HashMap<String, Object>> loadData = (ArrayList<HashMap<String, Object>>)yaml.load(fis);
+                    
+                    for(int i=0; i<loadData.size(); i++)
+                    {
+                    	HashMap<String, Object> treeHash = loadData.get(i);
+
+                    	AppleseedTreeData tree = AppleseedTreeData.LoadFromHash(treeHash);
+                    	
+                    	if(tree != null)
+                    		trees.put(tree.getLocation(), tree);
+                    }
+                    
+                    loadedTrees+=trees.size();
+                }
+    		}
+    		
             Yaml yaml = new Yaml();
             File inFile = new File(Appleseed.Plugin.getDataFolder(), "trees.yml");
             if (inFile.exists()){
@@ -241,46 +306,59 @@ public class AppleseedTreeManager {
 
                 	AppleseedTreeData tree = AppleseedTreeData.LoadFromHash(treeHash);
                 	
-                	if(tree != null)
-                		Trees.put(tree.getLocation(), tree);
+                	if(tree != null){
+                		WorldTrees.get(tree.getLocation().getWorld().getName()).put(tree.getLocation(), tree);
+                		loadedTrees++;
+                	}
                 }
+
+                inFile.renameTo(new File(Appleseed.Plugin.getDataFolder(), "trees.yml.old"));
             }
     	}
     	catch (Exception ex)
     	{
             ex.printStackTrace();
     	}
-    	System.out.println("Appleseed: " + ((Integer)Trees.size()).toString() + " trees loaded.");
+    	System.out.println("Appleseed: " + loadedTrees.toString() + " trees loaded.");
     }
     
     // save trees to disk
 
     public synchronized void saveTrees()
     {
-    	ArrayList<HashMap<String, Object>> saveData = new ArrayList<HashMap<String, Object>>();
-    	
-    	Set<Location> locations = Trees.keySet();
-    	Iterator<Location> itr = locations.iterator();
-    	while(itr.hasNext()){
-    		Location loc = itr.next();
-    		saveData.add(Trees.get(loc).MakeHashFromTree());
-    	}
-    	
-    	try
-    	{
-            Yaml yaml = new Yaml();
-            File outFile = new File(Appleseed.Plugin.getDataFolder(), "trees.yml");
-            FileOutputStream fos = new FileOutputStream(outFile);
-            OutputStreamWriter out = new OutputStreamWriter(fos);
-            out.write(yaml.dump(saveData));
-            out.close();
-            fos.close();
-    		
-    	}
-    	catch (Exception ex)
-    	{
-    		ex.printStackTrace();
-    	}
+		List<World> worlds = Appleseed.Plugin.getServer().getWorlds();
+		Iterator<World> worldItr = worlds.iterator();
+		
+		while(worldItr.hasNext())
+		{
+			World world = worldItr.next();
+			HashMap<Location, AppleseedTreeData> trees = WorldTrees.get(world.getName());
+
+	    	ArrayList<HashMap<String, Object>> saveData = new ArrayList<HashMap<String, Object>>();
+	    	
+	    	Set<Location> locations = trees.keySet();
+	    	Iterator<Location> itr = locations.iterator();
+	    	while(itr.hasNext()){
+	    		Location loc = itr.next();
+	    		saveData.add(trees.get(loc).MakeHashFromTree());
+	    	}
+	    	
+	    	try
+	    	{
+	            Yaml yaml = new Yaml();
+	            File outFile = new File(Appleseed.Plugin.getDataFolder(), world.getName() + ".yml");
+	            FileOutputStream fos = new FileOutputStream(outFile);
+	            OutputStreamWriter out = new OutputStreamWriter(fos);
+	            out.write(yaml.dump(saveData));
+	            out.close();
+	            fos.close();
+	    		
+	    	}
+	    	catch (Exception ex)
+	    	{
+	    		ex.printStackTrace();
+	    	}
+		}
     }
 
     public synchronized void asyncSaveTrees()
@@ -296,7 +374,7 @@ public class AppleseedTreeManager {
     public final boolean isTree(Location loc)
     {
     	Location rootLoc;
-    	if(Trees.containsKey(loc))
+    	if(WorldTrees.get(loc.getWorld().getName()).containsKey(loc))
     		rootLoc = loc;
     	else
     	{
