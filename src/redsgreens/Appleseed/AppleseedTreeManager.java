@@ -24,7 +24,8 @@ import org.yaml.snakeyaml.Yaml;
 public class AppleseedTreeManager {
 
     // hashmap of tree worlds, locations and data
-    private static HashMap<String, HashMap<AppleseedLocation, AppleseedTreeData>> WorldTrees = new HashMap<String, HashMap<AppleseedLocation, AppleseedTreeData>>();
+    private HashMap<String, HashMap<AppleseedLocation, AppleseedTreeData>> WorldTrees = new HashMap<String, HashMap<AppleseedLocation, AppleseedTreeData>>();
+    private HashMap<String, Boolean> treesUpdated = new HashMap<String, Boolean>();
     
     private Random rand = new Random();
 
@@ -38,9 +39,6 @@ public class AppleseedTreeManager {
 	
     // loop through the list of trees and drop items around them, then schedule the next run
     public synchronized void ProcessTrees(){
-    	Boolean treesRemoved = false;
-    	Boolean treesUpdated = false;
-
 		List<World> worlds = Appleseed.Plugin.getServer().getWorlds();
 		Iterator<World> worldItr = worlds.iterator();
 		
@@ -57,13 +55,6 @@ public class AppleseedTreeManager {
 	        		AppleseedLocation aloc = itr.next();
 
 	        		try {
-						if(aloc == null)
-						{
-							itr.remove();
-							treesRemoved = true;
-							continue;
-						}
-	    		
 						Chunk chunk = world.getChunkAt(((Double)aloc.getX()).intValue(), ((Double)aloc.getZ()).intValue());
 						if(chunk == null)
 							continue;
@@ -92,13 +83,15 @@ public class AppleseedTreeManager {
 						    				if(dropCount != -1)
 						    				{
 						    					tree.setDropCount(dropCount - 1);
-						    					treesUpdated = true;
+						    					if(!treesUpdated.containsKey(worldName))
+						    						treesUpdated.put(worldName, true);
 						    				}
 						    			}
 						    			else if(dropCount == 0 && fertilizerCount == 0)
 						    			{
 						    				KillTree(loc);
-						    				treesUpdated = true;
+					    					if(!treesUpdated.containsKey(worldName))
+					    						treesUpdated.put(worldName, true);
 						    			}
 									}
 									else
@@ -108,17 +101,19 @@ public class AppleseedTreeManager {
 							else if(world.getBlockAt(loc).getType() != Material.SAPLING)
 							{
 								itr.remove();
-								treesRemoved = true;
+		    					if(!treesUpdated.containsKey(worldName))
+		    						treesUpdated.put(worldName, true);
 							}
 						}
 					} catch (Exception e) {
 						System.out.println("Appleseed: Removed tree from world " + aloc.getWorldName() + ".");
 						e.printStackTrace();
 						itr.remove();
-						treesRemoved = true;
+    					if(!treesUpdated.containsKey(worldName))
+    						treesUpdated.put(worldName, true);
 					}
 	        	}
-	        	if(treesRemoved || treesUpdated)
+	        	if(treesUpdated.size() != 0)
 	        	{
 	        		asyncSaveTrees();
 	        	}
@@ -341,7 +336,13 @@ public class AppleseedTreeManager {
     // save trees to disk
     public synchronized void saveTrees()
     {
-        Iterator<String> worldItr = WorldTrees.keySet().iterator();
+        Iterator<String> worldItr;
+        
+        if(treesUpdated.size() == 0)
+        	worldItr = WorldTrees.keySet().iterator();
+        else
+        	worldItr = treesUpdated.keySet().iterator();
+        
 		while(worldItr.hasNext())
 		{
 			String world = worldItr.next();
@@ -371,6 +372,8 @@ public class AppleseedTreeManager {
 	    		ex.printStackTrace();
 	    	}
 		}
+		
+		treesUpdated.clear();
     }
 
     public synchronized void asyncSaveTrees()
