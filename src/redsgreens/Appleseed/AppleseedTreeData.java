@@ -10,7 +10,11 @@ import org.bukkit.inventory.ItemStack;
 
 public class AppleseedTreeData {
 
-	private Location location;
+//	private Location location;
+	private Double X;
+	private Double Y;
+	private Double Z;
+	private String worldName;
 	private ItemStack itemStack;
 	private String player;
 	private Integer dropCount;
@@ -20,7 +24,10 @@ public class AppleseedTreeData {
 
 	public AppleseedTreeData(Location loc, ItemStack is, String p)
 	{
-		location = loc;
+		X = loc.getX();
+		Y = loc.getY();
+		Z = loc.getZ();
+		worldName = loc.getWorld().getName();
 		itemStack = is;
 		player = p;
 
@@ -40,7 +47,10 @@ public class AppleseedTreeData {
 
 	public AppleseedTreeData(Location loc, ItemStack is, Integer dc, Integer fc, String p)
 	{
-		location = loc;
+		X = loc.getX();
+		Y = loc.getY();
+		Z = loc.getZ();
+		worldName = loc.getWorld().getName();
 		itemStack = is;
 		player = p;
 		dropCount = dc;
@@ -57,7 +67,7 @@ public class AppleseedTreeData {
 		if(world == null)
 			return null;
 		
-    	Location loc = new Location(world, (Double)loadData.get("x"), (Double)loadData.get("y"), (Double)loadData.get("z"));
+//    	Location loc = new Location(world, (Double)loadData.get("x"), (Double)loadData.get("y"), (Double)loadData.get("z"));
 
     	String player;
 		if(loadData.containsKey("player"))
@@ -83,7 +93,7 @@ public class AppleseedTreeData {
     	else
     		iStack = new ItemStack(Material.getMaterial((Integer)loadData.get("itemid")), 1);
 
-		return new AppleseedTreeData(loc, iStack, dc, fc, player);
+		return new AppleseedTreeData(world, (Double)loadData.get("x"), (Double)loadData.get("y"), (Double)loadData.get("z"), iStack, dc, fc, player);
 	}
 	
     // take a tree location and item and return a hash for saving to disk

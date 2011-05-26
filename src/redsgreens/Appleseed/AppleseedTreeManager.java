@@ -275,7 +275,7 @@ public class AppleseedTreeManager {
     			}
     			
                 Yaml yaml = new Yaml();
-                File inFile = new File(Appleseed.Plugin.getDataFolder(), worldName + ".yml");
+                File inFile = new File(Appleseed.Plugin.getDataFolder(), "trees-" + worldName + ".yml");
                 if (inFile.exists()){
                     FileInputStream fis = new FileInputStream(inFile);
                     ArrayList<HashMap<String, Object>> loadData = (ArrayList<HashMap<String, Object>>)yaml.load(fis);
@@ -346,7 +346,7 @@ public class AppleseedTreeManager {
 	    	try
 	    	{
 	            Yaml yaml = new Yaml();
-	            File outFile = new File(Appleseed.Plugin.getDataFolder(), world.getName() + ".yml");
+	            File outFile = new File(Appleseed.Plugin.getDataFolder(), "trees-" + world.getName() + ".yml");
 	            FileOutputStream fos = new FileOutputStream(outFile);
 	            OutputStreamWriter out = new OutputStreamWriter(fos);
 	            out.write(yaml.dump(saveData));
