@@ -56,7 +56,8 @@ public class Appleseed extends JavaPlugin {
     }
 
     public void onDisable() {
-    	TreeManager.saveTrees();
+    	if(!AppleseedTreeManager.SaveRunning)
+    		TreeManager.saveTrees();
         System.out.println( getDescription().getName() + " version " + getDescription().getVersion() + " is disabled." );
     }
 

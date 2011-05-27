@@ -73,11 +73,11 @@ public class AppleseedBlockListener extends BlockListener {
 
 			// save the sign location
 			tree.setSign(signLoc);
+			Appleseed.TreeManager.updateSign(tree);
 			
 			String signWorld = signLoc.getWorld().getName();
 			if(!Appleseed.TreeManager.treesUpdated.containsKey(signWorld))
 				Appleseed.TreeManager.treesUpdated.put(signWorld, true);
-			Appleseed.TreeManager.asyncSaveTrees();
 		}
 	}
 
@@ -111,7 +111,6 @@ public class AppleseedBlockListener extends BlockListener {
 		String signWorld = signBlock.getLocation().getWorld().getName();
 		if(!Appleseed.TreeManager.treesUpdated.containsKey(signWorld))
 			Appleseed.TreeManager.treesUpdated.put(signWorld, true);
-		Appleseed.TreeManager.asyncSaveTrees();
 	}
 	
 	

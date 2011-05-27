@@ -176,9 +176,11 @@ public class AppleseedPlayerListener extends PlayerListener {
 
 		if(treesUpdated == true)
 		{
+			if(tree.hasSign())
+				Appleseed.TreeManager.updateSign(tree);
+			
 			if(!Appleseed.TreeManager.treesUpdated.containsKey(tree.getWorld()))
 				Appleseed.TreeManager.treesUpdated.put(tree.getWorld(), true);
-			Appleseed.TreeManager.asyncSaveTrees();
 		}
 
 		// take the item from the player

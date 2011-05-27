@@ -18,6 +18,8 @@ import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.block.Sign;
+import org.bukkit.craftbukkit.block.CraftSign;
 import org.bukkit.inventory.ItemStack;
 import org.yaml.snakeyaml.Yaml;
 
@@ -34,6 +36,8 @@ public class AppleseedTreeManager {
     // hashmap of tree worlds, locations and data
     private HashMap<String, HashMap<AppleseedLocation, AppleseedTreeData>> WorldTrees = new HashMap<String, HashMap<AppleseedLocation, AppleseedTreeData>>();
     public HashMap<String, Boolean> treesUpdated = new HashMap<String, Boolean>();
+
+    public static boolean SaveRunning = false;
     
     private Random rand = new Random();
 
@@ -83,7 +87,8 @@ public class AppleseedTreeManager {
 
 							if(isTree(loc)){
 								// the tree is alive
-								ItemStack iStack = trees.get(aloc).getItemStack();
+								AppleseedTreeData tree = trees.get(aloc); 
+								ItemStack iStack = tree.getItemStack();
 								if(iStack != null)
 								{
 									AppleseedTreeType treeType = Appleseed.Config.TreeTypes.get(iStack);
@@ -91,7 +96,6 @@ public class AppleseedTreeManager {
 									if(treeType != null)
 									{
 										// and has a treetype 
-										AppleseedTreeData tree = trees.get(aloc);
 						    			Integer dropCount = tree.getDropCount(); 
 						    			Integer fertilizerCount = tree.getFertilizerCount();
 
@@ -115,6 +119,9 @@ public class AppleseedTreeManager {
 					    					if(!treesUpdated.containsKey(worldName))
 					    						treesUpdated.put(worldName, true);
 						    			}
+						    			
+						    			if(tree.hasSign())
+						    				updateSign(tree);
 									}
 									else
 										System.out.println("Appleseed: No TreeType in config.yml for \"" + iStack.getType().name().toLowerCase() + "\"");
@@ -162,7 +169,6 @@ public class AppleseedTreeManager {
 		if(!treesUpdated.containsKey(loc.getWorldName()))
 			treesUpdated.put(loc.getWorldName(), true);
 
-    	asyncSaveTrees();
     }
 
     // add a tree to the hashmap and save to disk
@@ -173,7 +179,6 @@ public class AppleseedTreeManager {
 		if(!treesUpdated.containsKey(loc.getWorldName()))
 			treesUpdated.put(loc.getWorldName(), true);
 
-    	asyncSaveTrees();
     }
 
     // return a tree if there is one at the specified location
@@ -370,6 +375,11 @@ public class AppleseedTreeManager {
     // save trees to disk
     public synchronized void saveTrees()
     {
+    	if(SaveRunning)
+    		return;
+    	
+    	SaveRunning = true;
+    	
         Iterator<String> worldItr;
         
         if(treesUpdated.size() == 0)
@@ -408,14 +418,17 @@ public class AppleseedTreeManager {
 		}
 		
 		treesUpdated.clear();
+		
+    	SaveRunning = false;
     }
 
     // schedule saveTrees() for 10 tics from now (generally .5 sec)
-    public synchronized void asyncSaveTrees()
+    private synchronized void asyncSaveTrees()
     {
 		Appleseed.Plugin.getServer().getScheduler().scheduleAsyncDelayedTask(Appleseed.Plugin, new Runnable() {
 		    public void run() {
-		    	saveTrees();
+		    	if(!SaveRunning)
+		    		saveTrees();
 		    }
 		}, 10);
     }
@@ -484,4 +497,51 @@ public class AppleseedTreeManager {
     		return retval;
     }
 
+    public synchronized void updateSign(AppleseedTreeData tree)
+    {
+    	if(!tree.hasSign())
+    		return;
+    	
+    	World world = Appleseed.Plugin.getServer().getWorld(tree.getWorld());
+    	if(world == null)
+    		return;
+    	
+    	Block block = world.getBlockAt(tree.getSign().getLocation());
+    	if(block == null)
+    		return;
+
+    	Sign sign = null;
+    	
+    	Boolean signInvalid = false;
+    	if(block.getType() != Material.WALL_SIGN)
+    		signInvalid = true;
+    	else
+    	{
+    		sign = new CraftSign(block);
+    		if(!sign.getLine(0).equals("§1[Appleseed]"))
+    			signInvalid = true;
+    	}
+
+    	if(signInvalid || sign == null)
+    	{
+    		tree.setSign(null);
+    		String worldName = world.getName();
+			if(!treesUpdated.containsKey(worldName))
+				treesUpdated.put(worldName, true);
+    		return;
+    	}
+    	
+    	
+    	String prefix;
+    	if(tree.getDropCount() == 0)
+    		prefix = "§c";
+    	else
+    		prefix = "§a";
+
+    	sign.setLine(1, "");
+    	sign.setLine(2, prefix + tree.getItemStack().getType().name().toLowerCase());
+    	sign.setLine(3, "");
+    	
+    	sign.update();
+    }
 }
