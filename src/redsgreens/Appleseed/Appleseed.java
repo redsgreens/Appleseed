@@ -15,6 +15,7 @@ import org.bukkit.plugin.PluginManager;
  */
 public class Appleseed extends JavaPlugin {
     private final AppleseedPlayerListener playerListener = new AppleseedPlayerListener();
+    private final AppleseedBlockListener blockListener = new AppleseedBlockListener();
     private final AppleseedWorldListener worldListener = new AppleseedWorldListener();
     private final HashMap<Player, Boolean> debugees = new HashMap<Player, Boolean>();
     
@@ -44,6 +45,7 @@ public class Appleseed extends JavaPlugin {
         // register our events
         PluginManager pm = getServer().getPluginManager();
         pm.registerEvent(Type.PLAYER_INTERACT, playerListener, Priority.Monitor, this);
+        pm.registerEvent(Type.SIGN_CHANGE, blockListener, Priority.Monitor, this);
         pm.registerEvent(Type.WORLD_LOAD, worldListener, Priority.Monitor, this);
 
         // start the timer

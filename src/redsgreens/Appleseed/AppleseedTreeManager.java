@@ -33,7 +33,7 @@ public class AppleseedTreeManager {
 
     // hashmap of tree worlds, locations and data
     private HashMap<String, HashMap<AppleseedLocation, AppleseedTreeData>> WorldTrees = new HashMap<String, HashMap<AppleseedLocation, AppleseedTreeData>>();
-    private HashMap<String, Boolean> treesUpdated = new HashMap<String, Boolean>();
+    public HashMap<String, Boolean> treesUpdated = new HashMap<String, Boolean>();
     
     private Random rand = new Random();
 
