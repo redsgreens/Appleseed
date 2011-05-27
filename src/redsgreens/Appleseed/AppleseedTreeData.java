@@ -20,7 +20,9 @@ public class AppleseedTreeData {
 	private String player;
 	private Integer dropCount;
 	private Integer fertilizerCount;
-
+	private Boolean hasSign;
+	private AppleseedLocation signLocation;
+	
 	private static Random rand = new Random();
 
 	public AppleseedTreeData(AppleseedLocation loc, ItemStack is, String p)
@@ -28,6 +30,8 @@ public class AppleseedTreeData {
 		location = new AppleseedLocation(loc.getWorldName(), loc.getX(), loc.getY(), loc.getZ());
 		itemStack = is;
 		player = p;
+		hasSign = false;
+		signLocation = null;
 
     	AppleseedTreeType treeType = Appleseed.Config.TreeTypes.get(is);
     	Integer fertilizer = treeType.getMaxFertilizer();
@@ -50,6 +54,8 @@ public class AppleseedTreeData {
 		player = p;
 		dropCount = dc;
 		fertilizerCount = fc;
+		hasSign = false;
+		signLocation = null;
 	}
 
 	public AppleseedTreeData(String world, Double x, Double y, Double z, ItemStack is, Integer dc, Integer fc, String p)
@@ -59,6 +65,19 @@ public class AppleseedTreeData {
 		player = p;
 		dropCount = dc;
 		fertilizerCount = fc;
+		hasSign = false;
+		signLocation = null;
+	}
+
+	public AppleseedTreeData(String world, Double x, Double y, Double z, ItemStack is, Integer dc, Integer fc, String p, Double sx, Double sy, Double sz)
+	{
+		location = new AppleseedLocation(world, x, y, z);
+		itemStack = is;
+		player = p;
+		dropCount = dc;
+		fertilizerCount = fc;
+		hasSign = true;
+		signLocation = new AppleseedLocation(world, sx, sy, sz);
 	}
 
 	// take a hashmap and make a tree from it
@@ -94,8 +113,31 @@ public class AppleseedTreeData {
     		iStack = new ItemStack(Material.getMaterial((Integer)loadData.get("itemid")), 1, ((Integer)loadData.get("durability")).shortValue()); 
     	else
     		iStack = new ItemStack(Material.getMaterial((Integer)loadData.get("itemid")), 1);
+		
+		Boolean sign = false;
+		Double signx = null;
+		Double signy = null;
+		Double signz = null;
+		if(loadData.containsKey("sign"))
+		{
+			sign = (Boolean)loadData.get("sign");
+			if(sign == true)
+			{
+				if(loadData.containsKey("signx") && loadData.containsKey("signy") && loadData.containsKey("signz"))
+				{
+					signx = (Double)loadData.get("signx");
+					signy = (Double)loadData.get("signy");
+					signz = (Double)loadData.get("signz");
+				}
+				else
+					sign = false;
+			}
+		}
 
-		return new AppleseedTreeData(world.getName(), (Double)loadData.get("x"), (Double)loadData.get("y"), (Double)loadData.get("z"), iStack, dc, fc, player);
+		if(sign)
+			return new AppleseedTreeData(world.getName(), (Double)loadData.get("x"), (Double)loadData.get("y"), (Double)loadData.get("z"), iStack, dc, fc, player, signx, signy, signz);
+		else
+			return new AppleseedTreeData(world.getName(), (Double)loadData.get("x"), (Double)loadData.get("y"), (Double)loadData.get("z"), iStack, dc, fc, player);
 	}
 	
     // take a tree location and item and return a hash for saving to disk
@@ -116,6 +158,14 @@ public class AppleseedTreeData {
     	treeHash.put("dropcount", dropCount);
     	treeHash.put("fertilizercount", fertilizerCount);
 
+    	if(hasSign)
+    	{
+        	treeHash.put("sign", true);
+        	treeHash.put("signx", signLocation.getX());
+        	treeHash.put("signy", signLocation.getY());
+        	treeHash.put("signz", signLocation.getZ());
+    	}
+    	
     	return treeHash;
     }
 	
@@ -176,5 +226,29 @@ public class AppleseedTreeData {
 	public void setFertilizerCount(Integer fc)
 	{
 		fertilizerCount = fc;
+	}
+	
+	public Boolean hasSign()
+	{
+		return hasSign;
+	}
+	
+	public AppleseedLocation getSign()
+	{
+		return signLocation;
+	}
+	
+	public void setSign(Location loc)
+	{
+		if(loc != null)
+		{
+		hasSign = true;
+		signLocation = new AppleseedLocation(loc);
+		}
+		else
+		{
+			hasSign = false;
+			signLocation = null;
+		}
 	}
 }

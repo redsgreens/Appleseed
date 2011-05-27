@@ -46,6 +46,7 @@ public class Appleseed extends JavaPlugin {
         PluginManager pm = getServer().getPluginManager();
         pm.registerEvent(Type.PLAYER_INTERACT, playerListener, Priority.Monitor, this);
         pm.registerEvent(Type.SIGN_CHANGE, blockListener, Priority.Monitor, this);
+        pm.registerEvent(Type.BLOCK_BREAK, blockListener, Priority.Monitor, this);
         pm.registerEvent(Type.WORLD_LOAD, worldListener, Priority.Monitor, this);
 
         // start the timer

@@ -159,6 +159,9 @@ public class AppleseedTreeManager {
     {
     	WorldTrees.get(loc.getWorldName()).put(loc, new AppleseedTreeData(loc, iStack, player));
     	
+		if(!treesUpdated.containsKey(loc.getWorldName()))
+			treesUpdated.put(loc.getWorldName(), true);
+
     	asyncSaveTrees();
     }
 
@@ -166,7 +169,10 @@ public class AppleseedTreeManager {
     public synchronized void AddTree(AppleseedLocation loc, ItemStack iStack, Integer dropcount, Integer fertilizercount,  String player)
     {
     	WorldTrees.get(loc.getWorldName()).put(loc, new AppleseedTreeData(loc, iStack, dropcount, fertilizercount, player));
-    	
+
+		if(!treesUpdated.containsKey(loc.getWorldName()))
+			treesUpdated.put(loc.getWorldName(), true);
+
     	asyncSaveTrees();
     }
 
