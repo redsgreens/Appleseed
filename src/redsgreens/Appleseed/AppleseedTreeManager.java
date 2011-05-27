@@ -21,6 +21,14 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.inventory.ItemStack;
 import org.yaml.snakeyaml.Yaml;
 
+/**
+ * AppleseedTreeManager handles the adding/removing/processing of trees
+ * 
+ * NOTE: the class has "synchronized" everywhere because saving trees can be executed
+ *       in another thread
+ *
+ * @author redsgreens
+ */
 public class AppleseedTreeManager {
 
     // hashmap of tree worlds, locations and data
@@ -39,22 +47,31 @@ public class AppleseedTreeManager {
 	
     // loop through the list of trees and drop items around them, then schedule the next run
     public synchronized void ProcessTrees(){
-		List<World> worlds = Appleseed.Plugin.getServer().getWorlds();
+
+    	// only process trees in loaded worlds
+    	List<World> worlds = Appleseed.Plugin.getServer().getWorlds();
 		Iterator<World> worldItr = worlds.iterator();
 		
 		while(worldItr.hasNext())
 		{
 			World world = worldItr.next();
 			String worldName = world.getName();
+			
+			// get the trees for this world
 			HashMap<AppleseedLocation, AppleseedTreeData> trees = WorldTrees.get(worldName);
 
+			// bail if no trees to process
 	    	if(trees.size() != 0){
+	    		
+	    		// iterate over the trees in this world
 	        	Set<AppleseedLocation> locations = trees.keySet();
 	        	Iterator<AppleseedLocation> itr = locations.iterator();
 	        	while(itr.hasNext()){
 	        		AppleseedLocation aloc = itr.next();
 
 	        		try {
+	        			
+	        			// make sure the chunk is loaded
 						Chunk chunk = world.getChunkAt(((Double)aloc.getX()).intValue(), ((Double)aloc.getZ()).intValue());
 						if(chunk == null)
 							continue;
@@ -65,6 +82,7 @@ public class AppleseedTreeManager {
 								continue;
 
 							if(isTree(loc)){
+								// the tree is alive
 								ItemStack iStack = trees.get(aloc).getItemStack();
 								if(iStack != null)
 								{
@@ -72,16 +90,19 @@ public class AppleseedTreeManager {
 
 									if(treeType != null)
 									{
+										// and has a treetype 
 										AppleseedTreeData tree = trees.get(aloc);
 						    			Integer dropCount = tree.getDropCount(); 
 						    			Integer fertilizerCount = tree.getFertilizerCount();
 
+						    			// roll the dice to see if an item should be spawned
 						    			if(rand.nextInt((Integer)(100 / treeType.getDropLikelihood())) == 0 && (dropCount > 0 || dropCount == -1))
 						    			{
 						    				loc.getWorld().dropItemNaturally(loc, tree.getItemStack());
 
 						    				if(dropCount != -1)
 						    				{
+						    					// decrement the dropcount if it's not an infinite tree
 						    					tree.setDropCount(dropCount - 1);
 						    					if(!treesUpdated.containsKey(worldName))
 						    						treesUpdated.put(worldName, true);
@@ -89,6 +110,7 @@ public class AppleseedTreeManager {
 						    			}
 						    			else if(dropCount == 0 && fertilizerCount == 0)
 						    			{
+						    				// the tree has no drops or fertilizer left, kill it
 						    				KillTree(loc);
 					    					if(!treesUpdated.containsKey(worldName))
 					    						treesUpdated.put(worldName, true);
@@ -100,6 +122,7 @@ public class AppleseedTreeManager {
 							}
 							else if(world.getBlockAt(loc).getType() != Material.SAPLING)
 							{
+								// there's no tree at the stored location anymore, remove it
 								itr.remove();
 		    					if(!treesUpdated.containsKey(worldName))
 		    						treesUpdated.put(worldName, true);
@@ -115,6 +138,7 @@ public class AppleseedTreeManager {
 	        	}
 	        	if(treesUpdated.size() != 0)
 	        	{
+	        		// save the trees if any changes are made
 	        		asyncSaveTrees();
 	        	}
 	        }
@@ -146,15 +170,17 @@ public class AppleseedTreeManager {
     	asyncSaveTrees();
     }
 
+    // return a tree if there is one at the specified location
     public synchronized AppleseedTreeData GetTree(AppleseedLocation loc)
     {
     	HashMap<AppleseedLocation, AppleseedTreeData> trees = WorldTrees.get(loc.getWorldName());
     	
     	if(trees.containsKey(loc))
+    		// the location is the root of a tree
     		return trees.get(loc);
     	else 
     	{
-
+    		// the location is not the root of a tree, scan down to see if they clicked above the root
     		World world = Appleseed.Plugin.getServer().getWorld(loc.getWorldName());
     		if(world == null)
     			return null;
@@ -180,6 +206,7 @@ public class AppleseedTreeManager {
     	}
     }
 
+    // for performance reasons calculate the distance squared between the location and all the other trees in the same world 
     public synchronized Boolean IsNewTreeTooClose(Location loc)
     {
     	HashMap<AppleseedLocation, AppleseedTreeData> trees = WorldTrees.get(loc.getWorld().getName());
@@ -193,6 +220,7 @@ public class AppleseedTreeManager {
     	return false;
     }
     
+    // replace the trunk of a tree with air so the leaves disappear
     public synchronized void KillTree(Location loc)
     {
     	if(!WorldTrees.get(loc.getWorld().getName()).containsKey(new AppleseedLocation(loc)))
@@ -376,6 +404,7 @@ public class AppleseedTreeManager {
 		treesUpdated.clear();
     }
 
+    // schedule saveTrees() for 10 tics from now (generally .5 sec)
     public synchronized void asyncSaveTrees()
     {
 		Appleseed.Plugin.getServer().getScheduler().scheduleAsyncDelayedTask(Appleseed.Plugin, new Runnable() {
@@ -385,7 +414,7 @@ public class AppleseedTreeManager {
 		}, 10);
     }
     
-    // see if the given location is the root of a tree
+    // see if the given location is a tree with a trunk and some leaves
     public final boolean isTree(Location loc)
     {
     	Location rootLoc;

@@ -5,6 +5,12 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 
+/**
+ * AppleseedCanBuild hooks to WorldGuard to enforce region protection
+ *
+ * @author redsgreens
+ */
+
 public class AppleseedCanBuild {
 
 	private WorldGuardPlugin WorldGuard = null;

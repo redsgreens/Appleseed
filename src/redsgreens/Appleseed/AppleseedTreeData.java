@@ -8,6 +8,11 @@ import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.inventory.ItemStack;
 
+/**
+ * AppleseedTreeData stores the data about a real tree in game
+ *
+ * @author redsgreens
+ */
 public class AppleseedTreeData {
 
 	private AppleseedLocation location;

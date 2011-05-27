@@ -5,6 +5,11 @@ import java.util.HashMap;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
+/**
+ * AppleseedTreeType stores the data about valid tree types that can be planted
+ *
+ * @author redsgreens
+ */
 public class AppleseedTreeType {
 
 	private ItemStack itemStack;

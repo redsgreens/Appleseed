@@ -12,6 +12,12 @@ import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.yaml.snakeyaml.Yaml;
 
+/**
+ * AppleseedConfig loads the config file from disk and presents the settings as public variables
+ *
+ * @author redsgreens
+ */
+
 public class AppleseedConfig {
 	public Boolean ShowErrorsInClient = true;
 	public Integer DropInterval = 60;

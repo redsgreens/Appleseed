@@ -11,7 +11,10 @@ import org.bukkit.event.player.PlayerListener;
 import org.bukkit.inventory.ItemStack;
 
 /**
- * Handle events for all Player related events
+ * Handle onPlayerInteract event
+ * 
+ * TODO: this class needs refactored/split up so it is readable
+ * 
  * @author redsgreens
  */
 public class AppleseedPlayerListener extends PlayerListener {

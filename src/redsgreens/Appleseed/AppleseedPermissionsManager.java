@@ -6,6 +6,11 @@ import org.bukkit.plugin.Plugin;
 import com.nijiko.permissions.PermissionHandler;
 import com.nijikokun.bukkit.Permissions.Permissions;
 
+/**
+ * AppleseedPermissionsManager hooks to the permissions plugin
+ *
+ * @author redsgreens
+ */
 public class AppleseedPermissionsManager {
 
 	private PermissionHandler Permissions = null;

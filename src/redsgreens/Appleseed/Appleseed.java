@@ -41,7 +41,7 @@ public class Appleseed extends JavaPlugin {
     	// initialize the tree manager
     	TreeManager = new AppleseedTreeManager();
     	
-        // register our event
+        // register our events
         PluginManager pm = getServer().getPluginManager();
         pm.registerEvent(Type.PLAYER_INTERACT, playerListener, Priority.Monitor, this);
         pm.registerEvent(Type.WORLD_LOAD, worldListener, Priority.Monitor, this);
