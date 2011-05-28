@@ -41,7 +41,7 @@ public class AppleseedPlayerListener extends PlayerListener {
 			// player is trying to plant something
 			handlePlantEvent(event, player, iStack, block);
 		
-		else if(blockType == Material.LOG && AppleseedItemStack.getItemStackName(new AppleseedItemStack(iStack)).equals("bone_meal"))
+		else if(blockType == Material.LOG && iStack.getType() == Material.INK_SACK && iStack.getDurability() == 15)
 			// player is trying to fertilize a tree
 			handleFertilzeEvent(event, player, iStack, block);
 		
@@ -68,7 +68,7 @@ public class AppleseedPlayerListener extends PlayerListener {
 		Block blockRoot = block.getRelative(BlockFace.UP);
 		if(blockRoot.getType() != Material.AIR)
 			return;
-		
+
 		// return if they don't have permission
 		if(!Appleseed.Permissions.hasPermission(player, "plant." + AppleseedItemStack.getItemStackName(aiStack)) || !Appleseed.CanBuild.canBuild(player, blockRoot))
 		{

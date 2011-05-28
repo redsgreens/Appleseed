@@ -182,7 +182,7 @@ public class AppleseedItemStack {
 	{
 	    if (this == other)
 	      return true;
-	    if (!(other instanceof AppleseedLocation))
+	    if (!(other instanceof AppleseedItemStack))
 	      return false;
 	    AppleseedItemStack otherIS = (AppleseedItemStack) other;
 	    return (this.material == otherIS.getMaterial() && this.durability == otherIS.getDurability()); 
@@ -190,5 +190,10 @@ public class AppleseedItemStack {
 
 	public int hashCode() { 
 		return this.material.hashCode() + this.durability.hashCode();	
+	}
+	
+	public String toString()
+	{
+		return "Material=" + material.name().toLowerCase() + ", Durability=" + durability.toString();
 	}
 }
