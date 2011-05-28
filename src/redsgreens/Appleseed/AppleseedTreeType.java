@@ -2,7 +2,6 @@ package redsgreens.Appleseed;
 
 import java.util.HashMap;
 
-import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
 /**
@@ -39,13 +38,9 @@ public class AppleseedTreeType {
 		if(!loadData.containsKey("DropLikelihood") || !loadData.containsKey("RequireFertilzer") || !loadData.containsKey("DropsBeforeFertilzer") || !loadData.containsKey("TreeType"))
 			return null;
 
-		Material material = Material.matchMaterial(itemName);
-		ItemStack iStack;
-		if(material != null)
-			iStack = new ItemStack(material, 1);
-		else if(itemName.equalsIgnoreCase("cocoa_beans"))
-			iStack = new ItemStack(Material.INK_SACK, 1, (short)3);
-		else
+		ItemStack iStack = Appleseed.getItemStackFromName(itemName);
+
+		if(iStack == null)
 			return null;
 
 		Integer mf;

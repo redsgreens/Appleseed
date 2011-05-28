@@ -539,7 +539,7 @@ public class AppleseedTreeManager {
     		prefix = "§a";
 
     	sign.setLine(1, "");
-    	sign.setLine(2, prefix + tree.getItemStack().getType().name().toLowerCase());
+    	sign.setLine(2, prefix + Appleseed.getItemStackName(tree.getItemStack()));
     	sign.setLine(3, "");
     	
     	sign.update();

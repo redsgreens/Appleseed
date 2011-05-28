@@ -41,7 +41,7 @@ public class AppleseedPlayerListener extends PlayerListener {
 			// player is trying to plant something
 			handlePlantEvent(event, player, iStack, block);
 		
-		else if(blockType == Material.LOG && iStack.getType() == Material.INK_SACK && iStack.getDurability() == (short)15)
+		else if(blockType == Material.LOG && Appleseed.getItemStackName(iStack).equals("bone_meal"))
 			// player is trying to fertilize a tree
 			handleFertilzeEvent(event, player, iStack, block);
 		
@@ -76,16 +76,7 @@ public class AppleseedPlayerListener extends PlayerListener {
 			return;
 		
 		// return if they don't have permission
-		if(iStack.getType() == Material.INK_SACK && iStack.getDurability() == (short)3)
-		{
-			if(!Appleseed.Permissions.hasPermission(player, "plant.cocoa_beans") || !Appleseed.CanBuild.canBuild(player, blockRoot))
-			{
-				if(Appleseed.Config.ShowErrorsInClient)
-					player.sendMessage("§cErr: You don't have permission to plant this tree.");
-				return;
-			}
-		}
-		else if(!Appleseed.Permissions.hasPermission(player, "plant." + iStack.getType().name().toLowerCase()) || !Appleseed.CanBuild.canBuild(player, blockRoot))
+		if(!Appleseed.Permissions.hasPermission(player, "plant." + Appleseed.getItemStackName(iStack)) || !Appleseed.CanBuild.canBuild(player, blockRoot))
 		{
 			if(Appleseed.Config.ShowErrorsInClient)
 				player.sendMessage("§cErr: You don't have permission to plant this tree.");
@@ -215,17 +206,11 @@ public class AppleseedPlayerListener extends PlayerListener {
 		else
 		{
 			AppleseedTreeData tree = Appleseed.TreeManager.GetTree(new AppleseedLocation(loc));
-			String msg = "§cAppleseed: Type=";
 			ItemStack treeIS = tree.getItemStack();
 			Integer treeDC = tree.getDropCount();
 			
-			if(treeIS.getType() == Material.INK_SACK && treeIS.getDurability() == (short)3)
-				msg = msg + "cocoa_beans";
-			else
-				msg = msg + treeIS.getType().name().toLowerCase();
+			String msg = "§cAppleseed: Type=" + Appleseed.getItemStackName(treeIS) + ", NeedsFertilizer=";
 
-			msg = msg + ", NeedsFertilizer=";
-			
 			if(treeDC == 0)
 				msg = msg + "yes";
 			else 

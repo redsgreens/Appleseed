@@ -110,7 +110,7 @@ public class AppleseedConfig {
 						TreeTypes.put(treeType.getItemStack(), treeType);
 					
 				}
-				
+
 				String strTreeTypes = "";
 				Iterator<ItemStack> itr2 = TreeTypes.keySet().iterator();
 				while(itr2.hasNext())
@@ -119,10 +119,7 @@ public class AppleseedConfig {
 					if(strTreeTypes.length() != 0)
 						strTreeTypes = strTreeTypes + ",";
 					
-					if(is.getType() == Material.INK_SACK && is.getDurability() == (short)3)
-						strTreeTypes = strTreeTypes + "cocoa_beans";
-					else
-						strTreeTypes = strTreeTypes + is.getType().name().toLowerCase();
+					strTreeTypes = strTreeTypes + Appleseed.getItemStackName(is);
 				}
 				
 				System.out.println("Appleseed: TreeTypes=(" + strTreeTypes +")");
