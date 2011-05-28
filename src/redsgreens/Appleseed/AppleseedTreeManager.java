@@ -20,7 +20,6 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
 import org.bukkit.craftbukkit.block.CraftSign;
-import org.bukkit.inventory.ItemStack;
 import org.yaml.snakeyaml.Yaml;
 
 /**
@@ -88,7 +87,7 @@ public class AppleseedTreeManager {
 							if(isTree(loc)){
 								// the tree is alive
 								AppleseedTreeData tree = trees.get(aloc); 
-								ItemStack iStack = tree.getItemStack();
+								AppleseedItemStack iStack = tree.getItemStack();
 								if(iStack != null)
 								{
 									AppleseedTreeType treeType = Appleseed.Config.TreeTypes.get(iStack);
@@ -102,7 +101,7 @@ public class AppleseedTreeManager {
 						    			// roll the dice to see if an item should be spawned
 						    			if(rand.nextInt((Integer)(100 / treeType.getDropLikelihood())) == 0 && (dropCount > 0 || dropCount == -1))
 						    			{
-						    				loc.getWorld().dropItemNaturally(loc, tree.getItemStack());
+						    				loc.getWorld().dropItemNaturally(loc, tree.getItemStack().getItemStack());
 
 						    				if(dropCount != -1)
 						    				{
@@ -124,7 +123,7 @@ public class AppleseedTreeManager {
 						    				updateSign(tree);
 									}
 									else
-										System.out.println("Appleseed: No TreeType in config.yml for \"" + iStack.getType().name().toLowerCase() + "\"");
+										System.out.println("Appleseed: No TreeType in config.yml for \"" + AppleseedItemStack.getItemStackName(iStack) + "\"");
 								}
 							}
 							else if(world.getBlockAt(loc).getType() != Material.SAPLING)
@@ -162,7 +161,7 @@ public class AppleseedTreeManager {
     }
 
     // add a tree to the hashmap and save to disk
-    public synchronized void AddTree(AppleseedLocation loc, ItemStack iStack, String player)
+    public synchronized void AddTree(AppleseedLocation loc, AppleseedItemStack iStack, String player)
     {
     	WorldTrees.get(loc.getWorldName()).put(loc, new AppleseedTreeData(loc, iStack, player));
     	
@@ -172,7 +171,7 @@ public class AppleseedTreeManager {
     }
 
     // add a tree to the hashmap and save to disk
-    public synchronized void AddTree(AppleseedLocation loc, ItemStack iStack, Integer dropcount, Integer fertilizercount,  String player)
+    public synchronized void AddTree(AppleseedLocation loc, AppleseedItemStack iStack, Integer dropcount, Integer fertilizercount,  String player)
     {
     	WorldTrees.get(loc.getWorldName()).put(loc, new AppleseedTreeData(loc, iStack, dropcount, fertilizercount, player));
 
@@ -539,7 +538,7 @@ public class AppleseedTreeManager {
     		prefix = "§a";
 
     	sign.setLine(1, "");
-    	sign.setLine(2, prefix + Appleseed.getItemStackName(tree.getItemStack()));
+    	sign.setLine(2, prefix + AppleseedItemStack.getItemStackName(tree.getItemStack()));
     	sign.setLine(3, "");
     	
     	sign.update();

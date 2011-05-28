@@ -41,7 +41,7 @@ public class AppleseedPlayerListener extends PlayerListener {
 			// player is trying to plant something
 			handlePlantEvent(event, player, iStack, block);
 		
-		else if(blockType == Material.LOG && Appleseed.getItemStackName(iStack).equals("bone_meal"))
+		else if(blockType == Material.LOG && AppleseedItemStack.getItemStackName(new AppleseedItemStack(iStack)).equals("bone_meal"))
 			// player is trying to fertilize a tree
 			handleFertilzeEvent(event, player, iStack, block);
 		
@@ -56,15 +56,9 @@ public class AppleseedPlayerListener extends PlayerListener {
 
 		// try to get the type of the tree they are planting
 		AppleseedTreeType treeType = null;
-		ItemStack tmpIS = new ItemStack(iStack.getType(), 1, iStack.getDurability());
-		if(Appleseed.Config.TreeTypes.containsKey(tmpIS))
-			treeType = Appleseed.Config.TreeTypes.get(tmpIS);
-		else
-		{
-			ItemStack tmpIS2 = new ItemStack(iStack.getType(), 1);
-			if(Appleseed.Config.TreeTypes.containsKey(tmpIS2))
-				treeType = Appleseed.Config.TreeTypes.get(tmpIS2);
-		}
+		AppleseedItemStack aiStack = new AppleseedItemStack(iStack);
+		if(Appleseed.Config.TreeTypes.containsKey(aiStack))
+			treeType = Appleseed.Config.TreeTypes.get(aiStack);
 		
 		// return if they don't have an allowed item in hand
 		if(treeType == null)
@@ -76,7 +70,7 @@ public class AppleseedPlayerListener extends PlayerListener {
 			return;
 		
 		// return if they don't have permission
-		if(!Appleseed.Permissions.hasPermission(player, "plant." + Appleseed.getItemStackName(iStack)) || !Appleseed.CanBuild.canBuild(player, blockRoot))
+		if(!Appleseed.Permissions.hasPermission(player, "plant." + AppleseedItemStack.getItemStackName(aiStack)) || !Appleseed.CanBuild.canBuild(player, blockRoot))
 		{
 			if(Appleseed.Config.ShowErrorsInClient)
 				player.sendMessage("§cErr: You don't have permission to plant this tree.");
@@ -101,9 +95,9 @@ public class AppleseedPlayerListener extends PlayerListener {
 		
 		// add the root location and type to the list of trees
 		if(Appleseed.Permissions.hasPermission(player, "infinite.plant"))
-			Appleseed.TreeManager.AddTree(new AppleseedLocation(blockRoot.getLocation()), new ItemStack(iStack.getType(), 1, iStack.getDurability()), -1, -1, player.getName());
+			Appleseed.TreeManager.AddTree(new AppleseedLocation(blockRoot.getLocation()), aiStack, -1, -1, player.getName());
 		else
-			Appleseed.TreeManager.AddTree(new AppleseedLocation(blockRoot.getLocation()), new ItemStack(iStack.getType(), 1, iStack.getDurability()), player.getName());
+			Appleseed.TreeManager.AddTree(new AppleseedLocation(blockRoot.getLocation()), aiStack, player.getName());
 		
 		// set the clicked block to dirt
 		block.setType(Material.DIRT);
@@ -206,10 +200,10 @@ public class AppleseedPlayerListener extends PlayerListener {
 		else
 		{
 			AppleseedTreeData tree = Appleseed.TreeManager.GetTree(new AppleseedLocation(loc));
-			ItemStack treeIS = tree.getItemStack();
+			AppleseedItemStack treeIS = tree.getItemStack();
 			Integer treeDC = tree.getDropCount();
 			
-			String msg = "§cAppleseed: Type=" + Appleseed.getItemStackName(treeIS) + ", NeedsFertilizer=";
+			String msg = "§cAppleseed: Type=" + AppleseedItemStack.getItemStackName(treeIS) + ", NeedsFertilizer=";
 
 			if(treeDC == 0)
 				msg = msg + "yes";

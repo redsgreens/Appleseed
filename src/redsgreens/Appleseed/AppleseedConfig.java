@@ -9,7 +9,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 import org.bukkit.Material;
-import org.bukkit.inventory.ItemStack;
 import org.yaml.snakeyaml.Yaml;
 
 /**
@@ -24,13 +23,8 @@ public class AppleseedConfig {
 	public Material WandItem = Material.WOOD_HOE;
 	public Integer MinimumTreeDistance = -1;
 
-	public HashMap<ItemStack, AppleseedTreeType> TreeTypes;
+	public HashMap<AppleseedItemStack, AppleseedTreeType> TreeTypes = new HashMap<AppleseedItemStack, AppleseedTreeType>();
 
-	public AppleseedConfig()
-	{
-		TreeTypes = new HashMap<ItemStack, AppleseedTreeType>();
-	}
-	
 	@SuppressWarnings("unchecked")
 	public void LoadConfig()
 	{
@@ -112,14 +106,14 @@ public class AppleseedConfig {
 				}
 
 				String strTreeTypes = "";
-				Iterator<ItemStack> itr2 = TreeTypes.keySet().iterator();
+				Iterator<AppleseedItemStack> itr2 = TreeTypes.keySet().iterator();
 				while(itr2.hasNext())
 				{
-					ItemStack is = itr2.next();
+					AppleseedItemStack is = itr2.next();
 					if(strTreeTypes.length() != 0)
 						strTreeTypes = strTreeTypes + ",";
 					
-					strTreeTypes = strTreeTypes + Appleseed.getItemStackName(is);
+					strTreeTypes = strTreeTypes + AppleseedItemStack.getItemStackName(is);
 				}
 				
 				System.out.println("Appleseed: TreeTypes=(" + strTreeTypes +")");

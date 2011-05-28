@@ -6,7 +6,6 @@ import java.util.Random;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
-import org.bukkit.inventory.ItemStack;
 
 /**
  * AppleseedTreeData stores the data about a real tree in game
@@ -16,7 +15,7 @@ import org.bukkit.inventory.ItemStack;
 public class AppleseedTreeData {
 
 	private AppleseedLocation location;
-	private ItemStack itemStack;
+	private AppleseedItemStack itemStack;
 	private String player;
 	private Integer dropCount;
 	private Integer fertilizerCount;
@@ -25,7 +24,7 @@ public class AppleseedTreeData {
 	
 	private static Random rand = new Random();
 
-	public AppleseedTreeData(AppleseedLocation loc, ItemStack is, String p)
+	public AppleseedTreeData(AppleseedLocation loc, AppleseedItemStack is, String p)
 	{
 		location = new AppleseedLocation(loc.getWorldName(), loc.getX(), loc.getY(), loc.getZ());
 		itemStack = is;
@@ -47,7 +46,7 @@ public class AppleseedTreeData {
 		ResetDropCount();		
 	}
 
-	public AppleseedTreeData(AppleseedLocation loc, ItemStack is, Integer dc, Integer fc, String p)
+	public AppleseedTreeData(AppleseedLocation loc, AppleseedItemStack is, Integer dc, Integer fc, String p)
 	{
 		location = new AppleseedLocation(loc.getWorldName(), loc.getX(), loc.getY(), loc.getZ());
 		itemStack = is;
@@ -58,7 +57,7 @@ public class AppleseedTreeData {
 		signLocation = null;
 	}
 
-	public AppleseedTreeData(String world, Double x, Double y, Double z, ItemStack is, Integer dc, Integer fc, String p)
+	public AppleseedTreeData(String world, Double x, Double y, Double z, AppleseedItemStack is, Integer dc, Integer fc, String p)
 	{
 		location = new AppleseedLocation(world, x, y, z);
 		itemStack = is;
@@ -69,7 +68,7 @@ public class AppleseedTreeData {
 		signLocation = null;
 	}
 
-	public AppleseedTreeData(String world, Double x, Double y, Double z, ItemStack is, Integer dc, Integer fc, String p, Double sx, Double sy, Double sz)
+	public AppleseedTreeData(String world, Double x, Double y, Double z, AppleseedItemStack is, Integer dc, Integer fc, String p, Double sx, Double sy, Double sz)
 	{
 		location = new AppleseedLocation(world, x, y, z);
 		itemStack = is;
@@ -108,11 +107,11 @@ public class AppleseedTreeData {
 		else
 			fc = -1;
 
-		ItemStack iStack;
+		AppleseedItemStack iStack;
 		if(loadData.containsKey("durability"))
-    		iStack = new ItemStack(Material.getMaterial((Integer)loadData.get("itemid")), 1, ((Integer)loadData.get("durability")).shortValue()); 
+    		iStack = new AppleseedItemStack(Material.getMaterial((Integer)loadData.get("itemid")), ((Integer)loadData.get("durability")).shortValue()); 
     	else
-    		iStack = new ItemStack(Material.getMaterial((Integer)loadData.get("itemid")), 1);
+    		iStack = new AppleseedItemStack(Material.getMaterial((Integer)loadData.get("itemid")));
 		
 		Boolean sign = false;
 		Double signx = null;
@@ -150,7 +149,7 @@ public class AppleseedTreeData {
     	treeHash.put("y", location.getY());
     	treeHash.put("z", location.getZ());
     	
-    	treeHash.put("itemid", itemStack.getTypeId());
+    	treeHash.put("itemid", itemStack.getMaterial().getId());
     	if(itemStack.getDurability() != 0)
     		treeHash.put("durability", itemStack.getDurability());
 
@@ -198,7 +197,7 @@ public class AppleseedTreeData {
 		return location.getLocation();
 	}
 
-	public ItemStack getItemStack()
+	public AppleseedItemStack getItemStack()
 	{
 		return itemStack;
 	}

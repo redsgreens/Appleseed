@@ -2,7 +2,6 @@ package redsgreens.Appleseed;
 
 import java.util.HashMap;
 
-import org.bukkit.inventory.ItemStack;
 
 /**
  * AppleseedTreeType stores the data about valid tree types that can be planted
@@ -11,14 +10,14 @@ import org.bukkit.inventory.ItemStack;
  */
 public class AppleseedTreeType {
 
-	private ItemStack itemStack;
+	private AppleseedItemStack itemStack;
 	private Integer dropLikelihood;
 	private Boolean requireFertilzer;
 	private Integer dropsBeforeFertilzer;
 	private Integer maxFertilizer;
 	private Byte saplingData;
 
-	public AppleseedTreeType(ItemStack is, Integer likelihood, Boolean reqFertilizer, Integer dropsFertilizer, Integer mxFertilizer, String type)
+	public AppleseedTreeType(AppleseedItemStack is, Integer likelihood, Boolean reqFertilizer, Integer dropsFertilizer, Integer mxFertilizer, String type)
 	{
 		itemStack = is;
 		dropLikelihood = likelihood;
@@ -38,7 +37,7 @@ public class AppleseedTreeType {
 		if(!loadData.containsKey("DropLikelihood") || !loadData.containsKey("RequireFertilzer") || !loadData.containsKey("DropsBeforeFertilzer") || !loadData.containsKey("TreeType"))
 			return null;
 
-		ItemStack iStack = Appleseed.getItemStackFromName(itemName);
+		AppleseedItemStack iStack = AppleseedItemStack.getItemStackFromName(itemName);
 
 		if(iStack == null)
 			return null;
@@ -63,7 +62,7 @@ public class AppleseedTreeType {
 		return tree;
 	}
 	
-	public ItemStack getItemStack()
+	public AppleseedItemStack getItemStack()
 	{
 		return itemStack;
 	}
