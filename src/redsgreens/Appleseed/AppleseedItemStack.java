@@ -177,4 +177,18 @@ public class AppleseedItemStack {
      	itemStackNames.put("spruce_sapling", new AppleseedItemStack(Material.SAPLING, (short)1));
      	itemStackNames.put("birch_sapling", new AppleseedItemStack(Material.LOG, (short)2));
     }
+    
+	public boolean equals(Object other) 
+	{
+	    if (this == other)
+	      return true;
+	    if (!(other instanceof AppleseedLocation))
+	      return false;
+	    AppleseedItemStack otherIS = (AppleseedItemStack) other;
+	    return (this.material == otherIS.getMaterial() && this.durability == otherIS.getDurability()); 
+	}
+
+	public int hashCode() { 
+		return this.material.hashCode() + this.durability.hashCode();	
+	}
 }
