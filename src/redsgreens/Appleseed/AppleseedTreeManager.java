@@ -94,26 +94,53 @@ public class AppleseedTreeManager {
 
 									if(treeType != null)
 									{
-										// and has a treetype 
-						    			Integer dropCount = tree.getDropCount(); 
+										// and has a treetype
+										
+										Boolean dropItem = false;
+										Boolean killTree = false;
+										
+										CountMode countMode = tree.getCountMode();
 						    			Integer fertilizerCount = tree.getFertilizerCount();
+										
+										switch(countMode)
+										{
+										case Drop:
+											Integer dropCount = tree.getDropCount(); 
+											if(rand.nextInt((Integer)(100 / treeType.getDropLikelihood())) == 0 && (dropCount > 0))
+											{
+												tree.setDropCount(dropCount - 1);
+												dropItem = true;
 
-						    			// roll the dice to see if an item should be spawned
-						    			if(rand.nextInt((Integer)(100 / treeType.getDropLikelihood())) == 0 && (dropCount > 0 || dropCount == -1))
-						    			{
-						    				loc.getWorld().dropItemNaturally(loc, tree.getItemStack().getItemStack());
+												if(dropCount == 0 && fertilizerCount == 0)
+													killTree = true;
 
-						    				if(dropCount != -1)
-						    				{
-						    					// decrement the dropcount if it's not an infinite tree
-						    					tree.setDropCount(dropCount - 1);
+												if(!treesUpdated.containsKey(worldName))
+						    						treesUpdated.put(worldName, true);
+											}
+											break;
+										case Interval:
+											Integer intervalCount = tree.getIntervalCount();
+											if(rand.nextInt((Integer)(100 / treeType.getDropLikelihood())) == 0 && (intervalCount > 0))
+											{
+												tree.setIntervalCount(intervalCount - 1);
+												dropItem = true;
 						    					if(!treesUpdated.containsKey(worldName))
 						    						treesUpdated.put(worldName, true);
-						    				}
-						    			}
-						    			else if(dropCount == 0 && fertilizerCount == 0)
+											}
+											if(intervalCount == 0 && fertilizerCount == 0)
+												killTree = true;
+											break;
+										case Infinite:
+											dropItem = true;
+											break;
+										}
+
+										if(dropItem)
+						    				loc.getWorld().dropItemNaturally(loc, tree.getItemStack().getItemStack());
+
+										if(killTree)
 						    			{
-						    				// the tree has no drops or fertilizer left, kill it
+						    				// the tree has no drops/intervals or fertilizer left, kill it
 						    				KillTree(loc);
 					    					if(!treesUpdated.containsKey(worldName))
 					    						treesUpdated.put(worldName, true);
@@ -167,9 +194,9 @@ public class AppleseedTreeManager {
     }
 
     // add a tree to the hashmap and save to disk
-    public synchronized void AddTree(AppleseedLocation loc, AppleseedItemStack iStack, Integer dropcount, Integer fertilizercount,  String player)
+    public synchronized void AddTree(AppleseedLocation loc, AppleseedItemStack iStack, CountMode cm, Integer dropcount, Integer fertilizercount, Integer intervalcount, String player)
     {
-    	WorldTrees.get(loc.getWorldName()).put(loc, new AppleseedTreeData(loc, iStack, dropcount, fertilizercount, player));
+    	WorldTrees.get(loc.getWorldName()).put(loc, new AppleseedTreeData(loc, iStack, cm, dropcount, fertilizercount, intervalcount, player));
 
 		if(!treesUpdated.containsKey(loc.getWorldName()))
 			treesUpdated.put(loc.getWorldName(), true);

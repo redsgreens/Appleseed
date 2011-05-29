@@ -14,10 +14,13 @@ import org.bukkit.World;
  */
 public class AppleseedTreeData {
 
+	private AppleseedTreeType treeType;
 	private AppleseedLocation location;
 	private AppleseedItemStack itemStack;
 	private String player;
+	private CountMode countMode;
 	private Integer dropCount;
+	private Integer intervalCount;
 	private Integer fertilizerCount;
 	private Boolean hasSign;
 	private AppleseedLocation signLocation;
@@ -32,7 +35,10 @@ public class AppleseedTreeData {
 		hasSign = false;
 		signLocation = null;
 
-    	AppleseedTreeType treeType = Appleseed.Config.TreeTypes.get(is);
+    	treeType = Appleseed.Config.TreeTypes.get(is);
+
+    	countMode = treeType.getCountMode();
+    	
     	Integer fertilizer = treeType.getMaxFertilizer();
     	if(fertilizer == -1)
     		fertilizerCount = -1;
@@ -42,41 +48,42 @@ public class AppleseedTreeData {
     		Integer fcMax = (int) (fertilizer + (0.3 * fertilizer));
     		fertilizerCount = rand.nextInt(fcMax - fcMin + 1) + fcMin;
     	}
-    	
-		ResetDropCount();		
+
+    	if(countMode == CountMode.Drop || countMode == CountMode.Interval)
+    		ResetDropCount();
+    	else
+    	{
+    		dropCount = -1;
+    		intervalCount = -1;
+    	}
 	}
 
-	public AppleseedTreeData(AppleseedLocation loc, AppleseedItemStack is, Integer dc, Integer fc, String p)
+	public AppleseedTreeData(AppleseedLocation loc, AppleseedItemStack is, CountMode cm, Integer dc, Integer fc, Integer ic, String p)
 	{
-		location = new AppleseedLocation(loc.getWorldName(), loc.getX(), loc.getY(), loc.getZ());
+		location = loc;
 		itemStack = is;
 		player = p;
 		dropCount = dc;
+		intervalCount = ic;
 		fertilizerCount = fc;
 		hasSign = false;
 		signLocation = null;
+		treeType = Appleseed.Config.TreeTypes.get(is);
+		countMode = treeType.getCountMode();
 	}
 
-	public AppleseedTreeData(String world, Double x, Double y, Double z, AppleseedItemStack is, Integer dc, Integer fc, String p)
+	public AppleseedTreeData(AppleseedLocation loc, AppleseedItemStack is, CountMode cm, Integer dc, Integer fc, Integer ic, String p, AppleseedLocation signLoc)
 	{
-		location = new AppleseedLocation(world, x, y, z);
+		location = loc;
 		itemStack = is;
 		player = p;
 		dropCount = dc;
-		fertilizerCount = fc;
-		hasSign = false;
-		signLocation = null;
-	}
-
-	public AppleseedTreeData(String world, Double x, Double y, Double z, AppleseedItemStack is, Integer dc, Integer fc, String p, Double sx, Double sy, Double sz)
-	{
-		location = new AppleseedLocation(world, x, y, z);
-		itemStack = is;
-		player = p;
-		dropCount = dc;
+		intervalCount = ic;
 		fertilizerCount = fc;
 		hasSign = true;
-		signLocation = new AppleseedLocation(world, sx, sy, sz);
+		signLocation = signLoc;
+		treeType = Appleseed.Config.TreeTypes.get(is);
+		countMode = treeType.getCountMode();
 	}
 
 	// take a hashmap and make a tree from it
@@ -107,6 +114,24 @@ public class AppleseedTreeData {
 		else
 			fc = -1;
 
+		Integer ic;
+		if(loadData.containsKey("intervalcount"))
+			ic = (Integer)loadData.get("intervalcount");
+		else
+			ic = -1;
+		
+		CountMode cm = CountMode.Drop;
+		if(loadData.containsKey("countmode"))
+		{
+			String cmStr = (String)loadData.get("countmode");
+			if(cmStr.equalsIgnoreCase("drop"))
+				cm = CountMode.Drop; 
+			else if(cmStr.equalsIgnoreCase("interval"))
+				cm = CountMode.Interval;
+			else if(cmStr.equalsIgnoreCase("infinite"))
+				cm = CountMode.Infinite;
+		}
+		
 		AppleseedItemStack iStack;
 		if(loadData.containsKey("durability"))
     		iStack = new AppleseedItemStack(Material.getMaterial((Integer)loadData.get("itemid")), ((Integer)loadData.get("durability")).shortValue()); 
@@ -133,10 +158,14 @@ public class AppleseedTreeData {
 			}
 		}
 
+		AppleseedLocation loc = new AppleseedLocation(world.getName(), (Double)loadData.get("x"), (Double)loadData.get("y"), (Double)loadData.get("z"));
 		if(sign)
-			return new AppleseedTreeData(world.getName(), (Double)loadData.get("x"), (Double)loadData.get("y"), (Double)loadData.get("z"), iStack, dc, fc, player, signx, signy, signz);
+		{
+			AppleseedLocation signLoc = new AppleseedLocation(world.getName(), signx, signy, signz);
+			return new AppleseedTreeData(loc, iStack, cm, dc, fc, ic, player, signLoc);
+		}
 		else
-			return new AppleseedTreeData(world.getName(), (Double)loadData.get("x"), (Double)loadData.get("y"), (Double)loadData.get("z"), iStack, dc, fc, player);
+			return new AppleseedTreeData(loc, iStack, cm, dc, fc, ic, player);
 	}
 	
     // take a tree location and item and return a hash for saving to disk
@@ -155,6 +184,8 @@ public class AppleseedTreeData {
 
     	treeHash.put("player", player);
     	treeHash.put("dropcount", dropCount);
+    	treeHash.put("intervalcount", intervalCount);
+    	treeHash.put("countmode", countMode.toString());
     	treeHash.put("fertilizercount", fertilizerCount);
 
     	if(hasSign)
@@ -170,15 +201,23 @@ public class AppleseedTreeData {
 	
     public void ResetDropCount()
     {
-    	AppleseedTreeType treeType = Appleseed.Config.TreeTypes.get(itemStack);
-    	Integer drops = treeType.getDropsBeforeFertilzer();
-    	if(drops == -1)
-    		dropCount = -1;
-    	else
+    	if(countMode == CountMode.Drop)
     	{
+        	Integer drops = treeType.getDropsBeforeFertilzer();
     		Integer dcMin = (int) (drops - (0.3 * drops));
     		Integer dcMax = (int) (drops + (0.3 * drops));
     		dropCount = rand.nextInt(dcMax - dcMin + 1) + dcMin;
+    		
+    		intervalCount = -1;
+    	}
+    	else
+    	{
+        	Integer intervals = treeType.getIntervalsBeforeFertilzer();
+    		Integer icMin = (int) (intervals - (0.3 * intervals));
+    		Integer icMax = (int) (intervals + (0.3 * intervals));
+    		intervalCount = rand.nextInt(icMax - icMin + 1) + icMin;
+    		
+    		dropCount = -1;
     	}
     }
 
@@ -216,7 +255,17 @@ public class AppleseedTreeData {
 	{
 		dropCount = dc;
 	}
+
+	public Integer getIntervalCount()
+	{
+		return intervalCount;
+	}
 	
+	public void setIntervalCount(Integer ic)
+	{
+		intervalCount = ic;
+	}
+
 	public Integer getFertilizerCount()
 	{
 		return fertilizerCount;
@@ -225,6 +274,30 @@ public class AppleseedTreeData {
 	public void setFertilizerCount(Integer fc)
 	{
 		fertilizerCount = fc;
+	}
+	
+	public CountMode getCountMode()
+	{
+		return countMode;
+	}
+	
+	public void setCountMode(CountMode cm)
+	{
+		countMode = cm;
+
+		switch(countMode)
+		{
+		case Drop:
+			intervalCount = -1;
+			break;
+		case Interval:
+			dropCount = -1;
+			break;
+		case Infinite:
+			dropCount = -1;
+			intervalCount = -1;
+			break;
+		}
 	}
 	
 	public Boolean hasSign()
