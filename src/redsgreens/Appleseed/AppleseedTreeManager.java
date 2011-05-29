@@ -530,6 +530,8 @@ public class AppleseedTreeManager {
     	String prefix;
     	if(tree.getDropCount() == 0)
     		prefix = "§c";
+    	if(tree.getDropCount() == -1)
+    		prefix = "§b";
     	else
     		prefix = "§a";
 

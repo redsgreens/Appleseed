@@ -1,6 +1,10 @@
 Version 0.5.0 (unreleased)
     * Added support for signs on trees
     * Better support for items with damage values
+    * TODO: Added IntervalsBeforeFertilizer paramter to tree type config
+
+Version 0.4.1 (05/29/2011)
+    * Small tweak to handling of "Wrong location" exception.
 
 Version 0.4.0 (05/26/2011)
     * Added config option to enforce minimum distance between trees
