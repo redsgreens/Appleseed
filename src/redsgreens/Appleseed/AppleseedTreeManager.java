@@ -106,11 +106,7 @@ public class AppleseedTreeManager {
 							}
 						}
 					} catch (Exception e) {
-						System.out.println("Appleseed: Removed tree from world " + aloc.getWorldName() + ".");
-						e.printStackTrace();
-						itr.remove();
-    					if(!treesUpdated.containsKey(worldName))
-    						treesUpdated.put(worldName, true);
+						System.out.println("Appleseed: Error dropping item in world \"" + aloc.getWorldName() + "\"");
 					}
 	        	}
 	        	if(treesUpdated.size() != 0)

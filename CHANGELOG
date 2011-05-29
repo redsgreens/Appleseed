@@ -1,3 +1,6 @@
+Version 0.4.1 (05/29/2011)
+    * Small tweak to handling of "Wrong location" exception.
+
 Version 0.4.0 (05/26/2011)
     * Added config option to enforce minimum distance between trees
     * Added config option to kill trees after some number of fertilizer cycles
