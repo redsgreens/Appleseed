@@ -11,9 +11,9 @@ import java.util.HashMap;
 public class AppleseedTreeType {
 	private AppleseedItemStack itemStack;
 	private Integer dropLikelihood;
-	private Boolean requireFertilzer;
-	private Integer dropsBeforeFertilzer;
-	private Integer intervalsBeforeFertilzer;
+	private Boolean requireFertilizer;
+	private Integer dropsBeforeFertilizer;
+	private Integer intervalsBeforeFertilizer;
 	private CountMode countMode;
 	private Integer maxFertilizer;
 	private Byte saplingData;
@@ -22,10 +22,10 @@ public class AppleseedTreeType {
 	{
 		itemStack = is;
 		dropLikelihood = likelihood;
-		requireFertilzer = reqFertilizer;
-		dropsBeforeFertilzer = dropsFertilizer;
+		requireFertilizer = reqFertilizer;
+		dropsBeforeFertilizer = dropsFertilizer;
 		maxFertilizer = mxFertilizer;
-		intervalsBeforeFertilzer = intFertilizer;
+		intervalsBeforeFertilizer = intFertilizer;
 		countMode = cm;
 		
 		if(type.equalsIgnoreCase("Spruce"))
@@ -37,7 +37,7 @@ public class AppleseedTreeType {
 	
 	public static AppleseedTreeType LoadFromHash(String itemName, HashMap<String, Object> loadData)
 	{
-		if(!loadData.containsKey("DropLikelihood") || !loadData.containsKey("RequireFertilzer") || !loadData.containsKey("TreeType"))
+		if(!loadData.containsKey("DropLikelihood") || !loadData.containsKey("TreeType"))
 			return null;
 
 		AppleseedItemStack iStack = AppleseedItemStack.getItemStackFromName(itemName);
@@ -48,12 +48,21 @@ public class AppleseedTreeType {
 		Integer mf;
 		if(loadData.containsKey("MaxFertilizer"))
 			mf = (Integer)loadData.get("MaxFertilizer");
+		else if(loadData.containsKey("MaxFertilzer"))
+			mf = (Integer)loadData.get("MaxFertilzer");
 		else
 			mf = -1;
 
 		Integer dc;
 		Integer ic;
 		CountMode cm;
+		if(loadData.containsKey("DropsBeforeFertilizer"))
+		{
+			dc = (Integer)loadData.get("DropsBeforeFertilizer");
+			ic = -1;
+			cm = CountMode.Drop;
+			
+		}
 		if(loadData.containsKey("DropsBeforeFertilzer"))
 		{
 			dc = (Integer)loadData.get("DropsBeforeFertilzer");
@@ -61,10 +70,10 @@ public class AppleseedTreeType {
 			cm = CountMode.Drop;
 			
 		}
-		else if(loadData.containsKey("IntervalsBeforeFertilzer"))
+		else if(loadData.containsKey("IntervalsBeforeFertilizer"))
 		{
 			dc = -1;
-			ic = (Integer)loadData.get("IntervalsBeforeFertilzer");
+			ic = (Integer)loadData.get("IntervalsBeforeFertilizer");
 			cm = CountMode.Interval;
 		}
 		else
@@ -74,10 +83,19 @@ public class AppleseedTreeType {
 			cm = CountMode.Infinite;
 		}
 
+		Boolean rf;
+		if(loadData.containsKey("RequireFertilizer"))
+			rf = (Boolean)loadData.get("RequireFertilizer");
+		else if(loadData.containsKey("RequireFertilzer"))
+			rf = (Boolean)loadData.get("RequireFertilzer");
+		else
+			rf = false;
+
+		
 		AppleseedTreeType tree;
 		try
 		{
-			tree = new AppleseedTreeType(iStack, (Integer)loadData.get("DropLikelihood"), (Boolean)loadData.get("RequireFertilzer"), dc, ic, cm, mf, (String)loadData.get("TreeType"));
+			tree = new AppleseedTreeType(iStack, (Integer)loadData.get("DropLikelihood"), rf, dc, ic, cm, mf, (String)loadData.get("TreeType"));
 		}
 		catch (Exception ex)
 		{
@@ -98,19 +116,19 @@ public class AppleseedTreeType {
 		return dropLikelihood;
 	}
 	
-	public Boolean getRequireFertilzer()
+	public Boolean getRequireFertilizer()
 	{
-		return requireFertilzer;
+		return requireFertilizer;
 	}
 	
-	public Integer getDropsBeforeFertilzer()
+	public Integer getDropsBeforeFertilizer()
 	{
-		return dropsBeforeFertilzer;
+		return dropsBeforeFertilizer;
 	}
 
-	public Integer getIntervalsBeforeFertilzer()
+	public Integer getIntervalsBeforeFertilizer()
 	{
-		return intervalsBeforeFertilzer;
+		return intervalsBeforeFertilizer;
 	}
 
 	public Integer getMaxFertilizer()

@@ -132,25 +132,13 @@ public class AppleseedPlayerListener extends PlayerListener {
 		Boolean treesUpdated = false;
 		if(Appleseed.Permissions.hasPermission(player, "infinite.fertilizer"))
 		{
-			
-			tree.setDropCount(-1);
-			tree.setFertilizerCount(-1);
+			tree.setInfinite();
 			treesUpdated = true;
 		}
 		else
 		{
-			Integer fertilizer = tree.getFertilizerCount();
-			if(fertilizer == -1)
-			{
+			if(tree.Fertilize())
 				tree.ResetDropCount();
-				treesUpdated = true;
-			}
-			else if(fertilizer > 0)
-			{
-				tree.setFertilizerCount(fertilizer - 1);
-				tree.ResetDropCount();
-				treesUpdated = true;
-			}
 			else
 			{
 				if(Appleseed.Config.ShowErrorsInClient)
@@ -160,13 +148,8 @@ public class AppleseedPlayerListener extends PlayerListener {
 		}
 
 		if(treesUpdated == true)
-		{
 			if(tree.hasSign())
 				Appleseed.TreeManager.updateSign(tree);
-			
-			if(!Appleseed.TreeManager.treesUpdated.containsKey(tree.getWorld()))
-				Appleseed.TreeManager.treesUpdated.put(tree.getWorld(), true);
-		}
 
 		// take the item from the player
 		if(iStack.getAmount() == 1)
@@ -201,16 +184,8 @@ public class AppleseedPlayerListener extends PlayerListener {
 		{
 			AppleseedTreeData tree = Appleseed.TreeManager.GetTree(new AppleseedLocation(loc));
 			AppleseedItemStack treeIS = tree.getItemStack();
-			Integer treeDC = tree.getDropCount();
-			
-			String msg = "§cAppleseed: Type=" + AppleseedItemStack.getItemStackName(treeIS) + ", NeedsFertilizer=";
 
-			if(treeDC == 0)
-				msg = msg + "yes";
-			else 
-				msg = msg + "no";
-
-			player.sendMessage(msg);				
+			player.sendMessage("§cAppleseed: Type=" + AppleseedItemStack.getItemStackName(treeIS) + ", NeedsFertilizer=" + tree.needsFertilizer().toString());				
 		}
 	}
 

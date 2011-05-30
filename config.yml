@@ -35,36 +35,36 @@ WandItem: 290
 # Example: 
 #    - "apple"                      # Name of the item that must be planted and will be dropped
 #        DropLikelihood: 33         # Chance an item will drop under a tree (numbers 1-100)
-#        RequireFertilzer: Yes      # Yes if the tree should require occasional fertilizer
-#        DropsBeforeFertilzer: 50   # Approximate number of drops before fertilzer is required
+#        RequireFertilizer: Yes      # Yes if the tree should require occasional fertilizer
+#        DropsBeforeFertilizer: 50   # Approximate number of drops before fertilizer is required
 #        MaxFertilizer: 5            # Approximate number of times a tree can be fertilized (optional, or set to -1 to disable)
 #        TreeType: Standard         # Type of tree that should grow from the sapling (Standard/Spruce/Birch)
 #
 TreeTypes:
     apple:
         DropLikelihood: 33
-        RequireFertilzer: Yes
-        DropsBeforeFertilzer: 50
+        RequireFertilizer: Yes
+        DropsBeforeFertilizer: 50
 #        MaxFertilizer: 10
         TreeType: Standard
         
     cocoa_beans:
         DropLikelihood: 33
-        RequireFertilzer: Yes
-        DropsBeforeFertilzer: 50
+        RequireFertilizer: Yes
+        DropsBeforeFertilizer: 50
 #        MaxFertilizer: 10
         TreeType: Spruce
 
     golden_apple:
         DropLikelihood: 5
-        RequireFertilzer: Yes
-        DropsBeforeFertilzer: 10
+        RequireFertilizer: Yes
+        DropsBeforeFertilizer: 10
         MaxFertilizer: 5
         TreeType: Birch
 
     cookie:
         DropLikelihood: 33
-        RequireFertilzer: Yes
-        DropsBeforeFertilzer: 50
+        RequireFertilizer: Yes
+        DropsBeforeFertilizer: 50
 #        MaxFertilizer: 5
         TreeType: Standard

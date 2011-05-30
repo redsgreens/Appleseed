@@ -1,7 +1,8 @@
 Version 0.5.0 (unreleased)
     * Added support for signs on trees
     * Better support for items with damage values
-    * TODO: Added IntervalsBeforeFertilizer paramter to tree type config
+    * Corrected spelling of "fertilizer" in config file (misspelling still works)
+    * Added IntervalsBeforeFertilizer parameter to tree type config
 
 Version 0.4.1 (05/29/2011)
     * Small tweak to handling of "Wrong location" exception.

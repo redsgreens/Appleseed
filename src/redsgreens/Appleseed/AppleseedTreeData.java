@@ -69,7 +69,7 @@ public class AppleseedTreeData {
 		hasSign = false;
 		signLocation = null;
 		treeType = Appleseed.Config.TreeTypes.get(is);
-		countMode = treeType.getCountMode();
+		countMode = cm;
 	}
 
 	public AppleseedTreeData(AppleseedLocation loc, AppleseedItemStack is, CountMode cm, Integer dc, Integer fc, Integer ic, String p, AppleseedLocation signLoc)
@@ -83,7 +83,7 @@ public class AppleseedTreeData {
 		hasSign = true;
 		signLocation = signLoc;
 		treeType = Appleseed.Config.TreeTypes.get(is);
-		countMode = treeType.getCountMode();
+		countMode = cm;
 	}
 
 	// take a hashmap and make a tree from it
@@ -203,7 +203,7 @@ public class AppleseedTreeData {
     {
     	if(countMode == CountMode.Drop)
     	{
-        	Integer drops = treeType.getDropsBeforeFertilzer();
+        	Integer drops = treeType.getDropsBeforeFertilizer();
     		Integer dcMin = (int) (drops - (0.3 * drops));
     		Integer dcMax = (int) (drops + (0.3 * drops));
     		dropCount = rand.nextInt(dcMax - dcMin + 1) + dcMin;
@@ -212,7 +212,7 @@ public class AppleseedTreeData {
     	}
     	else
     	{
-        	Integer intervals = treeType.getIntervalsBeforeFertilzer();
+        	Integer intervals = treeType.getIntervalsBeforeFertilizer();
     		Integer icMin = (int) (intervals - (0.3 * intervals));
     		Integer icMax = (int) (intervals + (0.3 * intervals));
     		intervalCount = rand.nextInt(icMax - icMin + 1) + icMin;
@@ -246,60 +246,90 @@ public class AppleseedTreeData {
 		return player;
 	}
 	
-	public Integer getDropCount()
+	public Boolean isInfinite()
 	{
-		return dropCount;
+		if(countMode == CountMode.Infinite)
+			return true;
+		else 
+			return false;
 	}
 	
-	public void setDropCount(Integer dc)
+	public void setInfinite()
 	{
-		dropCount = dc;
+		countMode = CountMode.Infinite;
+		intervalCount = -1;
+		dropCount = -1;
+	}
+	
+	public Boolean decrementCount()
+	{
+		Boolean retval = false;
+		
+		if(countMode == CountMode.Infinite)
+			retval = true;
+		else if(countMode == CountMode.Drop && dropCount > 0)
+		{
+			dropCount--;
+			
+			retval = true;
+		}
+		else if(countMode == CountMode.Interval && intervalCount > 0)
+		{
+			intervalCount--;
+			retval = true;
+		}
+
+		return retval;
+	}
+	
+	public Boolean Fertilize()
+	{
+		Boolean retval = false;
+
+		if(isInfinite())
+			retval = true;
+		else if(fertilizerCount > 0)
+		{
+			fertilizerCount--;
+			ResetDropCount();
+			retval = true;
+		}
+		
+		return retval;
+	}
+	
+	public Boolean needsFertilizer()
+	{
+		if(!isInfinite())
+			if((dropCount == 0 || intervalCount == 0) && fertilizerCount > 0)
+				return true;
+		
+		return false;
+	}
+	
+	public Boolean isAlive()
+	{
+		Boolean retval = false;
+		
+		if(isInfinite())
+			retval = true;
+		else if(treeType.getRequireFertilizer() == false)
+			retval = true;
+		else if(countMode == CountMode.Drop && dropCount > 0)
+			retval = true;
+		else if(countMode == CountMode.Interval && intervalCount > 0)
+			retval = true;
+		else if(fertilizerCount > 0)
+			retval = true;
+
+		return retval;
 	}
 
-	public Integer getIntervalCount()
-	{
-		return intervalCount;
-	}
-	
-	public void setIntervalCount(Integer ic)
-	{
-		intervalCount = ic;
-	}
-
-	public Integer getFertilizerCount()
-	{
-		return fertilizerCount;
-	}
-	
-	public void setFertilizerCount(Integer fc)
-	{
-		fertilizerCount = fc;
-	}
-	
 	public CountMode getCountMode()
 	{
 		return countMode;
 	}
-	
-	public void setCountMode(CountMode cm)
-	{
-		countMode = cm;
 
-		switch(countMode)
-		{
-		case Drop:
-			intervalCount = -1;
-			break;
-		case Interval:
-			dropCount = -1;
-			break;
-		case Infinite:
-			dropCount = -1;
-			intervalCount = -1;
-			break;
-		}
-	}
-	
 	public Boolean hasSign()
 	{
 		return hasSign;
