@@ -15,8 +15,7 @@ Features:
 For more info, go here: http://forums.bukkit.org/threads/17961/
 
 TODO:
- - Add sign support to show type and fertilizer status
- - Bonus items with very low likelihood
- - Optional tree death after some number of fertilizer cycles
- - Configurable "seed" item
+ - Config flag to disable initial sapling growth with bonemeal
+ - Adjust DropInterval so it uses real time rather than tickrate (for servers with customized tickrate) 
+ - Bonus items with very low likelihood / Configurable "seed" item
  
