@@ -63,7 +63,7 @@ public class AppleseedTreeType {
 			cm = CountMode.Drop;
 			
 		}
-		if(loadData.containsKey("DropsBeforeFertilzer"))
+		else if(loadData.containsKey("DropsBeforeFertilzer"))
 		{
 			dc = (Integer)loadData.get("DropsBeforeFertilzer");
 			ic = -1;

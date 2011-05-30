@@ -138,7 +138,10 @@ public class AppleseedPlayerListener extends PlayerListener {
 		else
 		{
 			if(tree.Fertilize())
+			{
 				tree.ResetDropCount();
+				treesUpdated = true;
+			}
 			else
 			{
 				if(Appleseed.Config.ShowErrorsInClient)

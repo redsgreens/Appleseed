@@ -106,9 +106,9 @@ public class AppleseedTreeManager {
 										}
 										else
 										{
-											tree.decrementCount();
-											if(rand.nextInt((Integer)(100 / treeType.getDropLikelihood())) == 0)
-												dropItem = true;
+											if(tree.decrementCount())
+												if(rand.nextInt((Integer)(100 / treeType.getDropLikelihood())) == 0)
+													dropItem = true;
 										}
 
 										if(dropItem)
