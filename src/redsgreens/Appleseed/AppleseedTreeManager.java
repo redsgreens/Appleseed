@@ -100,14 +100,14 @@ public class AppleseedTreeManager {
 										
 										if(countMode == CountMode.Drop)
 										{
-											if(rand.nextInt((Integer)(100 / treeType.getDropLikelihood())) == 0)
+											if(rand.nextInt(((Math.round(((Double)(100 / treeType.getDropLikelihood())).intValue())))) == 0)
 												if(tree.decrementCount())
 													dropItem = true;
 										}
 										else
 										{
 											if(tree.decrementCount())
-												if(rand.nextInt((Integer)(100 / treeType.getDropLikelihood())) == 0)
+												if(rand.nextInt(((Math.round(((Double)(100 / treeType.getDropLikelihood())).intValue())))) == 0)
 													dropItem = true;
 										}
 

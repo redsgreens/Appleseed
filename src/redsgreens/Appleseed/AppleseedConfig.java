@@ -73,7 +73,10 @@ public class AppleseedConfig {
 			System.out.println("Appleseed: DropInterval=" + DropInterval.toString() + " seconds");
 
 			if(configMap.containsKey("WandItem"))
-				WandItem = Material.getMaterial((Integer)configMap.get("WandItem"));
+			{
+				String wiStr = configMap.get("WandItem").toString();
+				WandItem = Material.matchMaterial(wiStr);
+			}
 			System.out.println("Appleseed: WandItem=" + WandItem.name().toLowerCase());
 
 			if(configMap.containsKey("MinimumTreeDistance"))

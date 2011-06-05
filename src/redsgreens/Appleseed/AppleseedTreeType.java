@@ -10,7 +10,7 @@ import java.util.HashMap;
 
 public class AppleseedTreeType {
 	private AppleseedItemStack itemStack;
-	private Integer dropLikelihood;
+	private Double dropLikelihood;
 	private Boolean requireFertilizer;
 	private Integer dropsBeforeFertilizer;
 	private Integer intervalsBeforeFertilizer;
@@ -18,7 +18,7 @@ public class AppleseedTreeType {
 	private Integer maxFertilizer;
 	private Byte saplingData;
 
-	public AppleseedTreeType(AppleseedItemStack is, Integer likelihood, Boolean reqFertilizer, Integer dropsFertilizer, Integer intFertilizer, CountMode cm, Integer mxFertilizer, String type)
+	public AppleseedTreeType(AppleseedItemStack is, Double likelihood, Boolean reqFertilizer, Integer dropsFertilizer, Integer intFertilizer, CountMode cm, Integer mxFertilizer, String type)
 	{
 		itemStack = is;
 		dropLikelihood = likelihood;
@@ -91,11 +91,13 @@ public class AppleseedTreeType {
 		else
 			rf = false;
 
+		String dlStr = loadData.get("DropLikelihood").toString();
+		Double dl = Double.parseDouble(dlStr);
 		
 		AppleseedTreeType tree;
 		try
 		{
-			tree = new AppleseedTreeType(iStack, (Integer)loadData.get("DropLikelihood"), rf, dc, ic, cm, mf, (String)loadData.get("TreeType"));
+			tree = new AppleseedTreeType(iStack, dl, rf, dc, ic, cm, mf, (String)loadData.get("TreeType"));
 		}
 		catch (Exception ex)
 		{
@@ -111,7 +113,7 @@ public class AppleseedTreeType {
 		return itemStack;
 	}
 	
-	public Integer getDropLikelihood()
+	public Double getDropLikelihood()
 	{
 		return dropLikelihood;
 	}

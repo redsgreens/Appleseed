@@ -1,3 +1,8 @@
+Version 0.5.5 ()
+    * Non-integer ItemLikelihood values allowed
+    * Textual name of wand item can be used instead of item number
+    
+
 Version 0.5.0 (05/30/2011)
     * Added support for signs on trees
     * Better support for items with damage values
