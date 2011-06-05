@@ -41,11 +41,11 @@ public class AppleseedPlayerListener extends PlayerListener {
 			// player is trying to plant something
 			handlePlantEvent(event, player, iStack, block);
 		
-		else if(blockType == Material.LOG && iStack.getType() == Material.INK_SACK && iStack.getDurability() == 15)
+		else if(blockType == Material.LOG && iStack.getType() == Appleseed.Config.FertilizerItem.getMaterial() && iStack.getDurability() == Appleseed.Config.FertilizerItem.getDurability())
 			// player is trying to fertilize a tree
 			handleFertilzeEvent(event, player, iStack, block);
 		
-		else if(blockType == Material.LOG && (new AppleseedItemStack(iStack.getType())) == Appleseed.Config.WandItem)
+		else if(blockType == Material.LOG && iStack.getType() == Appleseed.Config.WandItem.getMaterial())
 			// player used the wand on a tree
 			handleWandEvent(event, player, iStack, block);
     }
