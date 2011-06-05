@@ -1,7 +1,7 @@
-Version 0.5.5 ()
-    * Non-integer ItemLikelihood values allowed
+Version 0.5.5 (06/05/2011)
+    * Non-integer DropLikelihood values allowed
     * Textual name of wand item can be used instead of item number
-    * TODO: Per player cap on how many trees can be planted
+    * Configurable per player cap on how many trees can be planted(per world or server-wide)
     * Fertilizer item can be customized
 
 Version 0.5.0 (05/30/2011)

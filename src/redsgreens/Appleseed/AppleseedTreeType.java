@@ -93,6 +93,8 @@ public class AppleseedTreeType {
 
 		String dlStr = loadData.get("DropLikelihood").toString();
 		Double dl = Double.parseDouble(dlStr);
+		if(dl == 0) // a zero likelihood is not allowed
+			return null;
 		
 		AppleseedTreeType tree;
 		try

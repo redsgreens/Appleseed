@@ -1,5 +1,7 @@
 package redsgreens.Appleseed;
 
+import java.util.HashMap;
+
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
@@ -12,6 +14,8 @@ public class AppleseedPlayerManager {
 	private PermissionHandler Permissions = null;
 	private WorldGuardPlugin WorldGuard = null;
 
+	private HashMap<String, Integer> capsHash = new HashMap<String, Integer>();
+	
 	public AppleseedPlayerManager()
 	{
 		// attempt to hook to the permissions plugin
@@ -62,4 +66,56 @@ public class AppleseedPlayerManager {
 		else
 			return true;
 	}
+
+	public Boolean CapAddTree(String player, String world)
+	{
+		return CapAddTree(player, world, false);
+	}
+
+	public Boolean CapAddTree(String player, String world, Boolean force)
+	{
+		if(Appleseed.Config.MaxTreesPerPlayer == -1)
+			return true;
+		
+		String capStr;
+		if(Appleseed.Config.MaxIsPerWorld)
+			capStr = world + "_" + player;
+		else
+			capStr = player;
+		
+		if(capsHash.containsKey(capStr))
+		{
+			Integer x = capsHash.get(capStr);
+			if(x < Appleseed.Config.MaxTreesPerPlayer || force == true)
+			{
+				capsHash.remove(capStr);
+				capsHash.put(capStr, x+1);
+				return true;
+			}
+			else
+				return false;
+		}
+		else
+		{
+			capsHash.put(capStr, 1);
+			return true;
+		}
+	}
+	
+	public void CapRemoveTree(AppleseedTreeData tree)
+	{
+		String capStr;
+		if(Appleseed.Config.MaxIsPerWorld)
+			capStr = tree.getWorld() + "_" + tree.getPlayer();
+		else
+			capStr = tree.getPlayer();
+
+		if(capsHash.containsKey(capStr))
+		{
+			Integer x = capsHash.get(capStr);
+			capsHash.remove(capStr);
+			capsHash.put(capStr, x-1);
+		}
+	}
+
 }

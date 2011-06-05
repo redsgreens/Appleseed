@@ -29,6 +29,15 @@ FertilizerItem: bone_meal
 #MaxTreesPerPlayer: 10
 
 #
+# MaxIsPerWorld: optional parameter, determines if MaxTreesPerPlayer setting is server wide or per world
+#                defaults to "No" 
+#                    
+# Allowed values : Yes (players can plant MaxTreesPerPlayer trees in each world)
+#                  No  (players can plant MaxTreesPerPlayer regardless of which world they are planted in)
+# 
+#MaxIsPerWorld: No
+
+#
 # WandItem: item used in game to see what type a tree is and if it needs fertilizer 
 #
 # Allowed values: any item id or item name (default is wood_hoe)
