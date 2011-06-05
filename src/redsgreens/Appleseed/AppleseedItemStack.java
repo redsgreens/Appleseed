@@ -5,6 +5,12 @@ import java.util.HashMap;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
+/**
+ * AppleseedItemStack is an alternative to ItemStack that compares durability when the equals method is called 
+ *
+ * @author redsgreens
+ */
+
 public class AppleseedItemStack {
 
 	private Material material;

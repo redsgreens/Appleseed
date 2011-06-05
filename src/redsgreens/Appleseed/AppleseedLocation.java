@@ -4,8 +4,7 @@ import org.bukkit.Location;
 import org.bukkit.World;
 
 /**
- * AppleseedLocation used instead of the Bukkit Location class so locations can be
- * tracked without the world they belong to being loaded
+ * AppleseedLocation used instead of the Bukkit Location class so locations can be tracked without the world they belong to being loaded
  *
  * @author redsgreens
  */
