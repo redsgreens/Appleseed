@@ -14,11 +14,11 @@ public class AppleseedTreeType {
 	private Boolean requireFertilizer;
 	private Integer dropsBeforeFertilizer;
 	private Integer intervalsBeforeFertilizer;
-	private CountMode countMode;
+	private AppleseedCountMode countMode;
 	private Integer maxFertilizer;
 	private Byte saplingData;
 
-	public AppleseedTreeType(AppleseedItemStack is, Double likelihood, Boolean reqFertilizer, Integer dropsFertilizer, Integer intFertilizer, CountMode cm, Integer mxFertilizer, String type)
+	public AppleseedTreeType(AppleseedItemStack is, Double likelihood, Boolean reqFertilizer, Integer dropsFertilizer, Integer intFertilizer, AppleseedCountMode cm, Integer mxFertilizer, String type)
 	{
 		itemStack = is;
 		dropLikelihood = likelihood;
@@ -55,32 +55,32 @@ public class AppleseedTreeType {
 
 		Integer dc;
 		Integer ic;
-		CountMode cm;
+		AppleseedCountMode cm;
 		if(loadData.containsKey("DropsBeforeFertilizer"))
 		{
 			dc = (Integer)loadData.get("DropsBeforeFertilizer");
 			ic = -1;
-			cm = CountMode.Drop;
+			cm = AppleseedCountMode.Drop;
 			
 		}
 		else if(loadData.containsKey("DropsBeforeFertilzer"))
 		{
 			dc = (Integer)loadData.get("DropsBeforeFertilzer");
 			ic = -1;
-			cm = CountMode.Drop;
+			cm = AppleseedCountMode.Drop;
 			
 		}
 		else if(loadData.containsKey("IntervalsBeforeFertilizer"))
 		{
 			dc = -1;
 			ic = (Integer)loadData.get("IntervalsBeforeFertilizer");
-			cm = CountMode.Interval;
+			cm = AppleseedCountMode.Interval;
 		}
 		else
 		{
 			dc = -1;
 			ic = -1;
-			cm = CountMode.Infinite;
+			cm = AppleseedCountMode.Infinite;
 		}
 
 		Boolean rf;
@@ -143,7 +143,7 @@ public class AppleseedTreeType {
 		return saplingData;
 	}
 	
-	public CountMode getCountMode()
+	public AppleseedCountMode getCountMode()
 	{
 		return countMode;
 	}

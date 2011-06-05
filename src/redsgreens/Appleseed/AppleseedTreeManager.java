@@ -96,9 +96,9 @@ public class AppleseedTreeManager {
 										// and has a treetype
 										
 										Boolean dropItem = false;
-										CountMode countMode = tree.getCountMode();
+										AppleseedCountMode countMode = tree.getCountMode();
 										
-										if(countMode == CountMode.Drop)
+										if(countMode == AppleseedCountMode.Drop)
 										{
 											if(rand.nextInt(((Math.round(((Double)(100 / treeType.getDropLikelihood())).intValue())))) == 0)
 												if(tree.decrementCount())
@@ -153,7 +153,7 @@ public class AppleseedTreeManager {
     }
 
     // add a tree to the hashmap and save to disk
-    public synchronized void AddTree(AppleseedLocation loc, AppleseedItemStack iStack, CountMode cm, Integer dropcount, Integer fertilizercount, Integer intervalcount, String player)
+    public synchronized void AddTree(AppleseedLocation loc, AppleseedItemStack iStack, AppleseedCountMode cm, Integer dropcount, Integer fertilizercount, Integer intervalcount, String player)
     {
     	WorldTrees.get(loc.getWorldName()).put(loc, new AppleseedTreeData(loc, iStack, cm, dropcount, fertilizercount, intervalcount, player));
     }

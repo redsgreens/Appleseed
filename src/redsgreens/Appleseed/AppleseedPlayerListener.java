@@ -95,7 +95,7 @@ public class AppleseedPlayerListener extends PlayerListener {
 		
 		// add the root location and type to the list of trees
 		if(Appleseed.Permissions.hasPermission(player, "infinite.plant"))
-			Appleseed.TreeManager.AddTree(new AppleseedLocation(blockRoot.getLocation()), aiStack, CountMode.Infinite, -1, -1, -1, player.getName());
+			Appleseed.TreeManager.AddTree(new AppleseedLocation(blockRoot.getLocation()), aiStack, AppleseedCountMode.Infinite, -1, -1, -1, player.getName());
 		else
 			Appleseed.TreeManager.AddTree(new AppleseedLocation(blockRoot.getLocation()), aiStack, player.getName());
 		

@@ -18,7 +18,7 @@ public class AppleseedTreeData {
 	private AppleseedLocation location;
 	private AppleseedItemStack itemStack;
 	private String player;
-	private CountMode countMode;
+	private AppleseedCountMode countMode;
 	private Integer dropCount;
 	private Integer intervalCount;
 	private Integer fertilizerCount;
@@ -49,7 +49,7 @@ public class AppleseedTreeData {
     		fertilizerCount = rand.nextInt(fcMax - fcMin + 1) + fcMin;
     	}
 
-    	if(countMode == CountMode.Drop || countMode == CountMode.Interval)
+    	if(countMode == AppleseedCountMode.Drop || countMode == AppleseedCountMode.Interval)
     		ResetDropCount();
     	else
     	{
@@ -58,7 +58,7 @@ public class AppleseedTreeData {
     	}
 	}
 
-	public AppleseedTreeData(AppleseedLocation loc, AppleseedItemStack is, CountMode cm, Integer dc, Integer fc, Integer ic, String p)
+	public AppleseedTreeData(AppleseedLocation loc, AppleseedItemStack is, AppleseedCountMode cm, Integer dc, Integer fc, Integer ic, String p)
 	{
 		location = loc;
 		itemStack = is;
@@ -72,7 +72,7 @@ public class AppleseedTreeData {
 		countMode = cm;
 	}
 
-	public AppleseedTreeData(AppleseedLocation loc, AppleseedItemStack is, CountMode cm, Integer dc, Integer fc, Integer ic, String p, AppleseedLocation signLoc)
+	public AppleseedTreeData(AppleseedLocation loc, AppleseedItemStack is, AppleseedCountMode cm, Integer dc, Integer fc, Integer ic, String p, AppleseedLocation signLoc)
 	{
 		location = loc;
 		itemStack = is;
@@ -120,16 +120,16 @@ public class AppleseedTreeData {
 		else
 			ic = -1;
 		
-		CountMode cm = CountMode.Drop;
+		AppleseedCountMode cm = AppleseedCountMode.Drop;
 		if(loadData.containsKey("countmode"))
 		{
 			String cmStr = (String)loadData.get("countmode");
 			if(cmStr.equalsIgnoreCase("drop"))
-				cm = CountMode.Drop; 
+				cm = AppleseedCountMode.Drop; 
 			else if(cmStr.equalsIgnoreCase("interval"))
-				cm = CountMode.Interval;
+				cm = AppleseedCountMode.Interval;
 			else if(cmStr.equalsIgnoreCase("infinite"))
-				cm = CountMode.Infinite;
+				cm = AppleseedCountMode.Infinite;
 		}
 		
 		AppleseedItemStack iStack;
@@ -201,7 +201,7 @@ public class AppleseedTreeData {
 	
     public void ResetDropCount()
     {
-    	if(countMode == CountMode.Drop)
+    	if(countMode == AppleseedCountMode.Drop)
     	{
         	Integer drops = treeType.getDropsBeforeFertilizer();
     		Integer dcMin = (int) (drops - (0.3 * drops));
@@ -248,7 +248,7 @@ public class AppleseedTreeData {
 	
 	public Boolean isInfinite()
 	{
-		if(countMode == CountMode.Infinite)
+		if(countMode == AppleseedCountMode.Infinite)
 			return true;
 		else 
 			return false;
@@ -256,7 +256,7 @@ public class AppleseedTreeData {
 	
 	public void setInfinite()
 	{
-		countMode = CountMode.Infinite;
+		countMode = AppleseedCountMode.Infinite;
 		intervalCount = -1;
 		dropCount = -1;
 	}
@@ -265,15 +265,15 @@ public class AppleseedTreeData {
 	{
 		Boolean retval = false;
 		
-		if(countMode == CountMode.Infinite)
+		if(countMode == AppleseedCountMode.Infinite)
 			retval = true;
-		else if(countMode == CountMode.Drop && dropCount > 0)
+		else if(countMode == AppleseedCountMode.Drop && dropCount > 0)
 		{
 			dropCount--;
 			
 			retval = true;
 		}
-		else if(countMode == CountMode.Interval && intervalCount > 0)
+		else if(countMode == AppleseedCountMode.Interval && intervalCount > 0)
 		{
 			intervalCount--;
 			retval = true;
@@ -316,9 +316,9 @@ public class AppleseedTreeData {
 			return true;
 		else if(treeType.getRequireFertilizer() == false)
 			return true;
-		else if(countMode == CountMode.Drop && dropCount > 0)
+		else if(countMode == AppleseedCountMode.Drop && dropCount > 0)
 			return true;
-		else if(countMode == CountMode.Interval && intervalCount > 0)
+		else if(countMode == AppleseedCountMode.Interval && intervalCount > 0)
 			return true;
 		else if(fertilizerCount > 0 || fertilizerCount == -1)
 			return true;
@@ -326,7 +326,7 @@ public class AppleseedTreeData {
 		return false;
 	}
 
-	public CountMode getCountMode()
+	public AppleseedCountMode getCountMode()
 	{
 		return countMode;
 	}

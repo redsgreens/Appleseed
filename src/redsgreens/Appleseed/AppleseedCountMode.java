@@ -1,5 +1,5 @@
 package redsgreens.Appleseed;
 
-public enum CountMode {
+public enum AppleseedCountMode {
 	Drop, Interval, Infinite
 }
