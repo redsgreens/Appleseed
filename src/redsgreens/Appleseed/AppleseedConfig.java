@@ -7,8 +7,6 @@ import java.io.FileWriter;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Iterator;
-
-import org.bukkit.Material;
 import org.yaml.snakeyaml.Yaml;
 
 /**
@@ -20,8 +18,10 @@ import org.yaml.snakeyaml.Yaml;
 public class AppleseedConfig {
 	public Boolean ShowErrorsInClient = true;
 	public Integer DropInterval = 60;
-	public Material WandItem = Material.WOOD_HOE;
+	public AppleseedItemStack WandItem = AppleseedItemStack.getItemStackFromName("wood_hoe");
 	public Integer MinimumTreeDistance = -1;
+	public Integer MaxTreesPerPlayer = -1;
+	public AppleseedItemStack FertilizerItem = AppleseedItemStack.getItemStackFromName("bone_meal");
 
 	public HashMap<AppleseedItemStack, AppleseedTreeType> TreeTypes = new HashMap<AppleseedItemStack, AppleseedTreeType>();
 
@@ -72,12 +72,24 @@ public class AppleseedConfig {
 				DropInterval = (Integer)configMap.get("DropInterval");
 			System.out.println("Appleseed: DropInterval=" + DropInterval.toString() + " seconds");
 
+			if(configMap.containsKey("MaxTreesPerPlayer"))
+				MaxTreesPerPlayer = (Integer)configMap.get("MaxTreesPerPlayer");
+			if(MaxTreesPerPlayer != -1)
+				System.out.println("Appleseed: MaxTreesPerPlayer=" + MaxTreesPerPlayer.toString());
+
 			if(configMap.containsKey("WandItem"))
 			{
 				String wiStr = configMap.get("WandItem").toString();
-				WandItem = Material.matchMaterial(wiStr);
+				WandItem = AppleseedItemStack.getItemStackFromName(wiStr);
 			}
-			System.out.println("Appleseed: WandItem=" + WandItem.name().toLowerCase());
+			System.out.println("Appleseed: WandItem=" + AppleseedItemStack.getItemStackName(WandItem).toLowerCase());
+
+			if(configMap.containsKey("FertilizerItem"))
+			{
+				String fiStr = configMap.get("FertilizerItem").toString();
+				FertilizerItem = AppleseedItemStack.getItemStackFromName(fiStr);
+			}
+			System.out.println("Appleseed: FertilizerItem=" + AppleseedItemStack.getItemStackName(FertilizerItem).toLowerCase());
 
 			if(configMap.containsKey("MinimumTreeDistance"))
 				MinimumTreeDistance = (Integer)configMap.get("MinimumTreeDistance");

@@ -15,16 +15,30 @@ ShowErrorsInClient: Yes
 DropInterval: 60
 
 #
+# FertilizerItem: item used in game to fertilize a tree 
+#
+# Allowed values: any item id or item name (default is bone_meal)
+# 
+FertilizerItem: bone_meal
+
+#
+# MaxTreesPerPlayer: optional parameter, maximum number of trees a player can plant 
+#                    
+# Allowed values: any integer bigger than 1 (set to -1 to disable, or comment out the parameter)
+# 
+#MaxTreesPerPlayer: 10
+
+#
 # WandItem: item used in game to see what type a tree is and if it needs fertilizer 
 #
-# Allowed values: any decimal item id (default is 290 for wooden hoe)
+# Allowed values: any item id or item name (default is wood_hoe)
 # 
-WandItem: 290
+WandItem: wood_hoe
 
 #
 # MinimumTreeDistance: optional parameter specifies minimum block distance between planted trees 
 #
-# Allowed values: any decimal number bigger than 1 (set to -1 to disable, or comment out the parameter)
+# Allowed values: any number bigger than 1 (set to -1 to disable, or comment out the parameter)
 # 
 #MinimumTreeDistance: 8
 
