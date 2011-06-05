@@ -70,7 +70,7 @@ public class AppleseedPlayerListener extends PlayerListener {
 			return;
 
 		// return if they don't have permission
-		if(!Appleseed.Permissions.hasPermission(player, "plant." + AppleseedItemStack.getItemStackName(aiStack)) || !Appleseed.CanBuild.canBuild(player, blockRoot))
+		if(!Appleseed.PlayerManager.hasPermission(player, "plant." + AppleseedItemStack.getItemStackName(aiStack)) || !Appleseed.PlayerManager.canBuild(player, blockRoot))
 		{
 			if(Appleseed.Config.ShowErrorsInClient)
 				player.sendMessage("§cErr: You don't have permission to plant this tree.");
@@ -102,7 +102,7 @@ public class AppleseedPlayerListener extends PlayerListener {
 		event.setCancelled(true);
 		
 		// add the root location and type to the list of trees
-		if(Appleseed.Permissions.hasPermission(player, "infinite.plant"))
+		if(Appleseed.PlayerManager.hasPermission(player, "infinite.plant"))
 			Appleseed.TreeManager.AddTree(new AppleseedLocation(blockRoot.getLocation()), aiStack, AppleseedCountMode.Infinite, -1, -1, -1, player.getName());
 		else
 			Appleseed.TreeManager.AddTree(new AppleseedLocation(blockRoot.getLocation()), aiStack, player.getName());
@@ -138,7 +138,7 @@ public class AppleseedPlayerListener extends PlayerListener {
 		AppleseedTreeData tree = Appleseed.TreeManager.GetTree(new AppleseedLocation(loc));
 		
 		Boolean treesUpdated = false;
-		if(Appleseed.Permissions.hasPermission(player, "infinite.fertilizer"))
+		if(Appleseed.PlayerManager.hasPermission(player, "infinite.fertilizer"))
 		{
 			tree.setInfinite();
 			treesUpdated = true;
@@ -175,7 +175,7 @@ public class AppleseedPlayerListener extends PlayerListener {
 	private void handleWandEvent(PlayerInteractEvent event, Player player, ItemStack iStack, Block block)
 	{
 		// they clicked with the wand
-		if(!Appleseed.Permissions.hasPermission(player, "wand"))
+		if(!Appleseed.PlayerManager.hasPermission(player, "wand"))
 		{
 			if(Appleseed.Config.ShowErrorsInClient)
 				player.sendMessage("§cErr: You don't have permission to do this.");

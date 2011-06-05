@@ -59,7 +59,7 @@ public class AppleseedBlockListener extends BlockListener {
 				return;
 			}
 			
-			if(!Appleseed.Permissions.hasPermission(player, "sign.place"))
+			if(!Appleseed.PlayerManager.hasPermission(player, "sign.place"))
 			{
 				signBlock.setType(Material.AIR);
 				signBlock.getWorld().dropItemNaturally(signLoc, new ItemStack(Material.SIGN, 1));
