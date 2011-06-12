@@ -1,3 +1,6 @@
+Version 0.5.6 (06/12/2011)
+    * Prevent the player from "eating" a seed item if the tree can't be planted
+
 Version 0.5.5 (06/05/2011)
     * Non-integer DropLikelihood values allowed
     * Textual name of wand item can be used instead of item number
