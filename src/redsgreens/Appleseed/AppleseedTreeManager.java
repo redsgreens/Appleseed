@@ -20,6 +20,8 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
 import org.bukkit.craftbukkit.block.CraftSign;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Item;
 import org.yaml.snakeyaml.Yaml;
 
 /**
@@ -113,7 +115,27 @@ public class AppleseedTreeManager {
 										}
 
 										if(dropItem)
-						    				loc.getWorld().dropItemNaturally(loc, tree.getItemStack().getItemStack());
+										{
+						    				Item item = loc.getWorld().dropItemNaturally(loc, tree.getItemStack().getItemStack());
+						    				
+						    				if(Appleseed.Config.MaxUncollectedItems != -1)
+						    				{
+						    					List<Entity> itemList = item.getNearbyEntities(10, 10, 10);
+						    					Iterator<Entity> itemItr = itemList.iterator();
+						    					Integer count = 0;
+						    					
+						    					while(itemItr.hasNext())
+						    					{
+						    						Entity entity = itemItr.next();
+						    						if(entity instanceof Item && !entity.isDead())
+						    							if(((Item)entity).getItemStack().getType() == item.getItemStack().getType())
+						    								count++;
+						    					}
+						    					
+						    					if(count > Appleseed.Config.MaxUncollectedItems)
+						    						item.remove();
+						    				}
+										}
 
 										if(!tree.isAlive())
 										{
@@ -153,14 +175,14 @@ public class AppleseedTreeManager {
 
     }
 
-    // add a tree to the hashmap and save to disk
+    // add a tree to the hashmap
     public synchronized void AddTree(AppleseedLocation loc, AppleseedItemStack iStack, String player)
     {
     	Appleseed.PlayerManager.CapAddTree(player, loc.getWorldName());
     	WorldTrees.get(loc.getWorldName()).put(loc, new AppleseedTreeData(loc, iStack, player));
     }
 
-    // add a tree to the hashmap and save to disk
+    // add a tree to the hashmap
     public synchronized void AddTree(AppleseedLocation loc, AppleseedItemStack iStack, AppleseedCountMode cm, Integer dropcount, Integer fertilizercount, Integer intervalcount, String player)
     {
     	Appleseed.PlayerManager.CapAddTree(player, loc.getWorldName());

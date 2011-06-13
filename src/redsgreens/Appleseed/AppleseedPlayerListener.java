@@ -73,7 +73,10 @@ public class AppleseedPlayerListener extends PlayerListener {
 		if(!Appleseed.PlayerManager.hasPermission(player, "plant." + AppleseedItemStack.getItemStackName(aiStack)) || !Appleseed.PlayerManager.canBuild(player, blockRoot))
 		{
 			if(Appleseed.Config.ShowErrorsInClient)
+			{
 				player.sendMessage("§cErr: You don't have permission to plant this tree.");
+				event.setCancelled(true);
+			}
 			return;
 		}
 		
@@ -84,9 +87,15 @@ public class AppleseedPlayerListener extends PlayerListener {
 				if(Appleseed.Config.ShowErrorsInClient)
 				{
 					if(Appleseed.Config.MaxIsPerWorld)
+					{
 						player.sendMessage("§cErr: You are not allowed to plant more trees in this world.");
+						event.setCancelled(true);
+					}
 					else
+					{
 						player.sendMessage("§cErr: You are not allowed to plant more trees.");
+						event.setCancelled(true);
+					}
 				}
 				return;
 			}
@@ -97,7 +106,10 @@ public class AppleseedPlayerListener extends PlayerListener {
 			if(Appleseed.TreeManager.IsNewTreeTooClose(blockRoot.getLocation()))
 			{
 				if(Appleseed.Config.ShowErrorsInClient)
+				{
 					player.sendMessage("§cErr: Too close to another tree.");
+					event.setCancelled(true);
+				}
 				return;
 			}
 		}
@@ -167,7 +179,10 @@ public class AppleseedPlayerListener extends PlayerListener {
 			else
 			{
 				if(Appleseed.Config.ShowErrorsInClient)
+				{
 					player.sendMessage("§cErr: This tree cannot be fertilized.");
+					event.setCancelled(true);
+				}
 				return;
 			}
 		}

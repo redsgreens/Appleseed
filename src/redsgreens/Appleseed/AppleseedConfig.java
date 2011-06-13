@@ -22,6 +22,7 @@ public class AppleseedConfig {
 	public Integer MinimumTreeDistance = -1;
 	public Integer MaxTreesPerPlayer = -1;
 	public Boolean MaxIsPerWorld = false;
+	public Integer MaxUncollectedItems = -1;
 	public AppleseedItemStack FertilizerItem = AppleseedItemStack.getItemStackFromName("bone_meal");
 
 	public HashMap<AppleseedItemStack, AppleseedTreeType> TreeTypes = new HashMap<AppleseedItemStack, AppleseedTreeType>();
@@ -77,6 +78,11 @@ public class AppleseedConfig {
 				MaxTreesPerPlayer = (Integer)configMap.get("MaxTreesPerPlayer");
 			if(MaxTreesPerPlayer != -1)
 				System.out.println("Appleseed: MaxTreesPerPlayer=" + MaxTreesPerPlayer.toString());
+
+			if(configMap.containsKey("MaxUncollectedItems"))
+				MaxUncollectedItems = (Integer)configMap.get("MaxUncollectedItems");
+			if(MaxUncollectedItems != -1)
+				System.out.println("Appleseed: MaxUncollectedItems=" + MaxUncollectedItems.toString());
 
 			if(configMap.containsKey("MaxIsPerWorld") && MaxTreesPerPlayer != -1)
 			{

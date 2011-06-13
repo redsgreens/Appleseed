@@ -22,6 +22,14 @@ DropInterval: 60
 FertilizerItem: bone_meal
 
 #
+# MaxUncollectedItems: optional parameter, approximate maximum number of items that will be left on 
+#                      the ground around a tree 
+#                    
+# Allowed values: any integer bigger than 1 (set to -1 to disable, or comment out the parameter)
+# 
+MaxUncollectedItems: 6
+
+#
 # MaxTreesPerPlayer: optional parameter, maximum number of trees a player can plant 
 #                    
 # Allowed values: any integer bigger than 1 (set to -1 to disable, or comment out the parameter)
@@ -81,13 +89,13 @@ TreeTypes:
     golden_apple:
         DropLikelihood: 5
         RequireFertilizer: Yes
-        DropsBeforeFertilizer: 10
+        IntervalsBeforeFertilizer: 10
         MaxFertilizer: 5
         TreeType: Birch
 
     cookie:
         DropLikelihood: 33
         RequireFertilizer: Yes
-        DropsBeforeFertilizer: 50
+        IntervalsBeforeFertilizer: 60
 #        MaxFertilizer: 5
         TreeType: Standard

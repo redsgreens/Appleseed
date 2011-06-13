@@ -248,7 +248,7 @@ public class AppleseedTreeData {
 	
 	public Boolean isInfinite()
 	{
-		if(countMode == AppleseedCountMode.Infinite)
+		if(countMode == AppleseedCountMode.Infinite || treeType.getRequireFertilizer() == false)
 			return true;
 		else 
 			return false;
@@ -263,23 +263,20 @@ public class AppleseedTreeData {
 	
 	public Boolean decrementCount()
 	{
-		Boolean retval = false;
-		
-		if(countMode == AppleseedCountMode.Infinite)
-			retval = true;
+		if(treeType.getRequireFertilizer() == false || countMode == AppleseedCountMode.Infinite)
+			return true;
 		else if(countMode == AppleseedCountMode.Drop && dropCount > 0)
 		{
 			dropCount--;
-			
-			retval = true;
+			return true;
 		}
 		else if(countMode == AppleseedCountMode.Interval && intervalCount > 0)
 		{
 			intervalCount--;
-			retval = true;
+			return true;
 		}
 
-		return retval;
+		return false;
 	}
 	
 	public Boolean Fertilize()
