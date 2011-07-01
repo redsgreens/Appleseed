@@ -46,7 +46,9 @@ public class AppleseedTreeData {
     	{
     		Integer fcMin = (int) (fertilizer - (0.3 * fertilizer));
     		Integer fcMax = (int) (fertilizer + (0.3 * fertilizer));
-    		fertilizerCount = rand.nextInt(fcMax - fcMin + 1) + fcMin;
+    		Integer r = fcMax - fcMin + 1;
+    		if(r < 1) r = 1;
+    		fertilizerCount = rand.nextInt(r) + fcMin;
     	}
 
     	if(countMode == AppleseedCountMode.Drop || countMode == AppleseedCountMode.Interval)
@@ -206,7 +208,9 @@ public class AppleseedTreeData {
         	Integer drops = treeType.getDropsBeforeFertilizer();
     		Integer dcMin = (int) (drops - (0.3 * drops));
     		Integer dcMax = (int) (drops + (0.3 * drops));
-    		dropCount = rand.nextInt(dcMax - dcMin + 1) + dcMin;
+    		Integer r = dcMax - dcMin + 1;
+    		if(r < 1) r = 1;
+    		dropCount = rand.nextInt(r) + dcMin;
     		
     		intervalCount = -1;
     	}
@@ -215,7 +219,9 @@ public class AppleseedTreeData {
         	Integer intervals = treeType.getIntervalsBeforeFertilizer();
     		Integer icMin = (int) (intervals - (0.3 * intervals));
     		Integer icMax = (int) (intervals + (0.3 * intervals));
-    		intervalCount = rand.nextInt(icMax - icMin + 1) + icMin;
+    		Integer r = icMax - icMin + 1;
+    		if(r < 1) r = 1;
+    		intervalCount = rand.nextInt(r) + icMin;
     		
     		dropCount = -1;
     	}

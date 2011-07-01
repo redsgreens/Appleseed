@@ -1,3 +1,6 @@
+Version 0.6.1 (07/01/2011)
+    * Fix for "n must be positive" exception
+
 Version 0.6.0 (06/13/2011)
     * Detect uncollected items and prevent items from piling up
 
