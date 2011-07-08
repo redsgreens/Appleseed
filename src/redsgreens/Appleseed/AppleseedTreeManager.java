@@ -385,6 +385,14 @@ public class AppleseedTreeManager {
 
     	System.out.println("Appleseed: " + ((Integer)trees.size()).toString() + " trees loaded in world " + world + ".");
     }
+
+    public Boolean isWorldLoaded(String world)
+    {
+    	if(WorldTrees.containsKey(world))
+    		return true;
+    	else
+    		return false;
+    }
     
     // save trees to disk
     public synchronized void saveTrees()
