@@ -1,5 +1,5 @@
-Version 0.6.2 (unreleased)
-    * 
+Version 0.6.2 (07/10/2011)
+    * Fix error handling when ShowErrorsInClient is disabled
 
 Version 0.6.1 (07/01/2011)
     * Fix for "n must be positive" exception
