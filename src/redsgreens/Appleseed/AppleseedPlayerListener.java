@@ -114,14 +114,6 @@ public class AppleseedPlayerListener extends PlayerListener {
 			}
 		}
 
-		if(Appleseed.Config.MaxTreesPerPlayer != -1)
-		{
-			// MaxTreesPerPlayer is set, make sure this tree won't exceed the cap for the user
-
-//			TODO: do stuff here
-
-		}
-
 		// all tests satisfied, proceed
 		
 		// cancel the event so we're the only one processing it
