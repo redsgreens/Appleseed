@@ -116,16 +116,16 @@ public class AppleseedBlockListener extends BlockListener {
 		{
 			switch(signBlock.getData()){ // determine sign direction and get block behind it
 			case 2: // facing east
-				blockAgainst = signBlock.getFace(BlockFace.WEST);
+				blockAgainst = signBlock.getRelative(BlockFace.WEST);
 				break;
 			case 3: // facing west
-				blockAgainst = signBlock.getFace(BlockFace.EAST);
+				blockAgainst = signBlock.getRelative(BlockFace.EAST);
 				break;
 			case 4: // facing north
-				blockAgainst = signBlock.getFace(BlockFace.SOUTH);
+				blockAgainst = signBlock.getRelative(BlockFace.SOUTH);
 				break;
 			case 5: // facing south
-				blockAgainst = signBlock.getFace(BlockFace.NORTH);
+				blockAgainst = signBlock.getRelative(BlockFace.NORTH);
 				break;
 			}
 		}

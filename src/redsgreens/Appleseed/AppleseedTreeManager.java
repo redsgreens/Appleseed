@@ -208,7 +208,7 @@ public class AppleseedTreeManager {
         	int treeCount = 0;
         	while(treeCount < 15 && block.getTypeId() == treeId && !trees.containsKey(block.getLocation()))
         	{
-        		Block blockDown = block.getFace(BlockFace.DOWN);
+        		Block blockDown = block.getRelative(BlockFace.DOWN);
         		if(blockDown.getTypeId() == treeId)
         			block = blockDown;
         		else
@@ -256,39 +256,39 @@ public class AppleseedTreeManager {
     	{
     		block.setType(Material.AIR);
     		
-    		Block neighbor = block.getFace(BlockFace.EAST);
+    		Block neighbor = block.getRelative(BlockFace.EAST);
     		if(neighbor.getType() == Material.LOG)
     			neighbor.setType(Material.AIR);
 
-    		neighbor = block.getFace(BlockFace.NORTH);
+    		neighbor = block.getRelative(BlockFace.NORTH);
     		if(neighbor.getType() == Material.LOG)
     			neighbor.setType(Material.AIR);
 
-    		neighbor = block.getFace(BlockFace.NORTH_EAST);
+    		neighbor = block.getRelative(BlockFace.NORTH_EAST);
     		if(neighbor.getType() == Material.LOG)
     			neighbor.setType(Material.AIR);
 
-    		neighbor = block.getFace(BlockFace.NORTH_WEST);
+    		neighbor = block.getRelative(BlockFace.NORTH_WEST);
     		if(neighbor.getType() == Material.LOG)
     			neighbor.setType(Material.AIR);
 
-    		neighbor = block.getFace(BlockFace.SOUTH);
+    		neighbor = block.getRelative(BlockFace.SOUTH);
     		if(neighbor.getType() == Material.LOG)
     			neighbor.setType(Material.AIR);
 
-    		neighbor = block.getFace(BlockFace.SOUTH_EAST);
+    		neighbor = block.getRelative(BlockFace.SOUTH_EAST);
     		if(neighbor.getType() == Material.LOG)
     			neighbor.setType(Material.AIR);
 
-    		neighbor = block.getFace(BlockFace.SOUTH_WEST);
+    		neighbor = block.getRelative(BlockFace.SOUTH_WEST);
     		if(neighbor.getType() == Material.LOG)
     			neighbor.setType(Material.AIR);
 
-    		neighbor = block.getFace(BlockFace.WEST);
+    		neighbor = block.getRelative(BlockFace.WEST);
     		if(neighbor.getType() == Material.LOG)
     			neighbor.setType(Material.AIR);
 
-    		block = block.getFace(BlockFace.UP);
+    		block = block.getRelative(BlockFace.UP);
     		i++;
     	}
     }

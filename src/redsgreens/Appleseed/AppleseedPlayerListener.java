@@ -80,14 +80,16 @@ public class AppleseedPlayerListener extends PlayerListener {
 		// return if they have already planted their share of trees
 		if(Appleseed.Config.MaxTreesPerPlayer != -1 && !Appleseed.PlayerManager.hasPermission(player, "infinite.cap"))
 		{
-			if(!Appleseed.PlayerManager.CapAddTree(player.getName(), player.getLocation().getWorld().getName()))
+			String playerName = player.getName();
+			String worldName = player.getLocation().getWorld().getName();
+			if(!Appleseed.PlayerManager.CapAddTree(playerName, worldName))
 			{
 				if(Appleseed.Config.ShowErrorsInClient)
 				{
 					if(Appleseed.Config.MaxIsPerWorld)
-						player.sendMessage("§cErr: You are not allowed to plant more trees in this world.");
+						player.sendMessage("§cErr: You are not allowed to plant more trees in this world. (" + Appleseed.PlayerManager.getTreeCount(playerName, worldName) + "/" + Appleseed.Config.MaxTreesPerPlayer.toString() + ")");
 					else
-						player.sendMessage("§cErr: You are not allowed to plant more trees.");
+						player.sendMessage("§cErr: You are not allowed to plant more trees. (" + Appleseed.PlayerManager.getTreeCount(playerName) + "/" + Appleseed.Config.MaxTreesPerPlayer.toString() + ")");
 				}
 				event.setCancelled(true);
 				return;

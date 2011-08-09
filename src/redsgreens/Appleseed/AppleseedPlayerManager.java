@@ -54,7 +54,19 @@ public class AppleseedPlayerManager {
 	public Boolean hasPermission(Player player, String permission){
 		// use op status if no permissions plugin is installed
 		if(Permissions == null)
-			return player.isOp();
+		{
+			if(Appleseed.Config.AllowNonOpAccess == false)
+				return player.isOp();
+			else
+			{
+				if(player.isOp())
+					return true;
+				else if(permission.toLowerCase().substring(0, 6).equalsIgnoreCase("plant.") || permission.toLowerCase().substring(0, 5).equalsIgnoreCase("sign."))
+					return true;
+				else
+					return false;
+			}
+		}
 		else
 			return Permissions.has(player, "appleseed." + permission);
 	}
@@ -116,6 +128,23 @@ public class AppleseedPlayerManager {
 			capsHash.remove(capStr);
 			capsHash.put(capStr, x-1);
 		}
+	}
+	
+	public Integer getTreeCount(String playerName)
+	{
+		if(capsHash.containsKey(playerName))
+			return capsHash.get(playerName);
+		else
+			return 0;		
+	}
+
+	public Integer getTreeCount(String playerName, String worldName)
+	{
+		String s = worldName + "_" + playerName;
+		if(capsHash.containsKey(s))
+			return capsHash.get(s);
+		else
+			return 0;		
 	}
 
 }

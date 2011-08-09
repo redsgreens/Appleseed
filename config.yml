@@ -8,6 +8,15 @@
 ShowErrorsInClient: Yes
 
 #
+# AllowNonOpAccess: if there is no permissions plugin loaded, then this setting 
+#                   allows users without op status to plant and place signs
+#
+# Allowed values are: Yes
+#                     No
+#
+AllowNonOpAccess: No
+
+#
 # DropInterval: length of time, in seconds, between drops
 #
 # Allowed values: numbers bigger than 1 (no decimals)

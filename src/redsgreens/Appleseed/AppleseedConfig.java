@@ -17,6 +17,7 @@ import org.yaml.snakeyaml.Yaml;
 
 public class AppleseedConfig {
 	public Boolean ShowErrorsInClient = true;
+	public Boolean AllowNonOpAccess = false;
 	public Integer DropInterval = 60;
 	public AppleseedItemStack WandItem = AppleseedItemStack.getItemStackFromName("wood_hoe");
 	public Integer MinimumTreeDistance = -1;
@@ -69,6 +70,15 @@ public class AppleseedConfig {
 			if(configMap.containsKey("ShowErrorsInClient"))
 				ShowErrorsInClient = (Boolean)configMap.get("ShowErrorsInClient");
 			System.out.println("Appleseed: ShowErrorsInClient=" + ShowErrorsInClient.toString());
+
+			if(configMap.containsKey("AllowNonOpAccess")){
+				boolean configBool = (Boolean)configMap.get("AllowNonOpAccess");
+				if(configBool)
+					AllowNonOpAccess = true;
+				else AllowNonOpAccess = false;
+				if(AllowNonOpAccess == true)
+					System.out.println("Appleseed: AllowNonOpAccess=" + AllowNonOpAccess.toString());
+			}
 
 			if(configMap.containsKey("DropInterval"))
 				DropInterval = (Integer)configMap.get("DropInterval");
