@@ -1,3 +1,6 @@
+Version 0.6.4 (08/09/2011)
+    * Fix tracking of trees per player
+
 Version 0.6.3 (08/09/2011)
     * Replaced calls to deprecated Bukkit methods
     * Added AllowNonOpAccess parameter to config file for servers without permissions

@@ -1,7 +1,5 @@
 package redsgreens.Appleseed;
 
-import java.util.HashMap;
-
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
@@ -14,7 +12,7 @@ public class AppleseedPlayerManager {
 	private PermissionHandler Permissions = null;
 	private WorldGuardPlugin WorldGuard = null;
 
-	private HashMap<String, Integer> capsHash = new HashMap<String, Integer>();
+//	private HashMap<String, Integer> capsHash = new HashMap<String, Integer>();
 	
 	public AppleseedPlayerManager()
 	{
@@ -78,7 +76,7 @@ public class AppleseedPlayerManager {
 		else
 			return true;
 	}
-
+/*
 	public Boolean CapAddTree(String player, String world)
 	{
 		return CapAddTree(player, world, false);
@@ -113,7 +111,7 @@ public class AppleseedPlayerManager {
 			return true;
 		}
 	}
-	
+
 	public void CapRemoveTree(AppleseedTreeData tree)
 	{
 		String capStr;
@@ -129,22 +127,6 @@ public class AppleseedPlayerManager {
 			capsHash.put(capStr, x-1);
 		}
 	}
+*/	
 	
-	public Integer getTreeCount(String playerName)
-	{
-		if(capsHash.containsKey(playerName))
-			return capsHash.get(playerName);
-		else
-			return 0;		
-	}
-
-	public Integer getTreeCount(String playerName, String worldName)
-	{
-		String s = worldName + "_" + playerName;
-		if(capsHash.containsKey(s))
-			return capsHash.get(s);
-		else
-			return 0;		
-	}
-
 }

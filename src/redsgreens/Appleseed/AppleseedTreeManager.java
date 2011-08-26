@@ -138,10 +138,7 @@ public class AppleseedTreeManager {
 										}
 
 										if(!tree.isAlive())
-										{
-											Appleseed.PlayerManager.CapRemoveTree(tree);
 											KillTree(loc);
-										}
 										
 						    			if(tree.hasSign())
 						    				updateSign(tree);
@@ -151,10 +148,8 @@ public class AppleseedTreeManager {
 								}
 							}
 							else if(world.getBlockAt(loc).getType() != Material.SAPLING)
-							{
-								Appleseed.PlayerManager.CapRemoveTree(tree);
 								itr.remove();
-							}
+
 						}
 					} catch (Exception e) {
 						System.out.println("Appleseed: Error dropping item in world \"" + aloc.getWorldName() + "\"");
@@ -178,14 +173,14 @@ public class AppleseedTreeManager {
     // add a tree to the hashmap
     public synchronized void AddTree(AppleseedLocation loc, AppleseedItemStack iStack, String player)
     {
-    	Appleseed.PlayerManager.CapAddTree(player, loc.getWorldName());
+//    	Appleseed.PlayerManager.CapAddTree(player, loc.getWorldName());
     	WorldTrees.get(loc.getWorldName()).put(loc, new AppleseedTreeData(loc, iStack, player));
     }
 
     // add a tree to the hashmap
     public synchronized void AddTree(AppleseedLocation loc, AppleseedItemStack iStack, AppleseedCountMode cm, Integer dropcount, Integer fertilizercount, Integer intervalcount, String player)
     {
-    	Appleseed.PlayerManager.CapAddTree(player, loc.getWorldName());
+//    	Appleseed.PlayerManager.CapAddTree(player, loc.getWorldName());
     	WorldTrees.get(loc.getWorldName()).put(loc, new AppleseedTreeData(loc, iStack, cm, dropcount, fertilizercount, intervalcount, player));
     }
 
@@ -323,13 +318,13 @@ public class AppleseedTreeManager {
                 	{
                 		String treeWorld = tree.getWorld();
                 		if(!WorldTrees.containsKey(treeWorld))
-                		{
-                			Appleseed.PlayerManager.CapAddTree(tree.getPlayer(), treeWorld, true);
                 			WorldTrees.put(treeWorld, new HashMap<AppleseedLocation, AppleseedTreeData>());
-                		}
                 		
-                		WorldTrees.get(treeWorld).put(tree.getLocation(), tree);
-                		importedCount++;
+                		if(!WorldTrees.get(treeWorld).containsKey(tree.getLocation()))
+                		{
+                    		WorldTrees.get(treeWorld).put(tree.getLocation(), tree);
+                    		importedCount++;
+                		}
                 	}
                 }
                 
@@ -373,10 +368,7 @@ public class AppleseedTreeManager {
 			    	
 			    	if(tree != null)
 			    		if(!trees.containsKey(tree.getLocation()))
-			    		{
-			    			Appleseed.PlayerManager.CapAddTree(tree.getPlayer(), tree.getWorld(), true);
 			    			trees.put(tree.getLocation(), tree);
-			    		}
 			    }
 			}
 		} catch (FileNotFoundException e) {
@@ -558,4 +550,51 @@ public class AppleseedTreeManager {
     	
     	sign.update();
     }
+    
+	public Integer getPlayerTreeCount(String playerName, String worldName)
+	{
+		Integer retval = 0;
+		Iterator<AppleseedTreeData> itr = WorldTrees.get(worldName).values().iterator();
+		
+		while(itr.hasNext())
+		{
+			AppleseedTreeData tree = itr.next();
+			if(tree.getPlayer().equalsIgnoreCase(playerName))
+				retval++;
+		}
+		
+		return retval;		
+	}
+
+	public Integer getPlayerTreeCount(String playerName)
+	{
+		Integer retval = 0;
+		Iterator<String> itr = WorldTrees.keySet().iterator();
+		
+		while(itr.hasNext())
+		{
+			String world = itr.next();
+			retval += getPlayerTreeCount(playerName, world);
+		}
+			
+		return retval;		
+	}
+
+	public Boolean CanPlayerAddTree(String player, String world)
+	{
+		if(Appleseed.Config.MaxTreesPerPlayer == -1)
+			return true;
+
+		Integer treeCount;
+		if(Appleseed.Config.MaxIsPerWorld)
+			treeCount = getPlayerTreeCount(player, world);
+		else
+			treeCount = getPlayerTreeCount(player);
+
+		if(treeCount < Appleseed.Config.MaxTreesPerPlayer)
+			return true;
+		else
+			return false;
+	}
+	
 }
