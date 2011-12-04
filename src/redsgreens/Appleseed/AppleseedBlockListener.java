@@ -34,7 +34,7 @@ public class AppleseedBlockListener extends BlockListener {
 			return;
 		
 		// only proceed if it's a new sign
-		if (event.getLine(0).equalsIgnoreCase("[Appleseed]"))
+		if (event.getLine(0).equalsIgnoreCase("[" + Appleseed.Config.SignTag + "]"))
 		{
 			AppleseedLocation aloc = new AppleseedLocation(blockAgainst.getLocation());
 			AppleseedTreeData tree = Appleseed.TreeManager.GetTree(aloc);
@@ -69,7 +69,7 @@ public class AppleseedBlockListener extends BlockListener {
 			}
 
 			// set the first line to blue
-			(new CraftSign(signBlock)).setLine(0, "§1[Appleseed]");
+			(new CraftSign(signBlock)).setLine(0, "§1[" + Appleseed.Config.SignTag + "]");
 
 			// save the sign location
 			tree.setSign(signLoc);
@@ -92,7 +92,7 @@ public class AppleseedBlockListener extends BlockListener {
 		Sign sign = new CraftSign(signBlock);
 		
 		// return if it's not an appleseed sign
-		if(!sign.getLine(0).equals("§1[Appleseed]"))
+		if(!sign.getLine(0).equals("§1[" + Appleseed.Config.SignTag + "]"))
 			return;
 		
 		AppleseedTreeData tree = Appleseed.TreeManager.GetTree(new AppleseedLocation(getBlockBehindWallSign(sign).getLocation()));

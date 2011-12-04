@@ -1,3 +1,7 @@
+Version 0.6.5 (12/04/2011)
+    * PermissionsBukkit supported 
+    * Added config file option for customizing the sign tag
+
 Version 0.6.4 (08/09/2011)
     * Fix tracking of trees per player
 

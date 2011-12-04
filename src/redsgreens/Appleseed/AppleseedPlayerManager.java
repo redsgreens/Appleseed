@@ -48,7 +48,8 @@ public class AppleseedPlayerManager {
     	
     	
 	}
-	
+
+/*
 	public Boolean hasPermission(Player player, String permission){
 		// use op status if no permissions plugin is installed
 		if(Permissions == null)
@@ -67,6 +68,33 @@ public class AppleseedPlayerManager {
 		}
 		else
 			return Permissions.has(player, "appleseed." + permission);
+	}
+ */
+	
+	public Boolean hasPermission(Player player, String permission){
+    	boolean isOp = player.isOp();
+
+    	if(Permissions == null && isOp == false)
+    	{
+    		if(Appleseed.Config.AllowNonOpAccess == true && (permission.toLowerCase().substring(0, 6).equalsIgnoreCase("plant.") || permission.toLowerCase().substring(0, 5).equalsIgnoreCase("sign.")))
+    			return true;
+    		
+    		try
+    		{
+    			return player.hasPermission("appleseed." + permission);
+    		}
+    		catch (Exception ex){}
+    	}
+    	else
+    	{
+        	try{
+        		if(Permissions != null)
+        			  return Permissions.has(player, "appleseed." + permission);
+        	}
+        	catch (Exception ex){}
+    	}
+
+    	return isOp;	
 	}
 	
 	public Boolean canBuild(Player p, Block b)

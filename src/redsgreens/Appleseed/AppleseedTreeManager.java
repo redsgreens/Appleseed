@@ -525,7 +525,7 @@ public class AppleseedTreeManager {
     	else
     	{
     		sign = new CraftSign(block);
-    		if(!sign.getLine(0).equals("§1[Appleseed]"))
+    		if(!sign.getLine(0).equals("§1[" + Appleseed.Config.SignTag + "]"))
     			signInvalid = true;
     	}
 

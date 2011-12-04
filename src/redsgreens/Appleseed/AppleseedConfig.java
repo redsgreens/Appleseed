@@ -25,7 +25,8 @@ public class AppleseedConfig {
 	public Boolean MaxIsPerWorld = false;
 	public Integer MaxUncollectedItems = -1;
 	public AppleseedItemStack FertilizerItem = AppleseedItemStack.getItemStackFromName("bone_meal");
-
+	public String SignTag = "Appleseed";
+	
 	public HashMap<AppleseedItemStack, AppleseedTreeType> TreeTypes = new HashMap<AppleseedItemStack, AppleseedTreeType>();
 
 	@SuppressWarnings("unchecked")
@@ -120,6 +121,10 @@ public class AppleseedConfig {
 				System.out.println("Appleseed: MinimumTreeDistance=disabled");
 			else
 				System.out.println("Appleseed: MinimumTreeDistance=" + MinimumTreeDistance.toString());
+
+			if(configMap.containsKey("SignTag"))
+				SignTag = configMap.get("SignTag").toString();
+			System.out.println("Appleseed: SignTag=" + SignTag);
 
 			if(!configMap.containsKey("TreeTypes"))
 				System.out.println("Appleseed: TreeTypes=");

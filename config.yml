@@ -1,4 +1,11 @@
 #
+# SignTag: text that should be placed between [] on tree signs
+#
+# Allowed values : Alphanumeric text, no spaces
+# 
+SignTag: Appleseed
+
+#
 # ShowErrorsInClient: toggle that determines if permissions or other error messages
 #                     are displayed client-side
 #
