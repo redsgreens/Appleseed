@@ -1,3 +1,7 @@
+Version 0.6.6 (1/21/2012)
+    * Fixed compatibility with PermissionsBukkit
+    * Don't take items from players in creative mode
+
 Version 0.6.5 (12/04/2011)
     * PermissionsBukkit supported 
     * Added config file option for customizing the sign tag

@@ -58,7 +58,7 @@ public class AppleseedBlockListener extends BlockListener {
 					player.sendMessage("§cErr: This tree already has a sign.");
 				return;
 			}
-			
+
 			if(!Appleseed.PlayerManager.hasPermission(player, "sign.place"))
 			{
 				signBlock.setType(Material.AIR);

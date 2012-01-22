@@ -1,5 +1,6 @@
 package redsgreens.Appleseed;
 
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -127,12 +128,15 @@ public class AppleseedPlayerListener extends PlayerListener {
 		blockRoot.setData(treeType.getSaplingData());
 		
 		// take the item from the player
-		if(iStack.getAmount() == 1)
-			player.setItemInHand(null);
-		else
+		if(player.getGameMode() != GameMode.CREATIVE)
 		{
-			iStack.setAmount(iStack.getAmount() - 1);
-			player.setItemInHand(iStack);			
+			if(iStack.getAmount() == 1)
+				player.setItemInHand(null);
+			else
+			{
+				iStack.setAmount(iStack.getAmount() - 1);
+				player.setItemInHand(iStack);			
+			}
 		}
 	}
 	

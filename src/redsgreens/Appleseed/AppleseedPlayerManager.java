@@ -49,39 +49,30 @@ public class AppleseedPlayerManager {
     	
 	}
 
-/*
-	public Boolean hasPermission(Player player, String permission){
-		// use op status if no permissions plugin is installed
-		if(Permissions == null)
-		{
-			if(Appleseed.Config.AllowNonOpAccess == false)
-				return player.isOp();
-			else
-			{
-				if(player.isOp())
-					return true;
-				else if(permission.toLowerCase().substring(0, 6).equalsIgnoreCase("plant.") || permission.toLowerCase().substring(0, 5).equalsIgnoreCase("sign."))
-					return true;
-				else
-					return false;
-			}
-		}
-		else
-			return Permissions.has(player, "appleseed." + permission);
-	}
- */
-	
 	public Boolean hasPermission(Player player, String permission){
     	boolean isOp = player.isOp();
-
     	if(Permissions == null && isOp == false)
     	{
-    		if(Appleseed.Config.AllowNonOpAccess == true && (permission.toLowerCase().substring(0, 6).equalsIgnoreCase("plant.") || permission.toLowerCase().substring(0, 5).equalsIgnoreCase("sign.")))
-    			return true;
+    		if(Appleseed.Config.AllowNonOpAccess == true)
+    		{
+    			
+    			if(permission.length() >= 5 && permission.toLowerCase().substring(0, 5).equalsIgnoreCase("sign."))
+					return true;
+    			if (permission.length() >= 6 && permission.toLowerCase().substring(0, 6).equalsIgnoreCase("plant."))
+    					return true;
+    		}
     		
     		try
     		{
-    			return player.hasPermission("appleseed." + permission);
+    			Boolean retval = player.hasPermission("appleseed." + permission); 
+    			
+    			if(retval == false && permission.length() >= 6 && permission.toLowerCase().substring(0, 6).equalsIgnoreCase("plant."))
+    				retval = player.hasPermission("appleseed.plant.*");
+
+    			if(retval == false)
+    				retval = player.hasPermission("appleseed.*");
+    			
+    			return retval;
     		}
     		catch (Exception ex){}
     	}
@@ -89,7 +80,7 @@ public class AppleseedPlayerManager {
     	{
         	try{
         		if(Permissions != null)
-        			  return Permissions.has(player, "appleseed." + permission);
+        			  return Permissions.has(player, "appleseed.");
         	}
         	catch (Exception ex){}
     	}
@@ -104,57 +95,6 @@ public class AppleseedPlayerManager {
 		else
 			return true;
 	}
-/*
-	public Boolean CapAddTree(String player, String world)
-	{
-		return CapAddTree(player, world, false);
-	}
 
-	public Boolean CapAddTree(String player, String world, Boolean force)
-	{
-		if(Appleseed.Config.MaxTreesPerPlayer == -1)
-			return true;
-		
-		String capStr;
-		if(Appleseed.Config.MaxIsPerWorld)
-			capStr = world + "_" + player;
-		else
-			capStr = player;
-		
-		if(capsHash.containsKey(capStr))
-		{
-			Integer x = capsHash.get(capStr);
-			if(x < Appleseed.Config.MaxTreesPerPlayer || force == true)
-			{
-				capsHash.remove(capStr);
-				capsHash.put(capStr, x+1);
-				return true;
-			}
-			else
-				return false;
-		}
-		else
-		{
-			capsHash.put(capStr, 1);
-			return true;
-		}
-	}
-
-	public void CapRemoveTree(AppleseedTreeData tree)
-	{
-		String capStr;
-		if(Appleseed.Config.MaxIsPerWorld)
-			capStr = tree.getWorld() + "_" + tree.getPlayer();
-		else
-			capStr = tree.getPlayer();
-
-		if(capsHash.containsKey(capStr))
-		{
-			Integer x = capsHash.get(capStr);
-			capsHash.remove(capStr);
-			capsHash.put(capStr, x-1);
-		}
-	}
-*/	
 	
 }

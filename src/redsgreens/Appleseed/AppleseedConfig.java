@@ -72,11 +72,9 @@ public class AppleseedConfig {
 				ShowErrorsInClient = (Boolean)configMap.get("ShowErrorsInClient");
 			System.out.println("Appleseed: ShowErrorsInClient=" + ShowErrorsInClient.toString());
 
-			if(configMap.containsKey("AllowNonOpAccess")){
-				boolean configBool = (Boolean)configMap.get("AllowNonOpAccess");
-				if(configBool)
-					AllowNonOpAccess = true;
-				else AllowNonOpAccess = false;
+			if(configMap.containsKey("AllowNonOpAccess"))
+			{
+				AllowNonOpAccess = (Boolean)configMap.get("AllowNonOpAccess");
 				if(AllowNonOpAccess == true)
 					System.out.println("Appleseed: AllowNonOpAccess=" + AllowNonOpAccess.toString());
 			}
