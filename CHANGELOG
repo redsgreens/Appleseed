@@ -1,3 +1,7 @@
+Version 0.7.0 (1/29/2012)
+    * Fixed compatibility with PermissionsEx
+    * Implemented new Bukkit events system
+
 Version 0.6.6 (1/21/2012)
     * Fixed compatibility with PermissionsBukkit
     * Don't take items from players in creative mode

@@ -2,8 +2,6 @@ package redsgreens.Appleseed;
 
 import java.util.HashMap;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event.Priority;
-import org.bukkit.event.Event.Type;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.plugin.PluginManager;
 
@@ -41,10 +39,9 @@ public class Appleseed extends JavaPlugin {
     	
         // register our events
         PluginManager pm = getServer().getPluginManager();
-        pm.registerEvent(Type.PLAYER_INTERACT, playerListener, Priority.Monitor, this);
-        pm.registerEvent(Type.SIGN_CHANGE, blockListener, Priority.Monitor, this);
-        pm.registerEvent(Type.BLOCK_BREAK, blockListener, Priority.Monitor, this);
-        pm.registerEvent(Type.WORLD_LOAD, worldListener, Priority.Monitor, this);
+        pm.registerEvents(playerListener, this);
+        pm.registerEvents(blockListener, this);
+        pm.registerEvents(worldListener, this);
 
         // start the timer
         TreeManager.ProcessTrees();

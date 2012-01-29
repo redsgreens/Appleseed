@@ -80,7 +80,7 @@ public class AppleseedPlayerManager {
     	{
         	try{
         		if(Permissions != null)
-        			  return Permissions.has(player, "appleseed.");
+        			  return Permissions.has(player, "appleseed." + permission);
         	}
         	catch (Exception ex){}
     	}

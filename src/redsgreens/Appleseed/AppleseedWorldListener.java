@@ -1,6 +1,8 @@
 package redsgreens.Appleseed;
 
-import org.bukkit.event.world.WorldListener;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
 import org.bukkit.event.world.WorldLoadEvent;
 
 /**
@@ -8,9 +10,9 @@ import org.bukkit.event.world.WorldLoadEvent;
  * 
  * @author redsgreens
  */
-public class AppleseedWorldListener extends WorldListener {
+public class AppleseedWorldListener implements Listener {
 
-	@Override
+	@EventHandler(priority = EventPriority.MONITOR)
     public void onWorldLoad(WorldLoadEvent event)
 	{
 		// the trees for a world aren't loaded until the world itself is loaded
