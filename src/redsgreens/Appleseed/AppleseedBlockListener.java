@@ -39,7 +39,7 @@ public class AppleseedBlockListener implements Listener {
 		if (event.getLine(0).equalsIgnoreCase("[" + Appleseed.Config.SignTag + "]"))
 		{
 			AppleseedLocation aloc = new AppleseedLocation(blockAgainst.getLocation());
-			AppleseedTreeData tree = Appleseed.TreeManager.GetTree(aloc);
+			final AppleseedTreeData tree = Appleseed.TreeManager.GetTree(aloc);
 
 			// player placed an appleseed sign that isn't against a tree 
 			if(tree == null)
@@ -71,11 +71,18 @@ public class AppleseedBlockListener implements Listener {
 			}
 
 			// set the first line to blue
-			(new CraftSign(signBlock)).setLine(0, "§1[" + Appleseed.Config.SignTag + "]");
+			event.setLine(0, "§1[" + Appleseed.Config.SignTag + "]");
 
 			// save the sign location
 			tree.setSign(signLoc);
-			Appleseed.TreeManager.updateSign(tree);
+			
+			
+			Appleseed.Plugin.getServer().getScheduler().scheduleSyncDelayedTask(Appleseed.Plugin, new Runnable() {
+			    public void run() {
+			    	Appleseed.TreeManager.updateSign(tree);
+			    }
+			}, 0);
+
 		}
 	}
 
