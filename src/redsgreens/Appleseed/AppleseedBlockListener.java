@@ -16,7 +16,7 @@ import org.bukkit.inventory.ItemStack;
 
 public class AppleseedBlockListener implements Listener {
 
-	@EventHandler(priority = EventPriority.MONITOR)
+	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onSignChange(SignChangeEvent event)
 	{
 		// return if the event is already cancelled
@@ -40,13 +40,13 @@ public class AppleseedBlockListener implements Listener {
 		{
 			AppleseedLocation aloc = new AppleseedLocation(blockAgainst.getLocation());
 			AppleseedTreeData tree = Appleseed.TreeManager.GetTree(aloc);
-			
+
 			// player placed an appleseed sign that isn't against a tree 
 			if(tree == null)
 				return;
-			
+
 			// cancel the event so we're the only one processing it
-			event.setCancelled(true);
+//			event.setCancelled(true);
 
 			Player player = event.getPlayer();
 			Location signLoc = signBlock.getLocation();

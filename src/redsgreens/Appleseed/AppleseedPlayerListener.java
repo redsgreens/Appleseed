@@ -216,7 +216,7 @@ public class AppleseedPlayerListener implements Listener {
 			AppleseedTreeData tree = Appleseed.TreeManager.GetTree(new AppleseedLocation(loc));
 			AppleseedItemStack treeIS = tree.getItemStack();
 
-			player.sendMessage("§cAppleseed: Type=" + AppleseedItemStack.getItemStackName(treeIS) + ", NeedsFertilizer=" + tree.needsFertilizer().toString());				
+			player.sendMessage("§cAppleseed: Type=" + AppleseedItemStack.getItemStackName(treeIS) + ", NeedsFertilizer=" + tree.needsFertilizer().toString() + ", HasSign=" + tree.hasSign());				
 		}
 	}
 
