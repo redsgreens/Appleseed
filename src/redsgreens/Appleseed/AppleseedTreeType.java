@@ -32,6 +32,8 @@ public class AppleseedTreeType {
 			saplingData = 1;
 		else if(type.equalsIgnoreCase("Birch"))
 			saplingData = 2;
+		else if(type.equalsIgnoreCase("Jungle"))
+			saplingData = 3;
 		else saplingData = 0;
 	}
 	
