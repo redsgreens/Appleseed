@@ -11,7 +11,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
-
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -22,6 +21,7 @@ import org.bukkit.block.Sign;
 import org.bukkit.craftbukkit.block.CraftSign;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
+import org.bukkit.inventory.ItemStack;
 import org.yaml.snakeyaml.Yaml;
 
 /**
@@ -128,8 +128,11 @@ public class AppleseedTreeManager {
 						    					{
 						    						Entity entity = itemItr.next();
 						    						if(entity instanceof Item && !entity.isDead())
-						    							if(((Item)entity).getItemStack().getType() == item.getItemStack().getType())
-						    								count++;
+						    						{
+						    							ItemStack iis = ((Item)entity).getItemStack();
+						    							if(iis.getType() == item.getItemStack().getType())
+						    								count += iis.getAmount();
+						    						}
 						    					}
 						    					
 						    					if(count > Appleseed.Config.MaxUncollectedItems)
