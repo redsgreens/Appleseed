@@ -18,7 +18,6 @@ import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
-import org.bukkit.craftbukkit.block.CraftSign;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.inventory.ItemStack;
@@ -435,7 +434,7 @@ public class AppleseedTreeManager {
     // schedule saveTrees() for 10 tics from now (generally .5 sec)
     private synchronized void asyncSaveTrees()
     {
-		Appleseed.Plugin.getServer().getScheduler().scheduleAsyncDelayedTask(Appleseed.Plugin, new Runnable() {
+		Appleseed.Plugin.getServer().getScheduler().runTaskLaterAsynchronously(Appleseed.Plugin, new Runnable() {
 		    public void run() {
 		    	if(!SaveRunning)
 		    		saveTrees();
@@ -527,7 +526,7 @@ public class AppleseedTreeManager {
     		signInvalid = true;
     	else
     	{
-    		sign = new CraftSign(block);
+    		sign = (Sign)block.getState();
     		if(!sign.getLine(0).equals("§1[" + Appleseed.Config.SignTag + "]"))
     			signInvalid = true;
     	}

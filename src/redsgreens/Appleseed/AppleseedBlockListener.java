@@ -5,7 +5,6 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
-import org.bukkit.craftbukkit.block.CraftSign;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -29,7 +28,7 @@ public class AppleseedBlockListener implements Listener {
 			return;
 		
 		// get the block behind the sign
-		Block blockAgainst =  getBlockBehindWallSign(new CraftSign(signBlock));
+		Block blockAgainst =  getBlockBehindWallSign((Sign)signBlock.getState());
 		
 		// the sign must be on a tree
 		if(blockAgainst.getType() != Material.LOG)
@@ -98,7 +97,7 @@ public class AppleseedBlockListener implements Listener {
 		if(signBlock.getType() != Material.WALL_SIGN)
 			return;
 	
-		Sign sign = new CraftSign(signBlock);
+		Sign sign = (Sign)signBlock.getState();
 		
 		// return if it's not an appleseed sign
 		if(!sign.getLine(0).equals("§1[" + Appleseed.Config.SignTag + "]"))
